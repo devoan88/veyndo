@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 /**
  * Creates TEST products/prices if STRIPE_SECRET_KEY (sk_test_) is set.
- * Never uses live keys.
+ * Never uses live keys. Idempotent: reuse product by name; skip existing lookup_keys.
  */
+import Stripe from "stripe";
+
 const key = process.env.STRIPE_SECRET_KEY || "";
 if (!key.startsWith("sk_test_")) {
   console.log("Skip Stripe products: no sk_test_ key in env.");
   process.exit(0);
 }
 
-const Stripe = require("stripe");
 const stripe = new Stripe(key);
 
 const prices = [
@@ -19,28 +20,29 @@ const prices = [
   { product: "Veyndo Pro", lookup: "pro_yearly", amount: 19000, interval: "year" },
 ];
 
-(async () => {
-  const products = {};
-  for (const row of prices) {
-    const existing = await stripe.prices.list({ lookup_keys: [row.lookup], limit: 1 });
-    if (existing.data[0]) {
-      console.log("exists", row.lookup, existing.data[0].id);
-      continue;
-    }
-    if (!products[row.product]) {
-      const found = await stripe.products.search({ query: `name:'${row.product}'` });
-      products[row.product] = found.data[0] || (await stripe.products.create({ name: row.product }));
-    }
-    const price = await stripe.prices.create({
-      product: products[row.product].id,
-      currency: "eur",
-      unit_amount: row.amount,
-      recurring: { interval: row.interval },
-      lookup_key: row.lookup,
-    });
-    console.log("created", row.lookup, price.id);
+const productCache = {};
+
+async function productByName(name) {
+  if (productCache[name]) return productCache[name];
+  const found = await stripe.products.search({ query: `name:'${name}'` });
+  const product = found.data[0] || (await stripe.products.create({ name }));
+  productCache[name] = product;
+  return product;
+}
+
+for (const row of prices) {
+  const existing = await stripe.prices.list({ lookup_keys: [row.lookup], limit: 1 });
+  if (existing.data[0]) {
+    console.log("exists", row.lookup, existing.data[0].id);
+    continue;
   }
-})().catch((e) => {
-  console.error(e.message);
-  process.exit(1);
-});
+  const product = await productByName(row.product);
+  const price = await stripe.prices.create({
+    product: product.id,
+    currency: "eur",
+    unit_amount: row.amount,
+    recurring: { interval: row.interval },
+    lookup_key: row.lookup,
+  });
+  console.log("created", row.lookup, price.id);
+}

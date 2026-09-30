@@ -4,6 +4,8 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdmin } from "@/lib/supabase/admin";
 import { siteOrigin } from "@/lib/env";
 
+const ALLOWED = new Set(["profil_monthly", "profil_yearly", "pro_monthly", "pro_yearly"]);
+
 export async function POST(req: Request) {
   const secret = process.env.STRIPE_SECRET_KEY;
   if (!secret?.startsWith("sk_test_")) {
@@ -13,7 +15,17 @@ export async function POST(req: Request) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Bitte anmelden." }, { status: 401 });
 
-  const { lookupKey } = await req.json();
+  let body: { lookupKey?: unknown };
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Ungültige Anfrage." }, { status: 400 });
+  }
+  const lookupKey = typeof body.lookupKey === "string" ? body.lookupKey : "";
+  if (!ALLOWED.has(lookupKey)) {
+    return NextResponse.json({ error: "Ungültiger Plan." }, { status: 400 });
+  }
+
   const stripe = new Stripe(secret);
   const prices = await stripe.prices.list({ lookup_keys: [lookupKey], limit: 1 });
   const price = prices.data[0];

@@ -1,9 +1,9 @@
 {
   "mcpServers": {
-    "supabase": {
+    "veyndo-supabase": {
       "url": "https://mcp.supabase.com/mcp"
     },
-    "stripe": {
+    "veyndo-stripe": {
       "url": "https://mcp.stripe.com"
     }
   }

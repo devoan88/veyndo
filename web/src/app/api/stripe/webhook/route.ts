@@ -17,6 +17,13 @@ function intervalFrom(price: Stripe.Price | undefined): "month" | "year" | null 
   return null;
 }
 
+function throwIfError(error: { message: string } | null, context: string) {
+  if (error) {
+    console.error(context, error.message);
+    throw new Error(`${context}: ${error.message}`);
+  }
+}
+
 async function upsertSub(
   admin: ReturnType<typeof createAdmin>,
   ownerId: string,
@@ -46,7 +53,8 @@ async function upsertSub(
     cancel_at_period_end: sub.cancel_at_period_end,
     updated_at: new Date().toISOString(),
   };
-  await admin.from("subscriptions").upsert(row, { onConflict: "owner_id" });
+  const { error } = await admin.from("subscriptions").upsert(row, { onConflict: "owner_id" });
+  throwIfError(error, "subscriptions upsert");
 }
 
 export async function POST(req: Request) {
@@ -65,57 +73,68 @@ export async function POST(req: Request) {
   } catch (e) {
     return NextResponse.json({ error: (e as Error).message }, { status: 400 });
   }
-  const admin = createAdmin();
 
-  if (event.type === "checkout.session.completed") {
-    const session = event.data.object as Stripe.Checkout.Session;
-    const ownerId = session.client_reference_id || session.metadata?.owner_id;
-    const subId = session.subscription;
-    if (ownerId && typeof subId === "string") {
-      const sub = await stripe.subscriptions.retrieve(subId);
-      if (session.customer && typeof session.customer === "string") {
-        await admin.from("owners").update({ stripe_customer_id: session.customer }).eq("id", ownerId);
-      }
-      await upsertSub(admin, ownerId, sub);
-    }
-  }
+  try {
+    const admin = createAdmin();
 
-  if (event.type === "customer.subscription.updated" || event.type === "customer.subscription.deleted") {
-    const sub = event.data.object as Stripe.Subscription;
-    const ownerId = sub.metadata?.owner_id;
-    let oid = ownerId;
-    if (!oid && typeof sub.customer === "string") {
-      const { data } = await admin.from("owners").select("id").eq("stripe_customer_id", sub.customer).maybeSingle();
-      oid = data?.id;
-    }
-    if (oid) {
-      if (event.type === "customer.subscription.deleted") {
-        await admin.from("subscriptions").upsert({
-          owner_id: oid,
-          stripe_subscription_id: sub.id,
-          tier: "basis",
-          status: "canceled",
-          updated_at: new Date().toISOString(),
-        }, { onConflict: "owner_id" });
-      } else {
-        await upsertSub(admin, oid, sub);
+    if (event.type === "checkout.session.completed") {
+      const session = event.data.object as Stripe.Checkout.Session;
+      const ownerId = session.client_reference_id || session.metadata?.owner_id;
+      const subId = session.subscription;
+      if (ownerId && typeof subId === "string") {
+        const sub = await stripe.subscriptions.retrieve(subId);
+        if (session.customer && typeof session.customer === "string") {
+          const { error } = await admin.from("owners").update({ stripe_customer_id: session.customer }).eq("id", ownerId);
+          throwIfError(error, "owners stripe_customer_id");
+        }
+        await upsertSub(admin, ownerId, sub);
       }
     }
-  }
 
-  if (event.type === "invoice.payment_failed") {
-    const inv = event.data.object as Stripe.Invoice;
-    const customer =
-      "customer" in inv && typeof (inv as { customer?: unknown }).customer === "string"
-        ? (inv as { customer: string }).customer
-        : null;
-    if (customer) {
-      const { data } = await admin.from("owners").select("id").eq("stripe_customer_id", customer).maybeSingle();
-      if (data) {
-        await admin.from("subscriptions").update({ status: "past_due", updated_at: new Date().toISOString() }).eq("owner_id", data.id);
+    if (event.type === "customer.subscription.updated" || event.type === "customer.subscription.deleted") {
+      const sub = event.data.object as Stripe.Subscription;
+      const ownerId = sub.metadata?.owner_id;
+      let oid = ownerId;
+      if (!oid && typeof sub.customer === "string") {
+        const { data, error } = await admin.from("owners").select("id").eq("stripe_customer_id", sub.customer).maybeSingle();
+        throwIfError(error, "owners lookup by customer");
+        oid = data?.id;
+      }
+      if (oid) {
+        if (event.type === "customer.subscription.deleted") {
+          const { error } = await admin.from("subscriptions").upsert({
+            owner_id: oid,
+            stripe_subscription_id: sub.id,
+            tier: "basis",
+            status: "canceled",
+            updated_at: new Date().toISOString(),
+          }, { onConflict: "owner_id" });
+          throwIfError(error, "subscriptions canceled");
+        } else {
+          await upsertSub(admin, oid, sub);
+        }
       }
     }
-  }
 
-  return NextResponse.json({ received: true });
+    if (event.type === "invoice.payment_failed") {
+      const inv = event.data.object as Stripe.Invoice;
+      const customer =
+        "customer" in inv && typeof (inv as { customer?: unknown }).customer === "string"
+          ? (inv as { customer: string }).customer
+          : null;
+      if (customer) {
+        const { data, error } = await admin.from("owners").select("id").eq("stripe_customer_id", customer).maybeSingle();
+        throwIfError(error, "owners lookup payment_failed");
+        if (data) {
+          const { error: upErr } = await admin.from("subscriptions").update({ status: "past_due", updated_at: new Date().toISOString() }).eq("owner_id", data.id);
+          throwIfError(upErr, "subscriptions past_due");
+        }
+      }
+    }
+
+    return NextResponse.json({ received: true });
+  } catch (e) {
+    console.error("stripe webhook", e);
+    return NextResponse.json({ error: "db write failed" }, { status: 500 });
+  }
 }
