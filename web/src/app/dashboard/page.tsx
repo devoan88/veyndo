@@ -5,39 +5,50 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import QRCode from "qrcode";
 import { TopBar } from "@/components/Chrome";
-import { clearBusiness, loadBusiness, saveBusiness } from "@/lib/store";
+import { clearBusiness, loadBusiness, loadStats, saveBusiness } from "@/lib/store";
 import { getTemplate } from "@/lib/templates";
 import { PLANS, euro } from "@/lib/plans";
-import { profileUrl, slugProblem } from "@/lib/slug";
-import type { Business, PlanTier } from "@/lib/types";
+import { slugProblem } from "@/lib/slug";
+import type { Business } from "@/lib/types";
+
+const LOOKUPS: Record<string, string> = {
+  profil_m: "profil_monthly",
+  profil_y: "profil_yearly",
+  pro_m: "pro_monthly",
+  pro_y: "pro_yearly",
+};
 
 export default function Dashboard() {
   const router = useRouter();
   const [b, setB] = useState<Business | null>(null);
-  const [qr, setQr] = useState<string>("");
+  const [qr, setQr] = useState("");
+  const [stats, setStats] = useState<Record<string, number> | null>(null);
+  const [busy, setBusy] = useState("");
 
   useEffect(() => {
-    const loaded = loadBusiness();
-    if (!loaded) router.replace("/start");
-    else setB(loaded);
+    loadBusiness().then((loaded) => {
+      if (!loaded) router.replace("/start");
+      else setB(loaded);
+    });
   }, [router]);
 
   useEffect(() => {
     if (!b) return;
-    QRCode.toDataURL(profileUrl(b.slug), { margin: 1, width: 480, color: { dark: "#2c362b", light: "#fffdf9" } })
+    const url = `${window.location.origin}/p/${b.slug}?src=qr`;
+    QRCode.toDataURL(url, { margin: 1, width: 480, color: { dark: "#2c362b", light: "#fffdf9" } })
       .then(setQr)
       .catch(() => setQr(""));
+    if (PLANS[b.tier].stats) loadStats(b.id).then(setStats);
   }, [b]);
 
   if (!b) return null;
 
-  const update = (patch: Partial<Business>) => {
-    const next = { ...b, ...patch };
-    saveBusiness(next);
+  const update = async (patch: Partial<Business>) => {
+    const next = await saveBusiness({ ...b, ...patch });
     setB(next);
   };
 
-  const url = profileUrl(b.slug);
+  const url = `${typeof window !== "undefined" ? window.location.origin : ""}/p/${b.slug}`;
   const checks: [string, boolean][] = [
     ["Titelfoto hochladen", !!b.coverDataUrl],
     ["Telefonnummer eintragen", !!b.phone.trim()],
@@ -49,7 +60,31 @@ export default function Dashboard() {
   ];
   const done = checks.filter(([, ok]) => ok).length;
   const canPublish = !slugProblem(b.slug) && !!b.phone.trim() && !!b.legalName.trim();
-  const tiers: PlanTier[] = ["basis", "profil", "pro"];
+
+  async function checkout(lookupKey: string) {
+    setBusy(lookupKey);
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ lookupKey }),
+      });
+      const data = await res.json();
+      if (data.url) window.location.href = data.url;
+      else alert(data.error || "Checkout nicht bereit.");
+    } finally {
+      setBusy("");
+    }
+  }
+
+  async function portal() {
+    const res = await fetch("/api/portal", { method: "POST" });
+    const data = await res.json();
+    if (data.url) window.location.href = data.url;
+    else alert(data.error || "Portal nicht bereit.");
+  }
+
+  const visits = stats ? stats.view + stats.qr : 0;
 
   return (
     <>
@@ -67,7 +102,7 @@ export default function Dashboard() {
               <span className={`tag${b.isPublished ? "" : " grey"}`}>{b.isPublished ? "Online" : "Entwurf"}</span>
             </div>
             <p className="urlline" style={{ margin: "14px 0" }}>
-              <strong>{url.replace("https://", "")}</strong>
+              <strong>{url.replace(/^https?:\/\//, "")}</strong>
             </p>
             <div className="cta-row" style={{ marginTop: 0 }}>
               <Link href={`/p/${b.slug}`} className="btn ghost small">Ansehen</Link>
@@ -99,20 +134,24 @@ export default function Dashboard() {
 
           <div className="card">
             <h3>QR-Code</h3>
-            <p className="small muted">Für Schaufenster, Kassa und Visitenkarten. Führt direkt zu Ihrer Seite.</p>
-            {/* eslint-disable-next-line @next/next/no-img-element -- data URL */}
-            {qr && <img className="qr" src={qr} alt={`QR-Code für ${url}`} width={180} height={180} />}
+            <p className="small muted">Für Schaufenster, Kassa und Visitenkarten. Zählt als QR-Besuch.</p>
+            {qr && (
+              // eslint-disable-next-line @next/next/no-img-element -- data URL
+              <img className="qr" src={qr} alt={`QR-Code für ${url}`} width={180} height={180} />
+            )}
             {qr && (
               <a className="btn ghost small" style={{ marginTop: 12 }} href={qr} download={`veyndo-qr-${b.slug}.png`}>QR-Code herunterladen</a>
             )}
           </div>
 
           <div className="card">
-            <h3>Besuche</h3>
+            <h3>Letzte 30 Tage</h3>
             {PLANS[b.tier].stats ? (
               <>
-                <p className="stat" style={{ margin: 0 }}>0</p>
-                <p className="small muted" style={{ margin: 0 }}>Aufrufe, Anrufe und Routen werden gezählt, sobald die Seite online ist. Ohne Cookies.</p>
+                <p className="stat" style={{ margin: 0 }}>{visits}</p>
+                <p className="small muted" style={{ margin: 0 }}>
+                  Aufrufe {stats?.view ?? 0} · QR {stats?.qr ?? 0} · Anrufe {stats?.call ?? 0} · WhatsApp {stats?.whatsapp ?? 0} · Route {stats?.route ?? 0}
+                </p>
               </>
             ) : (
               <p className="small muted" style={{ margin: 0 }}>Die Statistik gibt es ab Plan Profil.</p>
@@ -122,28 +161,46 @@ export default function Dashboard() {
 
         <section id="plan" style={{ paddingBottom: 0 }}>
           <h2>Plan</h2>
-          <div className="notice">Testmodus: Die Bezahlung mit Stripe wird gerade eingerichtet. Sie können die Pläne schon ausprobieren.</div>
+          <p className="small muted">Aktuell: {PLANS[b.tier].label}. Zahlung über Stripe (Testmodus).</p>
           <div className="grid c3">
-            {tiers.map((t) => {
+            {(["basis", "profil", "pro"] as const).map((t) => {
               const p = PLANS[t];
               const current = b.tier === t;
               return (
                 <div key={t} className={`card plan${current ? " featured" : ""}`}>
                   <h3>{p.label}</h3>
                   <div className="price">{euro(p.priceMonthly)}<span className="small muted"> / Monat</span></div>
+                  {p.priceYearly > 0 && <div className="small muted">oder {euro(p.priceYearly)} / Jahr</div>}
                   <ul>{p.features.map((f) => <li key={f}>{f}</li>)}</ul>
-                  <button className={`btn block${current ? "" : " ghost"}`} disabled={current} onClick={() => update({ tier: t })}>
-                    {current ? "Aktueller Plan" : "Wählen"}
-                  </button>
+                  {t === "basis" ? (
+                    <button className={`btn block${current ? "" : " ghost"}`} disabled={current} onClick={portal}>
+                      {current ? "Aktueller Plan" : "Im Portal kündigen"}
+                    </button>
+                  ) : (
+                    <div className="cta-row" style={{ flexDirection: "column", alignItems: "stretch" }}>
+                      <button className="btn block" disabled={current && b.tier === t} onClick={() => checkout(LOOKUPS[`${t}_m`])}>
+                        {busy === LOOKUPS[`${t}_m`] ? "…" : current ? "Monatlich (aktiv)" : "Monatlich starten"}
+                      </button>
+                      <button className="btn ghost block" onClick={() => checkout(LOOKUPS[`${t}_y`])}>
+                        {busy === LOOKUPS[`${t}_y`] ? "…" : "Jährlich starten"}
+                      </button>
+                    </div>
+                  )}
                 </div>
               );
             })}
           </div>
+          <p style={{ marginTop: 16 }}>
+            <button className="linkbtn" type="button" onClick={portal}>Rechnungen und Zahlung</button>
+          </p>
         </section>
 
         <p style={{ marginTop: 40 }}>
-          <button className="linkbtn small" onClick={() => {
-            if (confirm("Profil in diesem Browser löschen und neu beginnen?")) { clearBusiness(); router.push("/start"); }
+          <button className="linkbtn small" onClick={async () => {
+            if (confirm("Profil löschen und neu beginnen?")) {
+              await clearBusiness();
+              router.push("/start");
+            }
           }}>Neu beginnen</button>
         </p>
       </main>

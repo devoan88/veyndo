@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { TopBar } from "@/components/Chrome";
 import ProfileView, { WEEKDAYS } from "@/components/ProfileView";
-import { loadBusiness, newServiceId, saveBusiness } from "@/lib/store";
+import { loadBusiness, newServiceId, saveBusiness, slugTaken } from "@/lib/store";
 import { PLANS } from "@/lib/plans";
 import { slugProblem, toSlug, PROFILE_DOMAIN } from "@/lib/slug";
 import type { Business, OpeningDay, Service } from "@/lib/types";
@@ -45,12 +45,14 @@ export default function EditorPage() {
   const [tab, setTab] = useState<Tab>("basis");
   const [saved, setSaved] = useState(true);
   const [showPreview, setShowPreview] = useState(false);
+  const [taken, setTaken] = useState(false);
   const first = useRef(true);
 
   useEffect(() => {
-    const loaded = loadBusiness();
-    if (!loaded) router.replace("/start");
-    else setB(loaded);
+    loadBusiness().then((loaded) => {
+      if (!loaded) router.replace("/start");
+      else setB(loaded);
+    });
   }, [router]);
 
   // Autosave, debounced
@@ -58,9 +60,23 @@ export default function EditorPage() {
     if (!b) return;
     if (first.current) { first.current = false; return; }
     setSaved(false);
-    const t = setTimeout(() => { saveBusiness(b); setSaved(true); }, 400);
+    const t = setTimeout(() => {
+      saveBusiness(b).then((next) => {
+        if (next.coverDataUrl !== b.coverDataUrl) setB(next);
+        setSaved(true);
+      });
+    }, 400);
     return () => clearTimeout(t);
   }, [b]);
+
+  useEffect(() => {
+    if (!b) return;
+    const t = setTimeout(() => {
+      slugTaken(b.slug, b.id).then(setTaken);
+    }, 400);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [b?.slug, b?.id]);
 
   if (!b) return null;
 
@@ -105,7 +121,9 @@ export default function EditorPage() {
                       onChange={(e) => set("slug", e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""))} />
                     <span>.{PROFILE_DOMAIN}</span>
                   </div>
-                  {slugErr ? <span className="error">{slugErr}</span> : (
+                  {slugErr ? <span className="error">{slugErr}</span> : taken ? (
+                    <span className="error">Adresse ist schon vergeben.</span>
+                  ) : (
                     <button type="button" className="linkbtn small" style={{ alignSelf: "flex-start" }}
                       onClick={() => set("slug", toSlug(b.name))}>Aus dem Namen erzeugen</button>
                   )}

@@ -1,72 +1,110 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import type { Metadata } from "next";
 import Link from "next/link";
-import ProfileView from "@/components/ProfileView";
-import { fromTemplate, loadBusiness } from "@/lib/store";
-import { TEMPLATES } from "@/lib/templates";
-import type { Business } from "@/lib/types";
+import { notFound } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+import { demoBusiness } from "@/lib/demo";
+import { localBusinessJsonLd } from "@/lib/jsonld";
+import { supabaseConfigured } from "@/lib/env";
+import PublicProfileClient from "./PublicProfileClient";
+import type { Business, OpeningDay, PlanTier, Service } from "@/lib/types";
 
-// Until Supabase is connected, a profile is only visible in the browser that created it.
-// "beispiel-<branche>" shows the template as a demo profile.
-function resolve(slug: string): Business | null {
-  if (slug.startsWith("beispiel-")) {
-    const t = TEMPLATES.find((x) => x.key === slug.slice("beispiel-".length));
-    if (!t) return null;
-    const b = fromTemplate(t);
-    return {
-      ...b,
-      slug,
-      tier: "profil",
-      phone: "+43 1 234 56 78",
-      whatsapp: "+43 664 123 45 67",
-      street: "Beispielgasse 1",
-      postalCode: t.example.district,
-      legalName: `${t.example.name} (Beispiel)`,
-    };
-  }
-  const own = loadBusiness();
-  return own && own.slug === slug ? own : null;
+function hm(t: string | null | undefined) {
+  if (!t) return undefined;
+  return String(t).slice(0, 5);
 }
 
-export default function PublicProfile() {
-  const { slug } = useParams<{ slug: string }>();
-  const [state, setState] = useState<{ b: Business | null; ready: boolean }>({ b: null, ready: false });
+async function loadPublished(slug: string): Promise<Business | null> {
+  const demo = demoBusiness(slug);
+  if (demo) return demo;
+  if (!supabaseConfigured()) return null;
+  const supabase = await createClient();
+  const { data: row } = await supabase.from("businesses").select("*").eq("slug", slug).maybeSingle();
+  if (!row) return null;
+  const [{ data: svcs }, { data: hrs }, { data: owner }] = await Promise.all([
+    supabase.from("services").select("*").eq("business_id", row.id).order("position"),
+    supabase.from("opening_hours").select("*").eq("business_id", row.id).order("weekday"),
+    supabase.from("subscriptions").select("tier,status").eq("owner_id", row.owner_id).maybeSingle(),
+  ]);
+  let tier: PlanTier = "basis";
+  if (owner && ["active", "trialing", "past_due"].includes(owner.status)) tier = owner.tier as PlanTier;
+  const services: Service[] = (svcs || []).map((s: { id: string; title: string; price_label: string | null; duration_min: number | null }) => ({
+    id: s.id,
+    title: s.title,
+    priceLabel: s.price_label || "",
+    durationMin: s.duration_min,
+  }));
+  const hours: OpeningDay[] = (hrs || []).map((h: { weekday: number; closed: boolean; opens: string | null; closes: string | null }) => ({
+    weekday: h.weekday,
+    closed: h.closed,
+    opens: hm(h.opens),
+    closes: hm(h.closes),
+  }));
+  const base = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const cover = row.cover_path && base ? `${base}/storage/v1/object/public/photos/${row.cover_path}` : null;
+  return {
+    id: row.id,
+    slug: row.slug,
+    templateKey: row.template_key,
+    name: row.name,
+    tagline: row.tagline || "",
+    about: row.about || "",
+    street: row.street || "",
+    postalCode: row.postal_code || "",
+    city: row.city,
+    district: row.district || "",
+    phone: row.phone || "",
+    whatsapp: row.whatsapp || "",
+    email: row.email || "",
+    instagram: row.instagram || "",
+    accentColor: row.accent_color,
+    coverDataUrl: cover,
+    services,
+    hours: hours.length ? hours : Array.from({ length: 7 }, (_, i) => ({ weekday: i + 1, closed: i >= 5, opens: "09:00", closes: "18:00" })),
+    legalName: row.legal_name || "",
+    legalForm: row.legal_form || "",
+    uidNumber: row.uid_number || "",
+    isPublished: row.is_published,
+    tier,
+    updatedAt: row.updated_at,
+  };
+}
 
-  useEffect(() => {
-    const b = resolve(slug);
-    setState({ b, ready: true });
-    if (b) document.title = `${b.name} · ${b.tagline}`;
-  }, [slug]);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const b = await loadPublished(slug);
+  if (!b) return { title: "Nicht gefunden" };
+  return {
+    title: `${b.name} · ${b.tagline}`,
+    description: b.about || b.tagline,
+  };
+}
 
-  if (!state.ready) return null;
-  const today = ((new Date().getDay() + 6) % 7) + 1;
-
-  if (!state.b) {
-    return (
-      <main className="wrap" style={{ padding: "80px 0", textAlign: "center" }}>
-        <h1>Seite nicht gefunden</h1>
-        <p className="muted">Unter dieser Adresse gibt es noch kein Profil.</p>
-        <Link href="/start" className="btn">Eigenes Profil erstellen</Link>
-      </main>
-    );
-  }
-
-  const { b } = state;
+export default async function PublicProfile({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ src?: string }>;
+}) {
+  const { slug } = await params;
+  const { src } = await searchParams;
+  const b = await loadPublished(slug);
+  if (!b) notFound();
   const isDemo = slug.startsWith("beispiel-");
   return (
     <>
-      {(isDemo || !b.isPublished) && (
+      {isDemo && (
         <div className="notice" style={{ borderRadius: 0, margin: 0, textAlign: "center" }}>
-          {isDemo ? (
-            <>Beispielprofil. <Link href="/start">So eines in 10 Minuten erstellen</Link></>
-          ) : (
-            <>Vorschau: Diese Seite ist noch nicht veröffentlicht. <Link href="/dashboard">Zum Dashboard</Link></>
-          )}
+          Beispielprofil. <Link href="/start">So eines in 10 Minuten erstellen</Link>
         </div>
       )}
-      <div className="profile-page"><ProfileView b={b} today={today} /></div>
+      {!isDemo && !b.isPublished && (
+        <div className="notice" style={{ borderRadius: 0, margin: 0, textAlign: "center" }}>
+          Vorschau: Diese Seite ist noch nicht veröffentlicht. <Link href="/dashboard">Zum Dashboard</Link>
+        </div>
+      )}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd(b)) }} />
+      <PublicProfileClient b={b} srcQr={src === "qr"} />
     </>
   );
 }

@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { TopBar } from "@/components/Chrome";
 import { TEMPLATES, GROUPS } from "@/lib/templates";
 import { loadBusiness, newBusiness, saveBusiness } from "@/lib/store";
+import { supabaseConfigured } from "@/lib/env";
+import { createClient } from "@/lib/supabase/client";
 
 export default function StartPage() {
   const router = useRouter();
@@ -12,17 +14,25 @@ export default function StartPage() {
   const [name, setName] = useState("");
   const [postal, setPostal] = useState("");
 
-  function create(e: React.FormEvent) {
+  async function create(e: React.FormEvent) {
     e.preventDefault();
     if (!templateKey) return;
-    if (loadBusiness() && !confirm("Es gibt schon ein Profil in diesem Browser. Ersetzen?")) return;
+    const existing = await loadBusiness();
+    if (existing && !confirm("Es gibt schon ein Profil. Ersetzen?")) return;
     const b = newBusiness(templateKey, name);
     if (postal.trim()) {
       b.postalCode = postal.trim();
       b.district = postal.trim();
       b.tagline = b.tagline.replace(/Wien \d{4}/, `Wien ${postal.trim()}`);
     }
-    saveBusiness(b);
+    await saveBusiness(b);
+    if (supabaseConfigured()) {
+      const { data } = await createClient().auth.getUser();
+      if (!data.user) {
+        router.push("/login?next=/editor");
+        return;
+      }
+    }
     router.push("/editor");
   }
 

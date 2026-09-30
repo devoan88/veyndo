@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AuthNav } from "./AuthNav";
 
 export function TopBar({ children }: { children?: React.ReactNode }) {
   return (
@@ -11,6 +12,7 @@ export function TopBar({ children }: { children?: React.ReactNode }) {
               <Link href="/#so-gehts">So geht&apos;s</Link>
               <Link href="/#preise">Preise</Link>
               <Link href="/dashboard">Mein Profil</Link>
+              <AuthNav />
               <Link href="/start" className="btn small">Kostenlos starten</Link>
             </>
           )}
