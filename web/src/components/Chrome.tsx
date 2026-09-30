@@ -6,6 +6,8 @@ export function TopBar({ children }: { children?: React.ReactNode }) {
     <header className="topbar">
       <div className="wrap">
         <Link href="/" className="brand">
+          {/* decorative mark; SVG is 28px */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/brand/veyndo-sage.svg" alt="" width={28} height={28} />
           Veyndo
         </Link>
