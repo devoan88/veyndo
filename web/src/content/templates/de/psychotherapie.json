@@ -1,0 +1,78 @@
+{
+  "key": "psychotherapie",
+  "group": "gesundheit",
+  "label": "Psychotherapie",
+  "google_category": "Psychotherapeut",
+  "accent_color": "#7a7a8b",
+  "example": {
+    "name": "Praxis Dr. Berger",
+    "city": "Wien",
+    "district": "1070"
+  },
+  "tagline": "Psychotherapie in {district} und online",
+  "about": "Einzel- und Paartherapie in einem geschützten Rahmen. Termine in der Praxis oder per Video. Teilrefundierung durch die Krankenkasse möglich.",
+  "services": [
+    {
+      "title": "Erstgespräch",
+      "price_label": "€ 80",
+      "duration_min": 50
+    },
+    {
+      "title": "Einzelsitzung 50 Min.",
+      "price_label": "€ 110",
+      "duration_min": 50
+    },
+    {
+      "title": "Paarsitzung 75 Min.",
+      "price_label": "€ 150",
+      "duration_min": 75
+    },
+    {
+      "title": "Online-Sitzung 50 Min.",
+      "price_label": "€ 110",
+      "duration_min": 50
+    }
+  ],
+  "opening_hours": [
+    {
+      "weekday": 1,
+      "closed": false,
+      "note": "nach Vereinbarung"
+    },
+    {
+      "weekday": 2,
+      "closed": false,
+      "note": "nach Vereinbarung"
+    },
+    {
+      "weekday": 3,
+      "closed": false,
+      "note": "nach Vereinbarung"
+    },
+    {
+      "weekday": 4,
+      "closed": false,
+      "note": "nach Vereinbarung"
+    },
+    {
+      "weekday": 5,
+      "closed": false,
+      "note": "nach Vereinbarung"
+    },
+    {
+      "weekday": 6,
+      "closed": true
+    },
+    {
+      "weekday": 7,
+      "closed": true
+    }
+  ],
+  "checklist": [
+    "Titelfoto hochladen",
+    "Telefonnummer prüfen",
+    "Impressum ausfüllen",
+    "Link im Google-Profil eintragen",
+    "QR-Code aufstellen"
+  ]
+}

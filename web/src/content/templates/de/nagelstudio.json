@@ -1,0 +1,93 @@
+{
+  "key": "nagelstudio",
+  "group": "schoenheit",
+  "label": "Nagelstudio",
+  "google_category": "Nagelstudio",
+  "accent_color": "#b98b86",
+  "example": {
+    "name": "Nagelstudio Lena",
+    "city": "Wien",
+    "district": "1070"
+  },
+  "tagline": "Maniküre, Gel und Nail Art in {district}",
+  "about": "Gepflegte Nägel ohne Stress: Maniküre, Gel und Nail Art mit hochwertigen Produkten. Wir nehmen uns Zeit für Sie, auch am Samstag.",
+  "services": [
+    {
+      "title": "Maniküre klassisch",
+      "price_label": "€ 29",
+      "duration_min": 40
+    },
+    {
+      "title": "Gel-Modellage Neuset",
+      "price_label": "€ 55",
+      "duration_min": 90
+    },
+    {
+      "title": "Auffüllen",
+      "price_label": "€ 42",
+      "duration_min": 75
+    },
+    {
+      "title": "Shellac / Gel-Lack",
+      "price_label": "€ 35",
+      "duration_min": 45
+    },
+    {
+      "title": "Nail Art pro Nagel",
+      "price_label": "ab € 3",
+      "duration_min": null
+    },
+    {
+      "title": "Pediküre",
+      "price_label": "€ 45",
+      "duration_min": 60
+    }
+  ],
+  "opening_hours": [
+    {
+      "weekday": 1,
+      "closed": true
+    },
+    {
+      "weekday": 2,
+      "closed": false,
+      "opens": "10:00",
+      "closes": "19:00"
+    },
+    {
+      "weekday": 3,
+      "closed": false,
+      "opens": "10:00",
+      "closes": "19:00"
+    },
+    {
+      "weekday": 4,
+      "closed": false,
+      "opens": "10:00",
+      "closes": "19:00"
+    },
+    {
+      "weekday": 5,
+      "closed": false,
+      "opens": "10:00",
+      "closes": "19:00"
+    },
+    {
+      "weekday": 6,
+      "closed": false,
+      "opens": "09:00",
+      "closes": "15:00"
+    },
+    {
+      "weekday": 7,
+      "closed": true
+    }
+  ],
+  "checklist": [
+    "Titelfoto hochladen",
+    "Telefonnummer prüfen",
+    "Impressum ausfüllen",
+    "Link im Google-Profil eintragen",
+    "QR-Code aufstellen"
+  ]
+}

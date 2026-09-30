@@ -1,0 +1,88 @@
+{
+  "key": "installateur",
+  "group": "handwerk",
+  "label": "Installateur",
+  "google_category": "Installateur",
+  "accent_color": "#5f7a8a",
+  "example": {
+    "name": "Installateur Huber",
+    "city": "Wien",
+    "district": "1070"
+  },
+  "tagline": "Bad, Heizung und Rohrbruch",
+  "about": "Wasser, Heizung, Bad: Wir reparieren, tauschen und planen. Bei Rohrbruch sind wir schnell bei Ihnen.",
+  "services": [
+    {
+      "title": "Anfahrt Wien",
+      "price_label": "€ 39",
+      "duration_min": null
+    },
+    {
+      "title": "Arbeitsstunde",
+      "price_label": "€ 72",
+      "duration_min": 60
+    },
+    {
+      "title": "Therme-Service",
+      "price_label": "ab € 139",
+      "duration_min": null
+    },
+    {
+      "title": "WC-Spülkasten tauschen",
+      "price_label": "ab € 180",
+      "duration_min": null
+    },
+    {
+      "title": "Rohrbruch-Notdienst",
+      "price_label": "auf Anfrage",
+      "duration_min": null
+    }
+  ],
+  "opening_hours": [
+    {
+      "weekday": 1,
+      "closed": false,
+      "opens": "07:00",
+      "closes": "17:00"
+    },
+    {
+      "weekday": 2,
+      "closed": false,
+      "opens": "07:00",
+      "closes": "17:00"
+    },
+    {
+      "weekday": 3,
+      "closed": false,
+      "opens": "07:00",
+      "closes": "17:00"
+    },
+    {
+      "weekday": 4,
+      "closed": false,
+      "opens": "07:00",
+      "closes": "17:00"
+    },
+    {
+      "weekday": 5,
+      "closed": false,
+      "opens": "07:00",
+      "closes": "14:00"
+    },
+    {
+      "weekday": 6,
+      "closed": true
+    },
+    {
+      "weekday": 7,
+      "closed": true
+    }
+  ],
+  "checklist": [
+    "Titelfoto hochladen",
+    "Telefonnummer prüfen",
+    "Impressum ausfüllen",
+    "Link im Google-Profil eintragen",
+    "QR-Code aufstellen"
+  ]
+}

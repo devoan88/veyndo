@@ -1,0 +1,88 @@
+{
+  "key": "elektriker",
+  "group": "handwerk",
+  "label": "Elektriker",
+  "google_category": "Elektriker",
+  "accent_color": "#6b7a5a",
+  "example": {
+    "name": "Elektro Novak",
+    "city": "Wien",
+    "district": "1070"
+  },
+  "tagline": "Elektroinstallationen und Reparaturen in Wien",
+  "about": "Konzessionierter Elektrobetrieb: Installationen, Reparaturen, E-Befund und Smart Home. Schnell vor Ort, saubere Arbeit, fixe Preise.",
+  "services": [
+    {
+      "title": "Anfahrt Wien",
+      "price_label": "€ 35",
+      "duration_min": null
+    },
+    {
+      "title": "Arbeitsstunde",
+      "price_label": "€ 68",
+      "duration_min": 60
+    },
+    {
+      "title": "E-Befund Wohnung",
+      "price_label": "ab € 149",
+      "duration_min": null
+    },
+    {
+      "title": "Steckdose tauschen",
+      "price_label": "ab € 45",
+      "duration_min": null
+    },
+    {
+      "title": "Notdienst Zuschlag",
+      "price_label": "ab € 60",
+      "duration_min": null
+    }
+  ],
+  "opening_hours": [
+    {
+      "weekday": 1,
+      "closed": false,
+      "opens": "07:00",
+      "closes": "17:00"
+    },
+    {
+      "weekday": 2,
+      "closed": false,
+      "opens": "07:00",
+      "closes": "17:00"
+    },
+    {
+      "weekday": 3,
+      "closed": false,
+      "opens": "07:00",
+      "closes": "17:00"
+    },
+    {
+      "weekday": 4,
+      "closed": false,
+      "opens": "07:00",
+      "closes": "17:00"
+    },
+    {
+      "weekday": 5,
+      "closed": false,
+      "opens": "07:00",
+      "closes": "13:00"
+    },
+    {
+      "weekday": 6,
+      "closed": true
+    },
+    {
+      "weekday": 7,
+      "closed": true
+    }
+  ],
+  "checklist": [
+    "Titelfoto hochladen",
+    "Telefonnummer prüfen",
+    "Impressum ausfüllen",
+    "Link im Google-Profil eintragen",
+    "QR-Code aufstellen"
+  ]
+}

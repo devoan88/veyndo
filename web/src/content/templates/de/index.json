@@ -1,0 +1,54 @@
+{
+  "groups": {
+    "schoenheit": "Schönheit",
+    "gesundheit": "Gesundheit",
+    "handwerk": "Handwerk"
+  },
+  "templates": [
+    {
+      "key": "nagelstudio",
+      "group": "schoenheit",
+      "label": "Nagelstudio"
+    },
+    {
+      "key": "friseur",
+      "group": "schoenheit",
+      "label": "Friseur"
+    },
+    {
+      "key": "kosmetik",
+      "group": "schoenheit",
+      "label": "Kosmetikstudio"
+    },
+    {
+      "key": "physiotherapie",
+      "group": "gesundheit",
+      "label": "Physiotherapie"
+    },
+    {
+      "key": "massage",
+      "group": "gesundheit",
+      "label": "Massage"
+    },
+    {
+      "key": "psychotherapie",
+      "group": "gesundheit",
+      "label": "Psychotherapie"
+    },
+    {
+      "key": "elektriker",
+      "group": "handwerk",
+      "label": "Elektriker"
+    },
+    {
+      "key": "installateur",
+      "group": "handwerk",
+      "label": "Installateur"
+    },
+    {
+      "key": "reinigung",
+      "group": "handwerk",
+      "label": "Reinigung"
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "key": "massage",
+  "group": "gesundheit",
+  "label": "Massage",
+  "google_category": "Massagepraxis",
+  "accent_color": "#9b8a70",
+  "example": {
+    "name": "Massage Oase",
+    "city": "Wien",
+    "district": "1070"
+  },
+  "tagline": "Entspannung und Heilmassage",
+  "about": "Klassische Massage, Hot Stone und Heilmassage. Nehmen Sie sich eine Stunde nur für sich.",
+  "services": [
+    {
+      "title": "Klassische Massage 30 Min.",
+      "price_label": "€ 39",
+      "duration_min": 30
+    },
+    {
+      "title": "Klassische Massage 50 Min.",
+      "price_label": "€ 59",
+      "duration_min": 50
+    },
+    {
+      "title": "Hot-Stone-Massage",
+      "price_label": "€ 75",
+      "duration_min": 60
+    },
+    {
+      "title": "Fußreflexzonenmassage",
+      "price_label": "€ 45",
+      "duration_min": 40
+    },
+    {
+      "title": "Gutschein",
+      "price_label": "ab € 39",
+      "duration_min": null
+    }
+  ],
+  "opening_hours": [
+    {
+      "weekday": 1,
+      "closed": false,
+      "opens": "10:00",
+      "closes": "20:00"
+    },
+    {
+      "weekday": 2,
+      "closed": false,
+      "opens": "10:00",
+      "closes": "20:00"
+    },
+    {
+      "weekday": 3,
+      "closed": false,
+      "opens": "10:00",
+      "closes": "20:00"
+    },
+    {
+      "weekday": 4,
+      "closed": false,
+      "opens": "10:00",
+      "closes": "20:00"
+    },
+    {
+      "weekday": 5,
+      "closed": false,
+      "opens": "10:00",
+      "closes": "20:00"
+    },
+    {
+      "weekday": 6,
+      "closed": false,
+      "opens": "10:00",
+      "closes": "16:00"
+    },
+    {
+      "weekday": 7,
+      "closed": true
+    }
+  ],
+  "checklist": [
+    "Titelfoto hochladen",
+    "Telefonnummer prüfen",
+    "Impressum ausfüllen",
+    "Link im Google-Profil eintragen",
+    "QR-Code aufstellen"
+  ]
+}

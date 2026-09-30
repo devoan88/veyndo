@@ -1,0 +1,88 @@
+{
+  "key": "kosmetik",
+  "group": "schoenheit",
+  "label": "Kosmetikstudio",
+  "google_category": "Kosmetikstudio",
+  "accent_color": "#a88c9c",
+  "example": {
+    "name": "Kosmetik Sophie",
+    "city": "Wien",
+    "district": "1070"
+  },
+  "tagline": "Gesichtsbehandlungen, Wimpern und Brauen",
+  "about": "Professionelle Gesichtspflege und Wimpern-Styling in ruhiger Atmosphäre. Wir beraten Sie individuell zu Ihrem Hauttyp.",
+  "services": [
+    {
+      "title": "Gesichtsbehandlung klassisch",
+      "price_label": "€ 69",
+      "duration_min": 60
+    },
+    {
+      "title": "Tiefenreinigung",
+      "price_label": "€ 55",
+      "duration_min": 45
+    },
+    {
+      "title": "Wimpernlifting",
+      "price_label": "€ 59",
+      "duration_min": 60
+    },
+    {
+      "title": "Brauen zupfen und färben",
+      "price_label": "€ 25",
+      "duration_min": 20
+    },
+    {
+      "title": "Wimpernverlängerung Neuset",
+      "price_label": "€ 110",
+      "duration_min": 120
+    }
+  ],
+  "opening_hours": [
+    {
+      "weekday": 1,
+      "closed": true
+    },
+    {
+      "weekday": 2,
+      "closed": false,
+      "opens": "10:00",
+      "closes": "19:00"
+    },
+    {
+      "weekday": 3,
+      "closed": false,
+      "opens": "10:00",
+      "closes": "19:00"
+    },
+    {
+      "weekday": 4,
+      "closed": false,
+      "opens": "10:00",
+      "closes": "19:00"
+    },
+    {
+      "weekday": 5,
+      "closed": false,
+      "opens": "10:00",
+      "closes": "19:00"
+    },
+    {
+      "weekday": 6,
+      "closed": false,
+      "opens": "09:00",
+      "closes": "14:00"
+    },
+    {
+      "weekday": 7,
+      "closed": true
+    }
+  ],
+  "checklist": [
+    "Titelfoto hochladen",
+    "Telefonnummer prüfen",
+    "Impressum ausfüllen",
+    "Link im Google-Profil eintragen",
+    "QR-Code aufstellen"
+  ]
+}

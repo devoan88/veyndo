@@ -1,0 +1,85 @@
+{
+  "key": "reinigung",
+  "group": "handwerk",
+  "label": "Reinigung",
+  "google_category": "Reinigungsdienst",
+  "accent_color": "#5f7f8f",
+  "example": {
+    "name": "Glanzwerk Reinigung",
+    "city": "Wien",
+    "district": "1070"
+  },
+  "tagline": "Wohnungs- und Büroreinigung in Wien",
+  "about": "Zuverlässige Reinigung für Wohnungen, Büros und Praxen. Versichert, mit eigenem Material und fixen Ansprechpartnern.",
+  "services": [
+    {
+      "title": "Stundensatz",
+      "price_label": "€ 32",
+      "duration_min": 60
+    },
+    {
+      "title": "Endreinigung bis 60 m²",
+      "price_label": "ab € 220",
+      "duration_min": null
+    },
+    {
+      "title": "Büroreinigung wöchentlich",
+      "price_label": "auf Anfrage",
+      "duration_min": null
+    },
+    {
+      "title": "Fensterreinigung",
+      "price_label": "ab € 90",
+      "duration_min": null
+    }
+  ],
+  "opening_hours": [
+    {
+      "weekday": 1,
+      "closed": false,
+      "opens": "07:00",
+      "closes": "19:00"
+    },
+    {
+      "weekday": 2,
+      "closed": false,
+      "opens": "07:00",
+      "closes": "19:00"
+    },
+    {
+      "weekday": 3,
+      "closed": false,
+      "opens": "07:00",
+      "closes": "19:00"
+    },
+    {
+      "weekday": 4,
+      "closed": false,
+      "opens": "07:00",
+      "closes": "19:00"
+    },
+    {
+      "weekday": 5,
+      "closed": false,
+      "opens": "07:00",
+      "closes": "19:00"
+    },
+    {
+      "weekday": 6,
+      "closed": false,
+      "opens": "08:00",
+      "closes": "14:00"
+    },
+    {
+      "weekday": 7,
+      "closed": true
+    }
+  ],
+  "checklist": [
+    "Titelfoto hochladen",
+    "Telefonnummer prüfen",
+    "Impressum ausfüllen",
+    "Link im Google-Profil eintragen",
+    "QR-Code aufstellen"
+  ]
+}

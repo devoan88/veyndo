@@ -1,0 +1,93 @@
+{
+  "key": "friseur",
+  "group": "schoenheit",
+  "label": "Friseur",
+  "google_category": "Friseursalon",
+  "accent_color": "#8b7a6b",
+  "example": {
+    "name": "Salon Mira",
+    "city": "Wien",
+    "district": "1070"
+  },
+  "tagline": "Schnitt, Farbe und Styling in {district}",
+  "about": "Ihr Friseur im Grätzl: ehrliche Beratung, sauberer Schnitt und Farben, die zu Ihnen passen.",
+  "services": [
+    {
+      "title": "Damenschnitt mit Waschen und Föhnen",
+      "price_label": "€ 49",
+      "duration_min": 60
+    },
+    {
+      "title": "Herrenschnitt",
+      "price_label": "€ 28",
+      "duration_min": 30
+    },
+    {
+      "title": "Kinderschnitt bis 12",
+      "price_label": "€ 18",
+      "duration_min": 20
+    },
+    {
+      "title": "Färben",
+      "price_label": "ab € 60",
+      "duration_min": 90
+    },
+    {
+      "title": "Strähnen",
+      "price_label": "ab € 75",
+      "duration_min": 120
+    },
+    {
+      "title": "Hochsteckfrisur",
+      "price_label": "ab € 55",
+      "duration_min": 60
+    }
+  ],
+  "opening_hours": [
+    {
+      "weekday": 1,
+      "closed": true
+    },
+    {
+      "weekday": 2,
+      "closed": false,
+      "opens": "09:00",
+      "closes": "18:00"
+    },
+    {
+      "weekday": 3,
+      "closed": false,
+      "opens": "09:00",
+      "closes": "18:00"
+    },
+    {
+      "weekday": 4,
+      "closed": false,
+      "opens": "09:00",
+      "closes": "20:00"
+    },
+    {
+      "weekday": 5,
+      "closed": false,
+      "opens": "09:00",
+      "closes": "18:00"
+    },
+    {
+      "weekday": 6,
+      "closed": false,
+      "opens": "08:00",
+      "closes": "14:00"
+    },
+    {
+      "weekday": 7,
+      "closed": true
+    }
+  ],
+  "checklist": [
+    "Titelfoto hochladen",
+    "Telefonnummer prüfen",
+    "Impressum ausfüllen",
+    "Link im Google-Profil eintragen",
+    "QR-Code aufstellen"
+  ]
+}
