@@ -5,7 +5,10 @@ export function TopBar({ children }: { children?: React.ReactNode }) {
   return (
     <header className="topbar">
       <div className="wrap">
-        <Link href="/" className="brand">Veyndo<span>.</span></Link>
+        <Link href="/" className="brand">
+          <img src="/brand/veyndo-sage.svg" alt="" width={28} height={28} />
+          Veyndo
+        </Link>
         <nav className="nav">
           {children ?? (
             <>
