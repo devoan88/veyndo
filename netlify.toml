@@ -1,0 +1,9 @@
+# Netlify: Next.js app lives in web/ (server routes run as Netlify Functions via the Next.js runtime).
+[build]
+  base = "web"
+  command = "npm run build"
+  publish = "web/.next"
+
+[build.environment]
+  NODE_VERSION = "22"
+  NEXT_TELEMETRY_DISABLED = "1"
