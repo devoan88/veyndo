@@ -35,6 +35,10 @@ export default function PreisePage() {
                 <p>{g.intro}</p>
               </div>
               <ul className={s.items}>
+                <li className={s.cols} aria-hidden>
+                  <span>Leistung</span>
+                  <span>Preis</span>
+                </li>
                 {g.items.map((it) => (
                   <li key={it.name} className={s.item}>
                     <div>

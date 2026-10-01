@@ -164,8 +164,8 @@ export default function Dashboard() {
             {!plan.stats && (
               <div className={s.lockOver}>
                 <b>Sehen Sie, wer anruft</b>
-                <span>Aufrufe, Anrufe, Routen und QR-Scans gibt es ab Plan Profil.</span>
-                <a href="#plan">Statistik freischalten lassen →</a>
+                <span>Aufrufe, Anrufe, Routen und QR-Scans schalten wir persönlich frei.</span>
+                <a href="/preise">Preisliste ansehen →</a>
               </div>
             )}
           </div>
@@ -235,15 +235,16 @@ export default function Dashboard() {
 
         {/* PLAN */}
         <section id="plan" className={s.planSec}>
-          <div className={s.secHead}><h2>Ihr Paket</h2></div>
+          <div className={s.secHead}><h2>Mehr Funktionen</h2></div>
           <div className={s.card}>
             <p style={{ marginTop: 0 }}>
-              Aktuell: <b>{plan.label}</b>. Mehr Funktionen wie Preisliste, Galerie, WhatsApp-Button oder Statistik
-              schalten wir persönlich für Sie frei.
+              Aktuell: <b>{plan.label}</b>. Preisliste, Galerie, WhatsApp-Button oder Statistik schalten wir
+              persönlich für Sie frei. Alle Festpreise stehen in der Preisliste.
             </p>
             <div className={s.posterActions} style={{ justifyContent: "flex-start" }}>
+              <Link href="/preise" className={s.btnGhost}>Zur Preisliste</Link>
               <a className={s.btnPrimary} target="_blank" rel="noopener noreferrer"
-                href={whatsappHref(`Hallo, hier ist ${b.name} (${b.slug}). Ich möchte mein Paket erweitern.`)}>Per WhatsApp anfragen</a>
+                href={whatsappHref(`Hallo, hier ist ${b.name} (${b.slug}). Ich möchte mehr Funktionen auf meiner Seite.`)}>Per WhatsApp anfragen</a>
               <a className={s.btnGhost} href={CONTACT.phoneHref}>Anrufen: {CONTACT.phone}</a>
             </div>
           </div>

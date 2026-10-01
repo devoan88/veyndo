@@ -14,6 +14,7 @@
 .groupHead p { color: var(--muted); margin: 0; }
 .items { list-style: none; margin: 0; padding: 0; background: #fffdf9; border: 1px solid var(--line); border-radius: 20px; overflow: hidden; }
 .item { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 16px 20px; border-bottom: 1px solid var(--line); }
+.cols { display: flex; justify-content: space-between; padding: 10px 20px; font-size: .75rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--line); background: var(--soft, #f6f2ea); }
 .item:last-child { border-bottom: 0; }
 .item b { display: block; font-weight: 700; margin-bottom: 2px; }
 .item span { color: var(--muted); font-size: .9rem; }

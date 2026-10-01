@@ -283,7 +283,7 @@ export default function EditorPage() {
               <div className={s.upsell}>
                 <b>Preise sichtbar machen</b>
                 <span>Im Plan {plan.label} sehen Kundinnen {plan.maxServices} Leistungen ohne Preise. Mit Profil zeigen Sie alles.</span>
-                <Link href="/dashboard#plan">Freischalten lassen →</Link>
+                <Link href="/preise">Preisliste ansehen →</Link>
               </div>
             )}
             <div className={s.box}>
@@ -330,7 +330,7 @@ export default function EditorPage() {
               <div className={s.upsell}>
                 <b>Galerie freischalten</b>
                 <span>Mit Profil zeigen Sie bis zu 8 Fotos, die Kundinnen groß ansehen können.</span>
-                <Link href="/dashboard#plan">Freischalten lassen →</Link>
+                <Link href="/preise">Preisliste ansehen →</Link>
               </div>
             ) : (
               <p className={s.meta}>{(b.photos ?? []).length} von {plan.gallery} Fotos · Das erste Foto wird groß gezeigt.</p>
@@ -411,7 +411,7 @@ export default function EditorPage() {
               <div className={s.field}>
                 <label htmlFor="f-wa">✆ WhatsApp</label>
                 <input id="f-wa" type="tel" value={b.whatsapp} placeholder="+43 664 123 45 67" onChange={(e) => set("whatsapp", e.target.value)} />
-                {!plan.whatsapp && <small>Der WhatsApp-Button erscheint ab Plan Profil.</small>}
+                {!plan.whatsapp && <small>Der WhatsApp-Button wird persönlich freigeschaltet. <Link href="/preise">Preisliste</Link></small>}
               </div>
             </div>
             <div className={s.field}>
