@@ -30,6 +30,9 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
+# supabase CLI temp
+supabase/.temp/
+
 # env files
 .env
 .env.local
