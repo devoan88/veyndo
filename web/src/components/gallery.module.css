@@ -1,0 +1,43 @@
+.grid { display: grid; gap: 6px; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 110px; border-radius: 14px; overflow: hidden; }
+.cell { position: relative; padding: 0; border: 0; margin: 0; cursor: zoom-in; overflow: hidden; background: rgba(0,0,0,.06); }
+.cell img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .6s cubic-bezier(.2,.7,.2,1); }
+.cell:hover img { transform: scale(1.05); }
+.cell:focus-visible { outline: 3px solid var(--pa, #8a9a62); outline-offset: -3px; }
+.more { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(0,0,0,.5); color: #fff; font-size: 1.6rem; font-weight: 800; }
+
+/* Layouts by count (1–5). First photo is the big one. */
+.n1 { grid-template-columns: 1fr; grid-auto-rows: 240px; }
+.n2 { grid-template-columns: 1fr 1fr; grid-auto-rows: 200px; }
+.n3 { grid-template-columns: 2fr 1fr 1fr; }
+.n3 .cell:first-child { grid-column: 1; grid-row: span 2; }
+.n3 .cell:nth-child(2), .n3 .cell:nth-child(3) { grid-column: span 2; }
+.n4 { grid-template-columns: 2fr 1fr 1fr; }
+.n4 .cell:first-child { grid-row: span 2; }
+.n4 .cell:nth-child(2) { grid-column: span 2; }
+.n5 { grid-template-columns: 2fr 1fr 1fr; }
+.n5 .cell:first-child { grid-row: span 2; }
+
+@container (min-width: 520px) {
+  .grid { grid-auto-rows: 150px; }
+  .n1 { grid-auto-rows: 320px; }
+  .n2 { grid-auto-rows: 260px; }
+}
+
+/* Full-screen viewer */
+.viewer { position: fixed; inset: 0; z-index: 1000; background: rgba(8,10,8,.94); display: grid; place-items: center; animation: fade .2s ease; touch-action: pan-y; }
+@keyframes fade { from { opacity: 0; } }
+.big { max-width: min(94vw, 1400px); max-height: 86vh; object-fit: contain; border-radius: 10px; animation: zoom .25s ease; user-select: none; }
+@keyframes zoom { from { transform: scale(.96); opacity: .4; } }
+.close, .nav { position: absolute; border: 0; cursor: pointer; color: #fff; background: rgba(255,255,255,.12); backdrop-filter: blur(6px); display: grid; place-items: center; transition: background .15s; }
+.close:hover, .nav:hover { background: rgba(255,255,255,.25); }
+.close { top: 16px; right: 16px; width: 44px; height: 44px; border-radius: 50%; font-size: 1.8rem; line-height: 1; }
+.nav { top: 50%; translate: 0 -50%; width: 48px; height: 48px; border-radius: 50%; font-size: 2rem; line-height: 1; }
+.prev { left: 14px; }
+.next { right: 14px; }
+.counter { position: absolute; bottom: 18px; left: 50%; translate: -50% 0; color: rgba(255,255,255,.85); font-size: .9rem; font-variant-numeric: tabular-nums; background: rgba(255,255,255,.1); padding: 5px 12px; border-radius: 999px; }
+@media (max-width: 600px) {
+  .nav { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .viewer, .big { animation: none; }
+}
