@@ -131,33 +131,11 @@ textarea { min-height: 96px; resize: vertical; }
 .slugbox input { border-radius: 10px 0 0 10px; }
 .slugbox span { padding: 10px 12px; border: 1px solid var(--line); border-left: 0; border-radius: 0 10px 10px 0; background: var(--card); color: var(--muted); white-space: nowrap; }
 
-/* Editor */
-.editor { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 420px); gap: 24px; padding: 24px 0 60px; align-items: start; }
-.editor .preview { position: sticky; top: 80px; }
-.phone { border: 10px solid var(--ink); border-radius: 34px; overflow: hidden; background: var(--white); max-height: calc(100vh - 140px); overflow-y: auto; }
-.tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
-.tabs button { font: inherit; font-size: .9rem; padding: 7px 13px; border-radius: 999px; border: 1px solid var(--line); background: var(--white); cursor: pointer; color: var(--ink); }
-.tabs button[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: var(--white); }
-.svc-row { display: grid; grid-template-columns: 1fr 110px 80px 34px; gap: 8px; align-items: center; margin-bottom: 8px; }
-.hours-row { display: grid; grid-template-columns: 90px 1fr 1fr auto; gap: 8px; align-items: center; margin-bottom: 8px; }
 .iconbtn { width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--line); background: var(--white); cursor: pointer; font-size: 1rem; color: var(--muted); }
 .notice { background: #efe6d2; border: 1px solid #dccca6; border-radius: 10px; padding: 10px 14px; font-size: .88rem; margin-bottom: 14px; }
 .savebar { display: flex; gap: 10px; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: 16px; }
-.mobile-toggle { display: none; }
 
-@media (max-width: 900px) {
-  .editor { grid-template-columns: 1fr; }
-  .editor .preview { position: static; display: none; }
-  .editor.show-preview .preview { display: block; }
-  .editor.show-preview .form { display: none; }
-  .mobile-toggle { display: inline-flex; }
-  .phone { border-width: 0; border-radius: var(--radius); max-height: none; border: 1px solid var(--line); }
-}
 @media (max-width: 520px) {
-  .svc-row { grid-template-columns: 1fr 90px 34px; }
-  .svc-row .dur { display: none; }
-  .hours-row { grid-template-columns: 70px 1fr 1fr; }
-  .hours-row .closed { grid-column: 1 / -1; }
   .row2 { grid-template-columns: 1fr; }
 }
 
@@ -200,21 +178,3 @@ textarea { min-height: 96px; resize: vertical; }
 @media (max-width: 640px) {
   .nav a:not(.btn) { display: none; }
 }
-
-/* Editor: theme picker */
-.label-like { font-size: .85rem; font-weight: 600; }
-.theme-pick { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-.theme-pick button { font: inherit; font-weight: 600; font-size: .9rem; padding: 14px 10px; border-radius: 12px; border: 1px solid var(--line); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; }
-.theme-pick button i { width: 26px; height: 6px; border-radius: 3px; }
-.theme-pick button[aria-checked="true"] { outline: 2px solid var(--accent); outline-offset: 2px; }
-
-/* Editor: photo gallery */
-.photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; }
-.photo-item { position: relative; aspect-ratio: 1; border-radius: 12px; overflow: hidden; background: var(--line); }
-.photo-item img { width: 100%; height: 100%; object-fit: cover; }
-.photo-tools { position: absolute; left: 6px; right: 6px; bottom: 6px; display: flex; justify-content: space-between; }
-.photo-tools button { width: 30px; height: 30px; border-radius: 50%; border: 0; background: rgba(255,255,255,.92); color: var(--ink); font-size: 1.1rem; line-height: 1; cursor: pointer; }
-.photo-tools button:disabled { opacity: .35; cursor: default; }
-.photo-add { aspect-ratio: 1; border-radius: 12px; border: 2px dashed var(--line); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer; color: var(--muted); font-size: .85rem; font-weight: 600; text-align: center; padding: 8px; }
-.photo-add span { font-size: 2rem; line-height: 1; color: var(--accent); }
-.photo-add:hover, .photo-add:focus-within { border-color: var(--accent); color: var(--ink); }

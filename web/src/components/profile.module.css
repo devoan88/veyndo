@@ -11,7 +11,7 @@
   font-family: var(--sans);
   min-height: 100%;
 }
-.klassisch { }
+.klassisch { --theme: klassisch; }
 .modern {
   --bg: #121612; --fg: #eef0ea; --muted: #a3ab9c; --card: #1b221c; --line: #2a332b;
   --hfont: var(--sans); --hweight: 800; --htrack: -.03em; --r: 14px;
