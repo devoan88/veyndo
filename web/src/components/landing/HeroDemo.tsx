@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
 import { TEMPLATES } from "@/lib/templates";
 import { branchPhoto } from "@/lib/photos";
 import { toSlug, PROFILE_DOMAIN } from "@/lib/slug";
+import { whatsappHref } from "@/lib/contact";
 import s from "@/app/landing.module.css";
 
 const todayIdx = () => ((new Date().getDay() + 6) % 7) + 1;
@@ -30,23 +30,23 @@ export default function HeroDemo() {
   const slug = toSlug(shownName);
   const day = t.opening_hours.find((h) => h.weekday === todayIdx());
   const status = day && !day.closed ? `Heute geöffnet bis ${day.closes}` : "Heute geschlossen";
-  const startHref = `/start?t=${t.key}${name.trim() ? `&n=${encodeURIComponent(name.trim())}` : ""}`;
+  const startHref = whatsappHref(`Hallo, ich möchte so eine Seite für ${name.trim() || "meinen Betrieb"} (${t.label}).`);
 
   return (
     <div className={s.heroGrid}>
       <div className={s.heroCopy}>
         <p className={s.eyebrow}><span className={s.pulse} aria-hidden /> Für Salons, Praxen und Handwerk in Wien</p>
         <h1 className={s.h1}>
-          Ihre Seite steht, <em>bevor der Kaffee kalt&nbsp;ist.</em>
+          Ihre Seite. <em>Persönlich für Sie gebaut.</em>
         </h1>
         <p className={s.lead}>
-          Tippen Sie den Namen Ihres Betriebs ein und sehen Sie sofort Ihre fertige Seite: mit Preisen,
-          Öffnungszeiten und Anruf-Button.
+          Tippen Sie den Namen Ihres Betriebs ein und sehen Sie, wie Ihre Seite aussehen kann: mit Preisen,
+          Öffnungszeiten und Anruf-Button. Den Rest machen wir.
         </p>
 
         <form
           className={s.tryBox}
-          onSubmit={(e) => { e.preventDefault(); window.location.href = startHref; }}
+          onSubmit={(e) => { e.preventDefault(); window.open(startHref, "_blank", "noopener"); }}
         >
           <label htmlFor="hero-name" className={s.tryLabel}>Wie heißt Ihr Betrieb?</label>
           <div className={s.tryRow}>
@@ -59,7 +59,7 @@ export default function HeroDemo() {
               autoComplete="organization"
               onChange={(e) => { setName(e.target.value); setTouched(true); }}
             />
-            <Link href={startHref} className={s.tryBtn}>Diese Seite gehört mir →</Link>
+            <a href={startHref} target="_blank" rel="noopener noreferrer" className={s.tryBtn}>Diese Seite für mich →</a>
           </div>
           <div className={s.chips} role="radiogroup" aria-label="Branche">
             {TEMPLATES.map((x) => (
@@ -75,7 +75,7 @@ export default function HeroDemo() {
               </button>
             ))}
           </div>
-          <p className={s.fine}>Kostenlos starten · keine Kreditkarte · in 10 Minuten online</p>
+          <p className={s.fine}>Wir richten alles persönlich für Sie ein · kostenloses Erstgespräch</p>
         </form>
       </div>
 

@@ -236,3 +236,8 @@
   .float { opacity: 1; }
   .f2, .f3 { display: none; }
 }
+
+/* Price teaser */
+.priceTeaser { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; background: var(--card); border: 1px solid var(--line); border-radius: 28px; padding: clamp(28px, 5vw, 48px); }
+.priceTeaser .h2 { margin-bottom: 12px; }
+.priceTeaser .body { margin: 0; }

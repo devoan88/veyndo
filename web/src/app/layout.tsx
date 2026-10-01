@@ -2,9 +2,9 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: { default: "Veyndo – Ihr Betrieb online in 10 Minuten", template: "%s · Veyndo" },
+  title: { default: "Veyndo – Ihre Seite, persönlich für Sie gebaut", template: "%s · Veyndo" },
   description:
-    "Profilseite mit Preisen, Öffnungszeiten, Anruf- und WhatsApp-Button. Für Studios, Praxen und Handwerk in Österreich. Kostenlos starten.",
+    "Websites mit Preisen, Öffnungszeiten, Galerie, Anruf- und WhatsApp-Button. Persönlich eingerichtet für Studios, Praxen und Handwerk in Wien. Festpreise ab € 990.",
   icons: { icon: "/favicon.svg" },
 };
 

@@ -7,19 +7,13 @@ import QRCode from "qrcode";
 import Ring from "@/components/studio/Ring";
 import { AuthNav } from "@/components/AuthNav";
 import { clearBusiness, loadBusiness, loadStats, saveBusiness } from "@/lib/store";
-import { PLANS, euro } from "@/lib/plans";
+import { PLANS } from "@/lib/plans";
+import { CONTACT, whatsappHref } from "@/lib/contact";
 import { slugProblem } from "@/lib/slug";
 import { profileScore } from "@/lib/completeness";
 import { openState } from "@/lib/hours";
 import type { Business } from "@/lib/types";
 import s from "@/components/studio/studio.module.css";
-
-const LOOKUPS: Record<string, string> = {
-  profil_m: "profil_monthly",
-  profil_y: "profil_yearly",
-  pro_m: "pro_monthly",
-  pro_y: "pro_yearly",
-};
 
 const KPIS: [string, string, string][] = [
   ["view", "Aufrufe", "◉"],
@@ -67,9 +61,7 @@ export default function Dashboard() {
   const [b, setB] = useState<Business | null>(null);
   const [qr, setQr] = useState("");
   const [stats, setStats] = useState<Record<string, number> | null>(null);
-  const [busy, setBusy] = useState("");
   const [copied, setCopied] = useState(false);
-  const [yearly, setYearly] = useState(false);
 
   useEffect(() => {
     loadBusiness().then((loaded) => {
@@ -105,29 +97,6 @@ export default function Dashboard() {
   ].filter(Boolean) as string[];
   const canPublish = missing.length === 0;
   const live = openState(b.hours);
-
-  async function checkout(lookupKey: string) {
-    setBusy(lookupKey);
-    try {
-      const res = await fetch("/api/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ lookupKey }),
-      });
-      const data = await res.json();
-      if (data.url) window.location.href = data.url;
-      else alert(data.error || "Checkout nicht bereit.");
-    } finally {
-      setBusy("");
-    }
-  }
-
-  async function portal() {
-    const res = await fetch("/api/portal", { method: "POST" });
-    const data = await res.json();
-    if (data.url) window.location.href = data.url;
-    else alert(data.error || "Portal nicht bereit.");
-  }
 
   async function copy() {
     try { await navigator.clipboard.writeText(url); setCopied(true); setTimeout(() => setCopied(false), 1800); } catch {}
@@ -196,7 +165,7 @@ export default function Dashboard() {
               <div className={s.lockOver}>
                 <b>Sehen Sie, wer anruft</b>
                 <span>Aufrufe, Anrufe, Routen und QR-Scans gibt es ab Plan Profil.</span>
-                <a href="#plan">Profil 14 Tage gratis testen →</a>
+                <a href="#plan">Statistik freischalten lassen →</a>
               </div>
             )}
           </div>
@@ -266,45 +235,18 @@ export default function Dashboard() {
 
         {/* PLAN */}
         <section id="plan" className={s.planSec}>
-          <div className={s.secHead}>
-            <h2>Ihr Plan</h2>
-            <div className={s.seg} role="radiogroup" aria-label="Abrechnung">
-              <button type="button" role="radio" aria-checked={!yearly} onClick={() => setYearly(false)}>Monatlich</button>
-              <button type="button" role="radio" aria-checked={yearly} onClick={() => setYearly(true)}>Jährlich · 2 Monate gratis</button>
+          <div className={s.secHead}><h2>Ihr Paket</h2></div>
+          <div className={s.card}>
+            <p style={{ marginTop: 0 }}>
+              Aktuell: <b>{plan.label}</b>. Mehr Funktionen wie Preisliste, Galerie, WhatsApp-Button oder Statistik
+              schalten wir persönlich für Sie frei.
+            </p>
+            <div className={s.posterActions} style={{ justifyContent: "flex-start" }}>
+              <a className={s.btnPrimary} target="_blank" rel="noopener noreferrer"
+                href={whatsappHref(`Hallo, hier ist ${b.name} (${b.slug}). Ich möchte mein Paket erweitern.`)}>Per WhatsApp anfragen</a>
+              <a className={s.btnGhost} href={CONTACT.phoneHref}>Anrufen: {CONTACT.phone}</a>
             </div>
           </div>
-          <div className={s.plans}>
-            {(["basis", "profil", "pro"] as const).map((t) => {
-              const p = PLANS[t];
-              const current = b.tier === t;
-              const key = LOOKUPS[`${t}_${yearly ? "y" : "m"}`];
-              return (
-                <div key={t} className={`${s.plan} ${current ? s.planCurrent : ""} ${t === "profil" ? s.planHot : ""}`}>
-                  {current && <span className={s.planTag}>Ihr Plan</span>}
-                  {!current && t === "profil" && <span className={s.planTag}>Beliebt</span>}
-                  <h3>{p.label}</h3>
-                  <div className={s.price}>
-                    {euro(yearly ? p.priceYearly : p.priceMonthly)}<small> / {yearly ? "Jahr" : "Monat"}</small>
-                  </div>
-                  <ul>{p.features.map((f) => <li key={f}>{f}</li>)}</ul>
-                  {t === "basis" ? (
-                    current ? <span className={s.planNote}>Kostenlos, für immer</span>
-                      : <button type="button" className={s.btnGhost} onClick={portal}>Wechseln im Kundenportal</button>
-                  ) : current ? (
-                    <button type="button" className={s.btnGhost} onClick={portal}>Abo verwalten</button>
-                  ) : (
-                    <button type="button" className={s.btnPrimary} disabled={!!busy} onClick={() => checkout(key)}>
-                      {busy === key ? "Einen Moment …" : "14 Tage gratis testen"}
-                    </button>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-          <p className={s.planFoot}>
-            <button type="button" className={s.linkBtn} onClick={portal}>Rechnungen und Zahlungsart</button>
-            {" · "}Monatlich kündbar.
-          </p>
         </section>
 
         <p className={s.danger}>

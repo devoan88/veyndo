@@ -283,7 +283,7 @@ export default function EditorPage() {
               <div className={s.upsell}>
                 <b>Preise sichtbar machen</b>
                 <span>Im Plan {plan.label} sehen Kundinnen {plan.maxServices} Leistungen ohne Preise. Mit Profil zeigen Sie alles.</span>
-                <Link href="/dashboard#plan">Profil ansehen →</Link>
+                <Link href="/dashboard#plan">Freischalten lassen →</Link>
               </div>
             )}
             <div className={s.box}>
@@ -330,7 +330,7 @@ export default function EditorPage() {
               <div className={s.upsell}>
                 <b>Galerie freischalten</b>
                 <span>Mit Profil zeigen Sie bis zu 8 Fotos, die Kundinnen groß ansehen können.</span>
-                <Link href="/dashboard#plan">Profil ansehen →</Link>
+                <Link href="/dashboard#plan">Freischalten lassen →</Link>
               </div>
             ) : (
               <p className={s.meta}>{(b.photos ?? []).length} von {plan.gallery} Fotos · Das erste Foto wird groß gezeigt.</p>

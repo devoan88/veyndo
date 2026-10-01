@@ -15,10 +15,10 @@ export function TopBar({ children }: { children?: React.ReactNode }) {
           {children ?? (
             <>
               <Link href="/#so-gehts">So geht&apos;s</Link>
-              <Link href="/#preise">Preise</Link>
+              <Link href="/preise">Preise</Link>
               <Link href="/dashboard">Mein Profil</Link>
               <AuthNav />
-              <Link href="/start" className="btn small">Kostenlos starten</Link>
+              <a href="https://wa.me/436643568802?text=Hallo%2C%20ich%20interessiere%20mich%20f%C3%BCr%20eine%20Veyndo-Seite." target="_blank" rel="noopener noreferrer" className="btn small">Anfrage senden</a>
             </>
           )}
         </nav>

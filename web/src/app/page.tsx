@@ -5,16 +5,17 @@ import { TopBar, Footer } from "@/components/Chrome";
 import HeroDemo from "@/components/landing/HeroDemo";
 import Reveal from "@/components/landing/Reveal";
 import { TEMPLATES } from "@/lib/templates";
-import { PLANS, euro } from "@/lib/plans";
+import { CONTACT, whatsappHref } from "@/lib/contact";
 import { branchPhoto, photo, PEOPLE } from "@/lib/photos";
-import type { PlanTier } from "@/lib/types";
 import s from "./landing.module.css";
 
 const FAQ: [string, string][] = [
-  ["Brauche ich Technikwissen?",
-    "Nein. Sie wählen Ihre Branche, wir füllen Leistungen, Preise und Öffnungszeiten vor. Sie ändern nur, was bei Ihnen anders ist. Wenn Sie WhatsApp bedienen können, können Sie Veyndo bedienen."],
-  ["Was kostet es wirklich?",
-    "Der Start ist kostenlos und bleibt es. Wer Preise, WhatsApp-Button und Statistik möchte, zahlt € 9 im Monat. Monatlich kündbar, ohne Bindung."],
+  ["Muss ich selbst etwas machen?",
+    "Nein. Wir richten alles persönlich für Sie ein: Texte, Preise, Fotos, Öffnungszeiten und Impressum. Sie schicken uns, was Sie haben, und prüfen am Ende. Kleine Änderungen können Sie danach selbst machen, so einfach wie eine WhatsApp-Nachricht."],
+  ["Was kostet es?",
+    "Alle Leistungen haben einen Festpreis, Sie finden sie in unserer Preisliste. Vor dem Start bekommen Sie ein klares schriftliches Angebot, ohne versteckte Kosten."],
+  ["Wie schnell ist meine Seite online?",
+    "Meist in wenigen Tagen nach unserem Gespräch, je nachdem, wie schnell Fotos und Texte da sind."],
   ["Und das Impressum?",
     "Die Pflichtangaben nach § 5 E-Commerce-Gesetz sind als Felder eingebaut. Sie tragen Ihre Daten ein, das Impressum steht automatisch auf Ihrer Seite."],
   ["Wo liegen meine Daten?",
@@ -26,7 +27,6 @@ const FAQ: [string, string][] = [
 ];
 
 export default async function Home() {
-  const tiers: PlanTier[] = ["basis", "profil", "pro"];
   const qrSvg = await QRCode.toString("https://salon-mira.veyndo.at", {
     type: "svg", margin: 0, color: { dark: "#1f2a1f", light: "#00000000" },
   });
@@ -149,7 +149,7 @@ export default async function Home() {
         <section className={s.section}>
           <div className="wrap">
             <Reveal><p className={s.kicker}>Alles drin</p></Reveal>
-            <Reveal delay={80}><h2 className={s.h2}>Klein im Preis. <em>Groß in der Wirkung.</em></h2></Reveal>
+            <Reveal delay={80}><h2 className={s.h2}>Alles drin. <em>Fertig für Sie eingerichtet.</em></h2></Reveal>
             <div className={s.bento}>
               <Reveal className={`${s.tile} ${s.tileQr}`}>
                 <div className={s.qr} dangerouslySetInnerHTML={{ __html: qrSvg }} />
@@ -182,7 +182,7 @@ export default async function Home() {
               <Reveal delay={100} className={s.tile}>
                 <span className={s.tIcon}>✎</span>
                 <h3>Preis geändert? 5 Sekunden.</h3>
-                <p>Am Handy ändern, sofort online. Kein Anruf bei der Agentur.</p>
+                <p>Am Handy selbst ändern, sofort online. Oder kurz schreiben, wir machen es.</p>
               </Reveal>
               <Reveal delay={200} className={s.tile}>
                 <span className={s.tIcon}>◐</span>
@@ -208,41 +208,28 @@ export default async function Home() {
                   Für die Friseurin in Mariahilf, den Elektriker in Favoriten, die Physiotherapeutin in Döbling.
                 </p>
                 <p className={s.body}>
-                  Lieber persönlich? Auf Wunsch richten wir Ihre Seite gemeinsam mit Ihnen ein.
+                  Persönlich statt Baukasten: Wir treffen uns oder telefonieren, und Sie bekommen eine fertige Seite.
                 </p>
                 <div className="cta-row">
-                  <Link href="/start" className={s.ctaDark}>Jetzt kostenlos starten</Link>
-                  <a href="https://veyndo-at.netlify.app/#kontakt" className={s.ctaGhost}>Persönlich beraten lassen</a>
+                  <a href={whatsappHref("Hallo, ich interessiere mich für eine Veyndo-Seite.")} target="_blank" rel="noopener noreferrer" className={s.ctaDark}>Per WhatsApp anfragen</a>
+                  <a href={CONTACT.phoneHref} className={s.ctaGhost}>Anrufen: {CONTACT.phone}</a>
                 </div>
               </Reveal>
             </div>
           </div>
         </section>
 
-        {/* PRICING */}
-        <section id="preise" className={s.section}>
+        {/* PRICING TEASER */}
+        <section id="preise" className={`${s.section} ${s.tight}`}>
           <div className="wrap">
-            <Reveal><p className={s.kicker}>Preise</p></Reveal>
-            <Reveal delay={80}><h2 className={s.h2}>Weniger als ein Haarschnitt. <em>Pro Monat.</em></h2></Reveal>
-            <div className={s.plans}>
-              {tiers.map((t, i) => {
-                const p = PLANS[t];
-                const hot = t === "profil";
-                return (
-                  <Reveal key={t} delay={i * 110} className={`${s.plan} ${hot ? s.planHot : ""}`}>
-                    {hot && <span className={s.planTag}>Am beliebtesten</span>}
-                    <h3>{p.label}</h3>
-                    <div className={s.price}>{euro(p.priceMonthly)}<small> / Monat</small></div>
-                    <p className={s.planSub}>{p.priceYearly > 0 ? `oder ${euro(p.priceYearly)} im Jahr – 2 Monate gratis` : "Für immer kostenlos"}</p>
-                    <ul>{p.features.map((f) => <li key={f}>{f}</li>)}</ul>
-                    <Link href="/start" className={hot ? s.ctaLight : s.ctaDark}>
-                      {t === "basis" ? "Kostenlos starten" : "14 Tage gratis testen"}
-                    </Link>
-                  </Reveal>
-                );
-              })}
-            </div>
-            <p className={s.fineCenter}>Alle Preise in Euro. Monatlich kündbar. Keine Einrichtungsgebühr.</p>
+            <Reveal className={s.priceTeaser}>
+              <div>
+                <p className={s.kicker}>Preise</p>
+                <h2 className={s.h2}>Festpreise. <em>Ohne Überraschungen.</em></h2>
+                <p className={s.body}>Website, Google-Profil, Sichtbarkeit, Software und Betreuung: alles mit klarem Preis in unserer Preisliste.</p>
+              </div>
+              <Link href="/preise" className={s.ctaDark}>Zur Preisliste →</Link>
+            </Reveal>
           </div>
         </section>
 
@@ -272,8 +259,8 @@ export default async function Home() {
               <h2 className={s.finalH}>Ihre Kundschaft sucht Sie schon.<br /><em>Lassen Sie sich finden.</em></h2>
             </Reveal>
             <Reveal delay={120}>
-              <Link href="/start" className={s.tryBtn}>In 10 Minuten online →</Link>
-              <p className={s.fine}>Kostenlos · keine Kreditkarte · kein Vertrag</p>
+              <a href={whatsappHref("Hallo, ich möchte eine Veyndo-Seite für meinen Betrieb.")} target="_blank" rel="noopener noreferrer" className={s.tryBtn}>Kostenloses Erstgespräch →</a>
+              <p className={s.fine}>WhatsApp oder {CONTACT.phone} · unverbindlich</p>
             </Reveal>
           </div>
         </section>

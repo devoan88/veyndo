@@ -9,3 +9,6 @@ web/node_modules
 
 # Local Netlify folder
 .netlify
+
+# Supabase CLI temp (repo root)
+supabase/.temp/
