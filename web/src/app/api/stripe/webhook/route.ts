@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { createAdmin } from "@/lib/supabase/admin";
+import { isStripeTestSecret } from "@/lib/env";
 
 export const runtime = "nodejs";
 
@@ -60,7 +61,7 @@ async function upsertSub(
 export async function POST(req: Request) {
   const secret = process.env.STRIPE_SECRET_KEY;
   const whsec = process.env.STRIPE_WEBHOOK_SECRET;
-  if (!secret?.startsWith("sk_test_") || !whsec) {
+  if (!isStripeTestSecret(secret) || !whsec) {
     return NextResponse.json({ error: "Webhook nicht konfiguriert" }, { status: 503 });
   }
   const stripe = new Stripe(secret);

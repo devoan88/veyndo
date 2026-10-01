@@ -2,13 +2,13 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { createClient } from "@/lib/supabase/server";
 import { createAdmin } from "@/lib/supabase/admin";
-import { siteOrigin } from "@/lib/env";
+import { isStripeTestSecret, siteOrigin } from "@/lib/env";
 
 const ALLOWED = new Set(["profil_monthly", "profil_yearly", "pro_monthly", "pro_yearly"]);
 
 export async function POST(req: Request) {
   const secret = process.env.STRIPE_SECRET_KEY;
-  if (!secret?.startsWith("sk_test_")) {
+  if (!isStripeTestSecret(secret)) {
     return NextResponse.json({ error: "Stripe Test-Key fehlt in .env.local" }, { status: 503 });
   }
   const supabase = await createClient();

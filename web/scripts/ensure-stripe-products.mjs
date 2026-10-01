@@ -6,8 +6,12 @@
 import Stripe from "stripe";
 
 const key = process.env.STRIPE_SECRET_KEY || "";
-if (!key.startsWith("sk_test_")) {
-  console.log("Skip Stripe products: no sk_test_ key in env.");
+const isTest =
+  key.startsWith("sk_test_") ||
+  key.startsWith("rk_test_") ||
+  key.startsWith("rkcs_test_");
+if (!isTest) {
+  console.log("Skip Stripe products: no TEST key in env.");
   process.exit(0);
 }
 

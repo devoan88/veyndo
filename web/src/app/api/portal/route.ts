@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { createClient } from "@/lib/supabase/server";
-import { siteOrigin } from "@/lib/env";
+import { isStripeTestSecret, siteOrigin } from "@/lib/env";
 
 export async function POST() {
   const secret = process.env.STRIPE_SECRET_KEY;
-  if (!secret?.startsWith("sk_test_")) {
+  if (!isStripeTestSecret(secret)) {
     return NextResponse.json({ error: "Stripe Test-Key fehlt." }, { status: 503 });
   }
   const supabase = await createClient();
