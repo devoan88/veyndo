@@ -48,6 +48,7 @@ create table businesses (
   facebook      text,
   maps_url      text,
   accent_color  text not null default '#3d4a3a' check (accent_color ~ '^#[0-9a-fA-F]{6}$'),
+  theme         text not null default 'klassisch' check (theme in ('klassisch','modern','frisch')),
   cover_path    text,                        -- storage path in bucket 'photos'
   -- Impressum (required in Austria, filled by the owner)
   legal_name    text,

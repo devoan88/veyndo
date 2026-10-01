@@ -1,6 +1,6 @@
 "use client";
 
-import type { Business, OpeningDay, PlanTier, Service } from "./types";
+import type { Business, OpeningDay, Photo, PlanTier, Service } from "./types";
 import { getTemplate } from "./templates";
 import { supabaseConfigured } from "./env";
 import { createClient } from "./supabase/client";
@@ -59,6 +59,7 @@ type BizRow = {
   email: string | null;
   instagram: string | null;
   accent_color: string;
+  theme: "klassisch" | "modern" | "frisch";
   cover_path: string | null;
   legal_name: string | null;
   legal_form: string | null;
@@ -96,6 +97,7 @@ function mapRow(
     email: row.email || "",
     instagram: row.instagram || "",
     accentColor: row.accent_color,
+    theme: row.theme || "klassisch",
     coverDataUrl: publicCoverUrl(row.cover_path),
     services,
     hours,
@@ -142,11 +144,13 @@ async function loadRemote(): Promise<Business | null> {
     return null;
   }
 
-  const [{ data: svcs }, { data: hrs }, tier] = await Promise.all([
+  const [{ data: svcs }, { data: hrs }, tier, { data: pics }] = await Promise.all([
     supabase.from("services").select("*").eq("business_id", row.id).order("position"),
     supabase.from("opening_hours").select("*").eq("business_id", row.id).order("weekday"),
     fetchTier(user.id),
+    supabase.from("photos").select("id,path").eq("business_id", row.id).order("position"),
   ]);
+  const photos: Photo[] = (pics || []).map((p: { id: string; path: string }) => ({ id: p.id, url: publicCoverUrl(p.path) || "" }));
 
   const services: Service[] = (svcs || []).map((s: { id: string; title: string; price_label: string | null; duration_min: number | null }) => ({
     id: s.id,
@@ -164,7 +168,7 @@ async function loadRemote(): Promise<Business | null> {
   if (hours.length === 0) {
     hours.push(...Array.from({ length: 7 }, (_, i) => ({ weekday: i + 1, closed: i >= 5, opens: "09:00", closes: "18:00" })));
   }
-  return mapRow(row as BizRow, services, hours, tier);
+  return { ...mapRow(row as BizRow, services, hours, tier), photos };
 }
 
 async function uploadCover(businessId: string, dataUrl: string) {
@@ -175,6 +179,43 @@ async function uploadCover(businessId: string, dataUrl: string) {
   const { error } = await supabase.storage.from("photos").upload(path, blob, { upsert: true, contentType: "image/jpeg" });
   if (error) throw error;
   return path;
+}
+
+const STORAGE_MARKER = "/object/public/photos/";
+
+/** Uploads new gallery photos (data URLs), removes deleted ones, stores order. */
+async function syncPhotos(businessId: string, photos: Photo[]): Promise<Photo[]> {
+  const supabase = createClient();
+  const rows: { id: string; business_id: string; path: string; position: number }[] = [];
+  for (const [i, p] of photos.entries()) {
+    let path: string | null = null;
+    if (p.url.startsWith("data:")) {
+      path = `${businessId}/g-${p.id}.jpg`;
+      const blob = await (await fetch(p.url)).blob();
+      const { error } = await supabase.storage.from("photos").upload(path, blob, { contentType: "image/jpeg", upsert: false });
+      // A parallel autosave may have uploaded the same file already.
+      if (error && !/exist|duplicate/i.test(error.message)) throw error;
+    } else {
+      const at = p.url.indexOf(STORAGE_MARKER);
+      if (at >= 0) path = p.url.slice(at + STORAGE_MARKER.length);
+    }
+    if (path) rows.push({ id: p.id, business_id: businessId, path, position: i });
+  }
+
+  const { data: existing, error: selErr } = await supabase.from("photos").select("id,path").eq("business_id", businessId);
+  if (selErr) throw selErr;
+  const keep = new Set(rows.map((r) => r.id));
+  const gone = (existing || []).filter((r: { id: string }) => !keep.has(r.id)) as { id: string; path: string }[];
+  if (gone.length) {
+    const { error } = await supabase.from("photos").delete().in("id", gone.map((g) => g.id));
+    if (error) throw error;
+    await supabase.storage.from("photos").remove(gone.map((g) => g.path));
+  }
+  if (rows.length) {
+    const { error } = await supabase.from("photos").upsert(rows);
+    if (error) throw error;
+  }
+  return rows.map((r) => ({ id: r.id, url: publicCoverUrl(r.path) || "" }));
 }
 
 async function saveRemote(b: Business, ownerId?: string): Promise<Business> {
@@ -211,6 +252,7 @@ async function saveRemote(b: Business, ownerId?: string): Promise<Business> {
     email: b.email || null,
     instagram: b.instagram || null,
     accent_color: b.accentColor,
+    theme: b.theme ?? "klassisch",
     cover_path: coverPath,
     legal_name: b.legalName || null,
     legal_form: b.legalForm || null,
@@ -251,8 +293,10 @@ async function saveRemote(b: Business, ownerId?: string): Promise<Business> {
     if (error) throw error;
   }
 
+  const photos = await syncPhotos(b.id, b.photos ?? []);
+
   const tier = await fetchTier(user.id);
-  const next = { ...b, coverDataUrl: coverPath ? publicCoverUrl(coverPath) : b.coverDataUrl, tier, updatedAt: new Date().toISOString() };
+  const next = { ...b, coverDataUrl: coverPath ? publicCoverUrl(coverPath) : b.coverDataUrl, photos, tier, updatedAt: new Date().toISOString() };
   return next;
 }
 

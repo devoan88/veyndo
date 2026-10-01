@@ -1,121 +1,204 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import type { Business } from "@/lib/types";
 import { PLANS } from "@/lib/plans";
-import { PROFILE_DOMAIN } from "@/lib/slug";
+import { PROFILE_DOMAIN, profileUrl } from "@/lib/slug";
+import { dayText, openState, WEEKDAYS, type OpenState } from "@/lib/hours";
+import Gallery from "./Gallery";
+import s from "./profile.module.css";
 
-export const WEEKDAYS = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"];
+export { WEEKDAYS };
 
-const digits = (s: string) => s.replace(/[^\d+]/g, "");
+const digits = (v: string) => v.replace(/[^\d+]/g, "");
 
 function whatsappLink(n: string) {
   const d = n.replace(/\D/g, "").replace(/^00/, "").replace(/^0/, "43");
   return `https://wa.me/${d}`;
 }
 
-export default function ProfileView({
-  b,
-  today,
-  onTrack,
-}: {
-  b: Business;
-  today?: number;
-  onTrack?: (kind: "call" | "whatsapp" | "route") => void;
-}) {
+type Track = (kind: "call" | "whatsapp" | "route") => void;
+
+export default function ProfileView({ b, today, onTrack }: { b: Business; today?: number; onTrack?: Track }) {
   const plan = PLANS[b.tier];
-  const services = b.services.filter((s) => s.title.trim()).slice(0, plan.maxServices);
+  const theme = b.theme ?? "klassisch";
+  const services = b.services.filter((x) => x.title.trim()).slice(0, plan.maxServices);
   const address = [b.street, [b.postalCode, b.city].filter(Boolean).join(" ")].filter(Boolean).join(", ");
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
     [b.name, address].filter(Boolean).join(", "),
   )}`;
-  const hasLegal = b.legalName.trim() !== "";
+  const ig = b.instagram.replace(/^@/, "").trim();
+  const showWa = plan.whatsapp && !!b.whatsapp;
+  const gallery = (b.photos ?? []).slice(0, plan.gallery);
+
+  // Time-dependent UI only after mount, so server and client render the same HTML.
+  const [state, setState] = useState<OpenState | null>(null);
+  const [copied, setCopied] = useState(false);
+  useEffect(() => {
+    const tick = () => setState(openState(b.hours));
+    tick();
+    const t = setInterval(tick, 60_000);
+    return () => clearInterval(t);
+  }, [b.hours]);
+
+  const todayHours = b.hours.find((h) => h.weekday === today);
+
+  async function share() {
+    const url = profileUrl(b.slug);
+    try {
+      if (navigator.share) await navigator.share({ title: b.name, text: b.tagline, url });
+      else { await navigator.clipboard.writeText(url); setCopied(true); setTimeout(() => setCopied(false), 2000); }
+    } catch {}
+  }
+
+  const actions = (
+    <>
+      <a className={s.primary} href={b.phone ? `tel:${digits(b.phone)}` : undefined} aria-disabled={!b.phone}
+        onClick={() => b.phone && onTrack?.("call")}>
+        <span aria-hidden>☏</span> Anrufen
+      </a>
+      {showWa && (
+        <a className={s.wa} href={whatsappLink(b.whatsapp)} target="_blank" rel="noopener noreferrer" onClick={() => onTrack?.("whatsapp")}>
+          <span aria-hidden>✆</span> WhatsApp
+        </a>
+      )}
+      <a className={s.ghost} href={mapsUrl} target="_blank" rel="noopener noreferrer" onClick={() => onTrack?.("route")}>
+        <span aria-hidden>➚</span> Route
+      </a>
+    </>
+  );
 
   return (
-    <article className="profile" style={{ ["--pa" as string]: b.accentColor }}>
-      <div
-        className="cover"
-        style={b.coverDataUrl ? { backgroundImage: `url(${b.coverDataUrl})` } : undefined}
-        role={b.coverDataUrl ? "img" : undefined}
-        aria-label={b.coverDataUrl ? `Foto von ${b.name}` : undefined}
-      />
-      <div className="head">
-        <div className="badge" aria-hidden>{(b.name.trim()[0] || "V").toUpperCase()}</div>
-        <h1>{b.name || "Ihr Betrieb"}</h1>
-        {b.tagline && <p className="tagline">{b.tagline}</p>}
-      </div>
-
-      <div className="actions">
-        <a href={b.phone ? `tel:${digits(b.phone)}` : undefined} aria-disabled={!b.phone} onClick={() => b.phone && onTrack?.("call")}>Anrufen</a>
-        {plan.whatsapp && b.whatsapp && (
-          <a href={whatsappLink(b.whatsapp)} target="_blank" rel="noopener noreferrer" onClick={() => onTrack?.("whatsapp")}>WhatsApp</a>
-        )}
-        <a className="alt" href={mapsUrl} target="_blank" rel="noopener noreferrer" onClick={() => onTrack?.("route")}>Route</a>
-      </div>
-
-      {services.length > 0 && (
-        <section className="block">
-          <h2>{plan.showPrices ? "Leistungen & Preise" : "Leistungen"}</h2>
-          {services.map((s) => (
-            <div className="svc" key={s.id}>
-              <span>
-                {s.title}
-                {s.durationMin ? <small>{s.durationMin} Min.</small> : null}
-              </span>
-              {plan.showPrices && s.priceLabel && <span className="p">{s.priceLabel}</span>}
+    <article className={`${s.root} ${s[theme]}`} style={{ ["--pa" as string]: b.accentColor }}>
+      <div className={s.layout}>
+        {/* LEFT / TOP: identity */}
+        <header className={s.side}>
+          <div className={s.hero}>
+            {b.coverDataUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element -- data URL or storage URL
+              <img className={s.heroImg} src={b.coverDataUrl} alt={`Foto von ${b.name}`} />
+            ) : (
+              <div className={s.heroFallback} aria-hidden>{(b.name.trim()[0] || "V").toUpperCase()}</div>
+            )}
+            <div className={s.heroShade} />
+            <div className={s.heroText}>
+              {state && (
+                <span className={`${s.status} ${state.appt ? s.appt : state.open ? (state.soon ? s.soon : s.open) : s.closed}`}>
+                  <i /> {state.label}
+                </span>
+              )}
+              <h1 className={s.name}>{b.name || "Ihr Betrieb"}</h1>
+              {b.tagline && <p className={s.tagline}>{b.tagline}</p>}
             </div>
-          ))}
-        </section>
-      )}
+          </div>
 
-      <section className="block">
-        <h2>Öffnungszeiten</h2>
-        <table className="hours">
-          <tbody>
-            {b.hours.map((h) => (
-              <tr key={h.weekday} className={h.weekday === today ? "today" : undefined}>
-                <td>{WEEKDAYS[h.weekday - 1]}</td>
-                <td>{h.closed ? "geschlossen" : `${h.opens ?? ""} – ${h.closes ?? ""}`}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </section>
+          <div className={s.facts}>
+            {address && <span>📍 {[b.postalCode, b.city].filter(Boolean).join(" ") || address}</span>}
+            {todayHours && <span>🕑 Heute {dayText(todayHours, "–")}</span>}
+            {ig && <a href={`https://instagram.com/${ig}`} target="_blank" rel="noopener noreferrer">◎ @{ig}</a>}
+          </div>
 
-      {b.about && (
-        <section className="block">
-          <h2>Über uns</h2>
-          <p style={{ margin: 0 }}>{b.about}</p>
-        </section>
-      )}
+          <div className={s.actions}>{actions}</div>
+        </header>
 
-      {(address || b.email || b.instagram) && (
-        <section className="block">
-          <h2>Kontakt</h2>
-          {address && <p style={{ margin: "0 0 4px" }}>{address}</p>}
-          {b.phone && <p style={{ margin: "0 0 4px" }}>{b.phone}</p>}
-          {b.email && <p style={{ margin: "0 0 4px" }}><a href={`mailto:${b.email}`}>{b.email}</a></p>}
-          {b.instagram && (
-            <p style={{ margin: 0 }}>
-              <a href={`https://instagram.com/${b.instagram.replace(/^@/, "")}`} target="_blank" rel="noopener noreferrer">
-                Instagram @{b.instagram.replace(/^@/, "")}
-              </a>
-            </p>
+        {/* RIGHT / BELOW: content */}
+        <div className={s.main}>
+          {services.length > 0 && (
+            <section className={s.block}>
+              <div className={s.blockHead}>
+                <h2>{plan.showPrices ? "Leistungen & Preise" : "Leistungen"}</h2>
+                <span className={s.count}>{services.length}</span>
+              </div>
+              <ul className={s.services}>
+                {services.map((x) => (
+                  <li key={x.id} className={s.svc}>
+                    <div>
+                      <b>{x.title}</b>
+                      {x.durationMin ? <small>{x.durationMin} Min.</small> : null}
+                    </div>
+                    {plan.showPrices && x.priceLabel && <span className={s.price}>{x.priceLabel}</span>}
+                  </li>
+                ))}
+              </ul>
+              {b.phone && (
+                <a className={s.inlineCta} href={`tel:${digits(b.phone)}`} onClick={() => onTrack?.("call")}>
+                  Termin vereinbaren · jetzt anrufen
+                </a>
+              )}
+            </section>
           )}
-        </section>
-      )}
 
-      <footer className="legal">
-        <p><strong>Impressum</strong></p>
-        {hasLegal ? (
-          <>
-            <p>{b.legalName}{b.legalForm ? `, ${b.legalForm}` : ""}</p>
-            {address && <p>{address}</p>}
-            {b.uidNumber && <p>UID: {b.uidNumber}</p>}
-            {b.email && <p>E-Mail: {b.email}</p>}
-          </>
-        ) : (
-          <p>Impressum wird noch ergänzt.</p>
-        )}
-        <a className="made" href={`https://${PROFILE_DOMAIN}`}>Erstellt mit Veyndo</a>
-      </footer>
+          {gallery.length > 0 && (
+            <section className={s.block}>
+              <div className={s.blockHead}>
+                <h2>Einblicke</h2>
+                <span className={s.count}>{gallery.length}</span>
+              </div>
+              <Gallery photos={gallery} name={b.name} />
+            </section>
+          )}
+
+          {b.about && (
+            <section className={s.block}>
+              <h2>Über uns</h2>
+              <p className={s.about}>{b.about}</p>
+            </section>
+          )}
+
+          <section className={s.block}>
+            <div className={s.blockHead}>
+              <h2>Öffnungszeiten</h2>
+              {state && !state.appt && <span className={`${s.dot} ${state.open ? s.open : s.closed}`}>{state.open ? "Jetzt offen" : "Jetzt zu"}</span>}
+            </div>
+            <ul className={s.hours}>
+              {b.hours.map((h) => (
+                <li key={h.weekday} className={h.weekday === today ? s.today : undefined}>
+                  <span>{WEEKDAYS[h.weekday - 1]}{h.weekday === today && <em> · heute</em>}</span>
+                  <span>{dayText(h)}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          {(address || b.phone || b.email) && (
+            <section className={s.block}>
+              <h2>So finden Sie uns</h2>
+              <div className={s.visit}>
+                <div>
+                  {address && <p className={s.addr}>{address}</p>}
+                  {b.phone && <p><a href={`tel:${digits(b.phone)}`}>{b.phone}</a></p>}
+                  {b.email && <p><a href={`mailto:${b.email}`}>{b.email}</a></p>}
+                </div>
+                <a className={s.ghost} href={mapsUrl} target="_blank" rel="noopener noreferrer" onClick={() => onTrack?.("route")}>
+                  Route planen
+                </a>
+              </div>
+            </section>
+          )}
+
+          <div className={s.shareRow}>
+            <button type="button" className={s.share} onClick={share}>{copied ? "Link kopiert ✓" : "Seite teilen"}</button>
+          </div>
+
+          <footer className={s.legal}>
+            <p><strong>Impressum</strong></p>
+            {b.legalName.trim() ? (
+              <>
+                <p>{b.legalName}{b.legalForm ? `, ${b.legalForm}` : ""}</p>
+                {address && <p>{address}</p>}
+                {b.uidNumber && <p>UID: {b.uidNumber}</p>}
+                {b.email && <p>E-Mail: {b.email}</p>}
+              </>
+            ) : (
+              <p>Impressum wird noch ergänzt.</p>
+            )}
+            <a className={s.made} href={`https://${PROFILE_DOMAIN}`}>Erstellt mit Veyndo</a>
+          </footer>
+        </div>
+      </div>
+
+      {/* Sticky action bar on narrow screens */}
+      <nav className={s.bar} aria-label="Kontakt">{actions}</nav>
     </article>
   );
 }

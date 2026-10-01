@@ -10,11 +10,12 @@ import { PLANS } from "@/lib/plans";
 import { slugProblem, toSlug, PROFILE_DOMAIN } from "@/lib/slug";
 import type { Business, OpeningDay, Service } from "@/lib/types";
 
-type Tab = "basis" | "kontakt" | "leistungen" | "zeiten" | "impressum";
+type Tab = "basis" | "kontakt" | "leistungen" | "fotos" | "zeiten" | "impressum";
 const TABS: [Tab, string][] = [
   ["basis", "Basis"],
   ["kontakt", "Kontakt"],
   ["leistungen", "Leistungen"],
+  ["fotos", "Fotos"],
   ["zeiten", "Öffnungszeiten"],
   ["impressum", "Impressum"],
 ];
@@ -62,7 +63,15 @@ export default function EditorPage() {
     setSaved(false);
     const t = setTimeout(() => {
       saveBusiness(b).then((next) => {
-        if (next.coverDataUrl !== b.coverDataUrl) setB(next);
+        const urls = new Map((next.photos ?? []).map((p) => [p.id, p.url]));
+        const changed = next.coverDataUrl !== b.coverDataUrl || (b.photos ?? []).some((p) => urls.has(p.id) && urls.get(p.id) !== p.url);
+        if (changed) {
+          setB((cur) => cur && ({
+            ...cur,
+            coverDataUrl: cur.coverDataUrl === b.coverDataUrl ? next.coverDataUrl : cur.coverDataUrl,
+            photos: cur.photos?.map((p) => ({ ...p, url: urls.get(p.id) ?? p.url })),
+          }));
+        }
         setSaved(true);
       });
     }, 400);
@@ -137,6 +146,21 @@ export default function EditorPage() {
                   <label htmlFor="f-about">Über uns</label>
                   <textarea id="f-about" value={b.about} maxLength={600} onChange={(e) => set("about", e.target.value)} />
                 </div>
+                <div className="field">
+                  <span className="label-like">Stil</span>
+                  <div className="theme-pick" role="radiogroup" aria-label="Stil">
+                    {([
+                      ["klassisch", "Klassisch", "#fffdf9", "#2c362b"],
+                      ["modern", "Modern", "#121612", "#eef0ea"],
+                      ["frisch", "Frisch", "#ffffff", "#1d221d"],
+                    ] as const).map(([key, label, bg, fg]) => (
+                      <button key={key} type="button" role="radio" aria-checked={(b.theme ?? "klassisch") === key}
+                        onClick={() => set("theme", key)} style={{ background: bg, color: fg }}>
+                        <i style={{ background: b.accentColor }} />{label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
                 <div className="row2">
                   <div className="field">
                     <label htmlFor="f-color">Farbe</label>
@@ -195,6 +219,50 @@ export default function EditorPage() {
                     <label htmlFor="f-ig">Instagram</label>
                     <input id="f-ig" value={b.instagram} placeholder="@ihrstudio" onChange={(e) => set("instagram", e.target.value)} />
                   </div>
+                </div>
+              </>
+            )}
+
+            {tab === "fotos" && (
+              <>
+                {plan.gallery === 0 ? (
+                  <div className="notice">
+                    Die Fotogalerie gibt es ab Plan Profil (€ 9 / Monat): bis zu 8 Fotos, die Kundinnen groß ansehen können.{" "}
+                    <Link href="/dashboard#plan">Plan ansehen</Link>
+                  </div>
+                ) : (
+                  <p className="small muted" style={{ marginTop: 0 }}>
+                    {(b.photos ?? []).length} von {plan.gallery} Fotos. Tipp: Arbeiten, Räume und Team. Das erste Foto wird groß gezeigt.
+                  </p>
+                )}
+                <div className="photo-grid">
+                  {(b.photos ?? []).map((p, i, arr) => (
+                    <div key={p.id} className="photo-item" style={{ opacity: i < plan.gallery ? 1 : 0.4 }}>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={p.url} alt={`Foto ${i + 1}`} />
+                      <div className="photo-tools">
+                        <button type="button" aria-label="Nach vorne" disabled={i === 0}
+                          onClick={() => { const a = [...arr]; [a[i - 1], a[i]] = [a[i], a[i - 1]]; set("photos", a); }}>‹</button>
+                        <button type="button" aria-label="Foto löschen"
+                          onClick={() => set("photos", arr.filter((x) => x.id !== p.id))}>×</button>
+                        <button type="button" aria-label="Nach hinten" disabled={i === arr.length - 1}
+                          onClick={() => { const a = [...arr]; [a[i + 1], a[i]] = [a[i], a[i + 1]]; set("photos", a); }}>›</button>
+                      </div>
+                    </div>
+                  ))}
+                  {plan.gallery > 0 && (b.photos ?? []).length < plan.gallery && (
+                    <label className="photo-add">
+                      <input type="file" accept="image/*" multiple className="sr-only" onChange={async (e) => {
+                        const files = Array.from(e.target.files ?? []);
+                        e.target.value = "";
+                        const room = plan.gallery - (b.photos ?? []).length;
+                        const added = await Promise.all(files.slice(0, room).map(async (f) => ({ id: newServiceId(), url: await resizeImage(f, 1400) })));
+                        setB((cur) => cur && ({ ...cur, photos: [...(cur.photos ?? []), ...added] }));
+                      }} />
+                      <span aria-hidden>+</span>
+                      Fotos hinzufügen
+                    </label>
+                  )}
                 </div>
               </>
             )}

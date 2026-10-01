@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { TopBar } from "@/components/Chrome";
 import { TEMPLATES, GROUPS } from "@/lib/templates";
@@ -13,6 +13,15 @@ export default function StartPage() {
   const [templateKey, setTemplateKey] = useState<string | null>(null);
   const [name, setName] = useState("");
   const [postal, setPostal] = useState("");
+
+  // Prefill from the landing page demo: /start?t=friseur&n=Salon%20Mira
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search);
+    const t = q.get("t");
+    if (t && TEMPLATES.some((x) => x.key === t)) setTemplateKey(t);
+    const n = q.get("n");
+    if (n) setName(n.slice(0, 80));
+  }, []);
 
   async function create(e: React.FormEvent) {
     e.preventDefault();

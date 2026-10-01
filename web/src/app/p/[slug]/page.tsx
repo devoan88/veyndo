@@ -6,7 +6,7 @@ import { demoBusiness } from "@/lib/demo";
 import { localBusinessJsonLd } from "@/lib/jsonld";
 import { supabaseConfigured } from "@/lib/env";
 import PublicProfileClient from "./PublicProfileClient";
-import type { Business, OpeningDay, PlanTier, Service } from "@/lib/types";
+import type { Business, OpeningDay, PlanTier, ProfileTheme, Service } from "@/lib/types";
 
 function hm(t: string | null | undefined) {
   if (!t) return undefined;
@@ -20,10 +20,11 @@ async function loadPublished(slug: string): Promise<Business | null> {
   const supabase = await createClient();
   const { data: row } = await supabase.from("businesses").select("*").eq("slug", slug).maybeSingle();
   if (!row) return null;
-  const [{ data: svcs }, { data: hrs }, { data: owner }] = await Promise.all([
+  const [{ data: svcs }, { data: hrs }, { data: owner }, { data: pics }] = await Promise.all([
     supabase.from("services").select("*").eq("business_id", row.id).order("position"),
     supabase.from("opening_hours").select("*").eq("business_id", row.id).order("weekday"),
     supabase.from("subscriptions").select("tier,status").eq("owner_id", row.owner_id).maybeSingle(),
+    supabase.from("photos").select("id,path").eq("business_id", row.id).order("position"),
   ]);
   let tier: PlanTier = "basis";
   if (owner && ["active", "trialing", "past_due"].includes(owner.status)) tier = owner.tier as PlanTier;
@@ -57,7 +58,9 @@ async function loadPublished(slug: string): Promise<Business | null> {
     email: row.email || "",
     instagram: row.instagram || "",
     accentColor: row.accent_color,
+    theme: (row.theme as ProfileTheme) || "klassisch",
     coverDataUrl: cover,
+    photos: base ? (pics || []).map((p: { id: string; path: string }) => ({ id: p.id, url: `${base}/storage/v1/object/public/photos/${p.path}` })) : [],
     services,
     hours: hours.length ? hours : Array.from({ length: 7 }, (_, i) => ({ weekday: i + 1, closed: i >= 5, opens: "09:00", closes: "18:00" })),
     legalName: row.legal_name || "",

@@ -1,6 +1,12 @@
 import { fromTemplate } from "./factory";
 import { TEMPLATES } from "./templates";
-import type { Business } from "./types";
+import { branchPhoto, DEMO_GALLERY, photo } from "./photos";
+import type { Business, ProfileTheme } from "./types";
+
+const DEMO_THEME: Record<string, ProfileTheme> = {
+  friseur: "frisch", nagelstudio: "frisch", kosmetik: "klassisch", massage: "klassisch",
+  physiotherapie: "frisch", psychotherapie: "klassisch", elektriker: "modern", installateur: "modern", reinigung: "frisch",
+};
 
 export function demoBusiness(slug: string): Business | null {
   if (!slug.startsWith("beispiel-")) return null;
@@ -17,5 +23,8 @@ export function demoBusiness(slug: string): Business | null {
     postalCode: t.example.district,
     legalName: `${t.example.name} (Beispiel)`,
     isPublished: true,
+    theme: DEMO_THEME[t.key] ?? "klassisch",
+    coverDataUrl: branchPhoto(t.key, 1200, 640),
+    photos: (DEMO_GALLERY[t.key] ?? []).map((id) => ({ id, url: photo(id, 1400) })),
   };
 }

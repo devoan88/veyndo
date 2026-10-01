@@ -1,5 +1,9 @@
 export type PlanTier = "basis" | "profil" | "pro";
 
+export type Photo = { id: string; url: string };
+
+export type ProfileTheme = "klassisch" | "modern" | "frisch";
+
 export type Service = {
   id: string;
   title: string;
@@ -31,7 +35,9 @@ export type Business = {
   email: string;
   instagram: string;
   accentColor: string;
+  theme?: ProfileTheme;
   coverDataUrl: string | null;
+  photos?: Photo[];
   services: Service[];
   hours: OpeningDay[];
   legalName: string;

@@ -185,7 +185,7 @@ textarea { min-height: 96px; resize: vertical; }
 .profile .legal { font-size: .78rem; color: var(--muted); padding: 18px 20px 26px; background: #f8f4ec; }
 .profile .legal p { margin: 0 0 4px; }
 .profile .made { display: block; margin-top: 10px; color: var(--muted); }
-.profile-page { max-width: 560px; margin: 0 auto; min-height: 100vh; box-shadow: 0 0 0 1px var(--line); }
+.profile-page { min-height: 100vh; }
 
 /* Dashboard */
 .stat { font-family: var(--serif); font-size: 2rem; }
@@ -200,3 +200,21 @@ textarea { min-height: 96px; resize: vertical; }
 @media (max-width: 640px) {
   .nav a:not(.btn) { display: none; }
 }
+
+/* Editor: theme picker */
+.label-like { font-size: .85rem; font-weight: 600; }
+.theme-pick { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.theme-pick button { font: inherit; font-weight: 600; font-size: .9rem; padding: 14px 10px; border-radius: 12px; border: 1px solid var(--line); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.theme-pick button i { width: 26px; height: 6px; border-radius: 3px; }
+.theme-pick button[aria-checked="true"] { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Editor: photo gallery */
+.photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; }
+.photo-item { position: relative; aspect-ratio: 1; border-radius: 12px; overflow: hidden; background: var(--line); }
+.photo-item img { width: 100%; height: 100%; object-fit: cover; }
+.photo-tools { position: absolute; left: 6px; right: 6px; bottom: 6px; display: flex; justify-content: space-between; }
+.photo-tools button { width: 30px; height: 30px; border-radius: 50%; border: 0; background: rgba(255,255,255,.92); color: var(--ink); font-size: 1.1rem; line-height: 1; cursor: pointer; }
+.photo-tools button:disabled { opacity: .35; cursor: default; }
+.photo-add { aspect-ratio: 1; border-radius: 12px; border: 2px dashed var(--line); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer; color: var(--muted); font-size: .85rem; font-weight: 600; text-align: center; padding: 8px; }
+.photo-add span { font-size: 2rem; line-height: 1; color: var(--accent); }
+.photo-add:hover, .photo-add:focus-within { border-color: var(--accent); color: var(--ink); }
