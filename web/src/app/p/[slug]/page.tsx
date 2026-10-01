@@ -20,14 +20,14 @@ async function loadPublished(slug: string): Promise<Business | null> {
   const supabase = await createClient();
   const { data: row } = await supabase.from("businesses").select("*").eq("slug", slug).maybeSingle();
   if (!row) return null;
-  const [{ data: svcs }, { data: hrs }, { data: owner }, { data: pics }] = await Promise.all([
+  const [{ data: svcs }, { data: hrs }, { data: planRow }, { data: pics }] = await Promise.all([
     supabase.from("services").select("*").eq("business_id", row.id).order("position"),
     supabase.from("opening_hours").select("*").eq("business_id", row.id).order("weekday"),
-    supabase.from("published_subscription_tier").select("tier,status").eq("owner_id", row.owner_id).maybeSingle(),
+    supabase.from("published_subscription_tier").select("tier,status").eq("business_id", row.id).maybeSingle(),
     supabase.from("photos").select("id,path").eq("business_id", row.id).order("position"),
   ]);
   let tier: PlanTier = "basis";
-  if (owner && ["active", "trialing", "past_due"].includes(owner.status)) tier = owner.tier as PlanTier;
+  if (planRow && ["active", "trialing", "past_due"].includes(planRow.status)) tier = planRow.tier as PlanTier;
   const services: Service[] = (svcs || []).map((s: { id: string; title: string; price_label: string | null; duration_min: number | null }) => ({
     id: s.id,
     title: s.title,

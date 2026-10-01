@@ -231,15 +231,13 @@ create policy photos_write on photos for all using (owns_business(business_id)) 
 -- subscriptions: owner can read own; nobody writes from the browser (service role only)
 create policy subs_read on subscriptions for select using (owner_id = auth.uid() or is_admin());
 
--- Public profiles need the owner's plan (gallery limits) without exposing stripe columns.
+-- Public profiles: plan for a published, unblocked business (no owner_id, no stripe columns).
 create view public.published_subscription_tier
 with (security_invoker = false) as
-select s.owner_id, s.tier, s.status
-from public.subscriptions s
-where exists (
-  select 1 from public.businesses b
-  where b.owner_id = s.owner_id and b.is_published
-);
+select b.id as business_id, s.tier, s.status
+from public.businesses b
+join public.subscriptions s on s.owner_id = b.owner_id
+where b.is_published and not b.is_blocked;
 grant select on public.published_subscription_tier to anon, authenticated, service_role;
 
 -- events: anyone may insert for a public business; only owner/admin read
