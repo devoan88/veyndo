@@ -231,6 +231,17 @@ create policy photos_write on photos for all using (owns_business(business_id)) 
 -- subscriptions: owner can read own; nobody writes from the browser (service role only)
 create policy subs_read on subscriptions for select using (owner_id = auth.uid() or is_admin());
 
+-- Public profiles need the owner's plan (gallery limits) without exposing stripe columns.
+create view public.published_subscription_tier
+with (security_invoker = false) as
+select s.owner_id, s.tier, s.status
+from public.subscriptions s
+where exists (
+  select 1 from public.businesses b
+  where b.owner_id = s.owner_id and b.is_published
+);
+grant select on public.published_subscription_tier to anon, authenticated, service_role;
+
 -- events: anyone may insert for a public business; only owner/admin read
 create policy events_insert on events for insert with check (business_is_public(business_id));
 create policy events_read on events for select using (owns_business(business_id) or is_admin());
@@ -249,10 +260,14 @@ create policy reserved_read on reserved_slugs for select using (true);
 insert into storage.buckets (id, name, public) values ('photos', 'photos', true)
   on conflict (id) do nothing;
 
+-- Public read (needed for the public bucket URL and for storage.remove to find rows).
+create policy photos_bucket_read on storage.objects for select
+  using (bucket_id = 'photos');
 create policy photos_bucket_write on storage.objects for insert to authenticated
   with check (bucket_id = 'photos' and owns_business(((storage.foldername(name))[1])::uuid));
 create policy photos_bucket_delete on storage.objects for delete to authenticated
   using (bucket_id = 'photos' and owns_business(((storage.foldername(name))[1])::uuid));
+-- Cover replacements use a new unique path and delete the old object (no UPDATE policy).
 
 -- ---------------------------------------------------------------
 -- New auth user → owners row

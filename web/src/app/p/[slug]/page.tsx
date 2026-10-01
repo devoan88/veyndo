@@ -23,7 +23,7 @@ async function loadPublished(slug: string): Promise<Business | null> {
   const [{ data: svcs }, { data: hrs }, { data: owner }, { data: pics }] = await Promise.all([
     supabase.from("services").select("*").eq("business_id", row.id).order("position"),
     supabase.from("opening_hours").select("*").eq("business_id", row.id).order("weekday"),
-    supabase.from("subscriptions").select("tier,status").eq("owner_id", row.owner_id).maybeSingle(),
+    supabase.from("published_subscription_tier").select("tier,status").eq("owner_id", row.owner_id).maybeSingle(),
     supabase.from("photos").select("id,path").eq("business_id", row.id).order("position"),
   ]);
   let tier: PlanTier = "basis";

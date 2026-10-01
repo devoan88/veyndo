@@ -171,13 +171,23 @@ async function loadRemote(): Promise<Business | null> {
   return { ...mapRow(row as BizRow, services, hours, tier), photos };
 }
 
-async function uploadCover(businessId: string, dataUrl: string) {
+async function pathFromPublicUrl(url: string | null | undefined) {
+  if (!url) return null;
+  const at = url.indexOf(STORAGE_MARKER);
+  if (at < 0) return null;
+  return url.slice(at + STORAGE_MARKER.length);
+}
+
+async function uploadCover(businessId: string, dataUrl: string, previousPath: string | null) {
   const supabase = createClient();
   const res = await fetch(dataUrl);
   const blob = await res.blob();
-  const path = `${businessId}/cover.jpg`;
-  const { error } = await supabase.storage.from("photos").upload(path, blob, { upsert: true, contentType: "image/jpeg" });
+  const path = `${businessId}/cover-${crypto.randomUUID()}.jpg`;
+  const { error } = await supabase.storage.from("photos").upload(path, blob, { contentType: "image/jpeg", upsert: false });
   if (error) throw error;
+  if (previousPath && previousPath !== path && previousPath.startsWith(`${businessId}/`)) {
+    await supabase.storage.from("photos").remove([previousPath]);
+  }
   return path;
 }
 
@@ -228,7 +238,12 @@ async function saveRemote(b: Business, ownerId?: string): Promise<Business> {
 
   let coverPath: string | null = null;
   if (b.coverDataUrl?.startsWith("data:")) {
-    coverPath = await uploadCover(b.id, b.coverDataUrl);
+    let previousPath = await pathFromPublicUrl(b.coverDataUrl);
+    if (!previousPath) {
+      const { data: prev } = await supabase.from("businesses").select("cover_path").eq("id", b.id).maybeSingle();
+      previousPath = prev?.cover_path ?? null;
+    }
+    coverPath = await uploadCover(b.id, b.coverDataUrl, previousPath);
   } else if (b.coverDataUrl?.includes("/photos/")) {
     const marker = "/object/public/photos/";
     const i = b.coverDataUrl.indexOf(marker);
