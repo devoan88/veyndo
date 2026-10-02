@@ -19,17 +19,9 @@ export async function ensureSession(): Promise<boolean> {
     if (existing.data.session?.user) return true;
     const { data } = await supabase.auth.signInAnonymously();
     if (data.user) return true;
+    // A parallel call may have created the session already.
     const again = await supabase.auth.getSession();
-    if (again.data.session?.user) return true;
-    const res = await fetch("/api/demo-session", { method: "POST" });
-    if (!res.ok) return false;
-    const tokens = (await res.json()) as { access_token?: string; refresh_token?: string };
-    if (!tokens.access_token || !tokens.refresh_token) return false;
-    const set = await supabase.auth.setSession({
-      access_token: tokens.access_token,
-      refresh_token: tokens.refresh_token,
-    });
-    return !!set.data.session?.user;
+    return !!again.data.session?.user;
   })();
   try {
     return await inflight;
