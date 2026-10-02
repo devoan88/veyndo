@@ -114,6 +114,7 @@
 .screen { height: 100%; border-radius: 36px; overflow: auto; background: #fff; scrollbar-width: none; }
 .screen::-webkit-scrollbar { display: none; }
 .ribbon { position: absolute; z-index: 5; top: 26px; right: -12px; transform: rotate(12deg); background: var(--glow); color: var(--night); font-weight: 900; letter-spacing: .14em; font-size: .78rem; padding: 6px 14px; border-radius: 8px; box-shadow: 0 8px 18px -8px rgba(0,0,0,.5); }
+.priceHint { position: absolute; z-index: 5; bottom: -34px; left: 50%; translate: -50% 0; white-space: nowrap; font-size: .76rem; font-weight: 700; color: #fff; background: rgba(255,255,255,.14); backdrop-filter: blur(6px); padding: 5px 12px; border-radius: 999px; }
 .ghostPhone { width: 320px; height: 600px; max-height: calc(100vh - 120px); border-radius: 44px; border: 2px dashed rgba(255,255,255,.25); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #f4f6ec; gap: 12px; padding: 30px; }
 .ghostPhone span { font-size: 3rem; animation: wave 2.2s ease-in-out infinite; transform-origin: 70% 70%; }
 @keyframes wave { 0%, 60%, 100% { transform: rotate(0); } 10%, 30% { transform: rotate(14deg); } 20%, 40% { transform: rotate(-8deg); } }
@@ -126,7 +127,8 @@
   .stage { display: none; }
   .stage.sheetOpen { display: grid; position: fixed; inset: 0; z-index: 60; height: 100%; top: 0; }
   .sheetClose { display: grid; place-items: center; position: absolute; top: 14px; right: 14px; z-index: 6; width: 40px; height: 40px; border-radius: 50%; border: 0; background: #fff; color: var(--ink); font-size: 1.4rem; cursor: pointer; }
-  .fab { display: inline-flex; position: fixed; right: 16px; bottom: 86px; z-index: 40; padding: 12px 18px; border-radius: 999px; border: 0; background: var(--night); color: #fff; font: inherit; font-weight: 800; box-shadow: 0 14px 30px -10px rgba(0,0,0,.5); cursor: pointer; }
+  .nav { padding-bottom: 64px; } /* room for the hosting badge in the corner */
+  .fab { display: inline-flex; position: fixed; right: 16px; bottom: 140px; z-index: 40; padding: 12px 18px; border-radius: 999px; border: 0; background: var(--night); color: #fff; font: inherit; font-weight: 800; box-shadow: 0 14px 30px -10px rgba(0,0,0,.5); cursor: pointer; }
   .progress span { display: none; }
   .badge { display: none; }
 }

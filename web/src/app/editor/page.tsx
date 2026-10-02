@@ -18,7 +18,7 @@ import s from "@/components/studio/studio.module.css";
 
 const SECTIONS: { key: EditorTab; label: string; icon: string; title: string; sub: string }[] = [
   { key: "basis", label: "Auftritt", icon: "✦", title: "Ihr Auftritt", sub: "Name, Foto und Stil: der erste Eindruck in einer Sekunde." },
-  { key: "leistungen", label: "Leistungen", icon: "€", title: "Leistungen & Preise", sub: "Klare Preise sind der häufigste Grund, warum Kundinnen anrufen." },
+  { key: "leistungen", label: "Leistungen", icon: "€", title: "Leistungen & Preise", sub: "Was Ihre Kundinnen bei Ihnen zahlen. Die vorgegebenen Preise sind nur Beispiele: bitte durch Ihre ersetzen." },
   { key: "fotos", label: "Galerie", icon: "▦", title: "Galerie", sub: "Zeigen Sie Ihre Arbeit, Ihre Räume und Ihr Team." },
   { key: "zeiten", label: "Zeiten", icon: "◷", title: "Öffnungszeiten", sub: "Daraus entsteht der Live-Status „Jetzt geöffnet“." },
   { key: "kontakt", label: "Kontakt", icon: "☏", title: "Kontakt & Adresse", sub: "So erreicht man Sie mit einem Tipp." },

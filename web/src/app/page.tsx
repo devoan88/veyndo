@@ -85,7 +85,7 @@ export default function Home() {
                 <Reveal delay={80}><h2 className={s.h2}>So kann Ihre Seite aussehen.</h2></Reveal>
               </div>
               <Reveal delay={120}>
-                <p className={s.sideNote}>Branche antippen. Danach ersetzen Sie Namen, Preise und Fotos durch Ihre.</p>
+                <p className={s.sideNote}>Branche antippen. Die Preise dort sind Beispiele dafür, was Ihre Kundinnen bei Ihnen zahlen. Sie ersetzen sie durch Ihre eigenen.</p>
               </Reveal>
             </div>
             <div className={s.gallery}>

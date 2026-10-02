@@ -174,7 +174,7 @@ export default function DemoStudio() {
             <section className={s.step}>
               <p className={s.kicker}>Schritt 1 · Beruf</p>
               <h1>Was machen Sie? <em>Wir bauen mit.</em></h1>
-              <p className={s.sub}>Suchen Sie Ihren Beruf. Ihre Demo bekommt sofort passende Leistungen, Preise und Zeiten.</p>
+              <p className={s.sub}>Suchen Sie Ihren Beruf. Ihre Demo bekommt sofort typische Leistungen, Öffnungszeiten und <b>Beispielpreise</b>, also was Ihre Kundinnen bei Ihnen zahlen. Alles änderbar.</p>
               {hasDemo && <p className={s.resume}>Sie haben schon eine Demo. <Link href="/dashboard">Dort weitermachen →</Link></p>}
               <div className={s.search}>
                 <span aria-hidden>⌕</span>
@@ -399,6 +399,7 @@ export default function DemoStudio() {
           {preview ? (
             <div className={s.phone}>
               <span className={s.ribbon}>DEMO</span>
+              <span className={s.priceHint}>Preise = Beispiele für Ihre Kundinnen</span>
               <div className={s.screen}><ProfileView b={preview} today={today} /></div>
             </div>
           ) : (
