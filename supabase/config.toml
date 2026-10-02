@@ -1,0 +1,4 @@
+# Hosted Auth flags only. Undeclared keys are left unchanged on `supabase config push`.
+[auth]
+enable_anonymous_sign_ins = true
+captcha_enabled = false

@@ -10,7 +10,8 @@ import { PALETTES, THEME_BG } from "@/lib/palettes";
 import { SWATCHES } from "@/lib/look";
 import { fromProfession, uid } from "@/lib/factory";
 import { branchPhoto, DEMO_GALLERY, photo } from "@/lib/photos";
-import { loadBusiness, saveBusiness } from "@/lib/store";
+import { loadBusiness, saveBusiness, slugTaken } from "@/lib/store";
+import { toSlug } from "@/lib/slug";
 import { ensureSession, sendDemoRequest } from "@/lib/session";
 import { saveWishes, savePhotoPlan, type PhotoPlan } from "@/lib/trial";
 import { resizeImage } from "@/lib/image";
@@ -60,7 +61,7 @@ export default function DemoStudio() {
   }
 
   function pick(p: Profession, name?: string) {
-    const fresh = fromProfession(p, name || b?.name);
+    const fresh = fromProfession(p, name?.trim() || p.label);
     setProf(p);
     setB((cur) => cur ? {
       ...fresh,
@@ -113,7 +114,12 @@ export default function DemoStudio() {
       saveWishes(wishes.trim(), tags);
       savePhotoPlan(photoPlan ?? "none");
       await ensureSession();
-      const saved = await saveBusiness({ ...b, isPublished: false });
+      let slug = toSlug(b.name);
+      if (slug.length < 2) slug = `demo-${uid().replace(/-/g, "").slice(0, 8)}`;
+      if (await slugTaken(slug, b.id)) {
+        slug = `${slug.slice(0, 32)}-${uid().replace(/-/g, "").slice(0, 6)}`;
+      }
+      const saved = await saveBusiness({ ...b, slug, isPublished: false });
       setB({ ...b, ...saved, tier: b.tier });
       setStep(5);
     } finally {
@@ -207,7 +213,10 @@ export default function DemoStudio() {
               <div className={s.field}>
                 <label htmlFor="name">Name</label>
                 <input id="name" className={s.big} value={b.name} maxLength={80} autoFocus
-                  onChange={(e) => update({ name: e.target.value })} onFocus={(e) => e.target.select()} />
+                  onChange={(e) => {
+                    const name = e.target.value;
+                    update({ name, slug: toSlug(name) });
+                  }} onFocus={(e) => e.target.select()} />
               </div>
               <div className={s.field}>
                 <label htmlFor="plz">Postleitzahl (optional)</label>

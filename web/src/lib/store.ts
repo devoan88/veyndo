@@ -113,7 +113,9 @@ function mapRow(
 async function currentUser() {
   const supabase = createClient();
   const { data } = await supabase.auth.getUser();
-  return data.user;
+  if (data.user) return data.user;
+  const { data: sess } = await supabase.auth.getSession();
+  return sess.session?.user ?? null;
 }
 
 async function fetchTier(ownerId: string): Promise<PlanTier> {
@@ -333,7 +335,9 @@ export async function saveBusiness(b: Business): Promise<Business> {
   }
   try {
     return await saveRemote(locked);
-  } catch {
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : (err && typeof err === "object" && "message" in err ? String((err as { message: unknown }).message) : "fail");
+    console.error("saveBusiness", msg);
     localSave(locked);
     return locked;
   }
