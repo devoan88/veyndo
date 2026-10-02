@@ -8,6 +8,15 @@ import { supabaseConfigured } from "@/lib/env";
 import PublicProfileClient from "./PublicProfileClient";
 import type { Business, OpeningDay, PlanTier, ProfileTheme, Service } from "@/lib/types";
 
+async function viewerIsAdmin() {
+  if (!supabaseConfigured()) return false;
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return false;
+  const { data } = await supabase.from("owners").select("is_admin").eq("id", user.id).maybeSingle();
+  return !!data?.is_admin;
+}
+
 function hm(t: string | null | undefined) {
   if (!t) return undefined;
   return String(t).slice(0, 5);
@@ -94,19 +103,18 @@ export default async function PublicProfile({
   const b = await loadPublished(slug);
   if (!b) notFound();
   const isDemo = slug.startsWith("beispiel-");
+  const adminPreview = !isDemo && !b.isPublished && (await viewerIsAdmin());
+  if (!isDemo && !b.isPublished && !adminPreview) notFound();
   return (
     <>
-      {isDemo && (
+      {(isDemo || adminPreview) && (
         <div className="notice" style={{ borderRadius: 0, margin: 0, textAlign: "center" }}>
-          Beispielprofil. <Link href="/start">So eines in 10 Minuten erstellen</Link>
+          {adminPreview ? "DEMO · unveröffentlicht · nur für Admin sichtbar." : <>Beispielprofil. <Link href="/start">So eines als Vorschau bauen</Link></>}
         </div>
       )}
-      {!isDemo && !b.isPublished && (
-        <div className="notice" style={{ borderRadius: 0, margin: 0, textAlign: "center" }}>
-          Vorschau: Diese Seite ist noch nicht veröffentlicht. <Link href="/dashboard">Zum Dashboard</Link>
-        </div>
+      {!adminPreview && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd(b)) }} />
       )}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd(b)) }} />
       <PublicProfileClient b={b} srcQr={src === "qr"} />
     </>
   );

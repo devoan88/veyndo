@@ -7,11 +7,13 @@ import ProfileView, { WEEKDAYS } from "@/components/ProfileView";
 import Ring from "@/components/studio/Ring";
 import { loadBusiness, newServiceId, saveBusiness, slugTaken } from "@/lib/store";
 import { PLANS } from "@/lib/plans";
-import { getTemplate } from "@/lib/templates";
+import { TEMPLATES } from "@/lib/templates";
+import { getProfession, professionLabel } from "@/lib/professions";
 import { slugProblem, toSlug, PROFILE_DOMAIN } from "@/lib/slug";
 import { profileScore, type EditorTab } from "@/lib/completeness";
 import { openState } from "@/lib/hours";
-import type { Business, OpeningDay, ProfileTheme, Service } from "@/lib/types";
+import { SWATCHES, THEMES } from "@/lib/look";
+import type { Business, OpeningDay, Service } from "@/lib/types";
 import s from "@/components/studio/studio.module.css";
 
 const SECTIONS: { key: EditorTab; label: string; icon: string; title: string; sub: string }[] = [
@@ -21,13 +23,6 @@ const SECTIONS: { key: EditorTab; label: string; icon: string; title: string; su
   { key: "zeiten", label: "Zeiten", icon: "◷", title: "Öffnungszeiten", sub: "Daraus entsteht der Live-Status „Jetzt geöffnet“." },
   { key: "kontakt", label: "Kontakt", icon: "☏", title: "Kontakt & Adresse", sub: "So erreicht man Sie mit einem Tipp." },
   { key: "impressum", label: "Impressum", icon: "§", title: "Impressum", sub: "Pflicht in Österreich (§ 5 ECG, § 25 MedienG). Steht unten auf Ihrer Seite." },
-];
-
-const SWATCHES = ["#b98b86", "#8a9a62", "#3d4a3a", "#5b7c99", "#c27c4e", "#8e6fa8", "#b8a06a", "#2c2c2c"];
-const THEMES: { key: ProfileTheme; label: string; bg: string; fg: string; card: string }[] = [
-  { key: "klassisch", label: "Klassisch", bg: "#fffdf9", fg: "#2c362b", card: "#f1ebdf" },
-  { key: "modern", label: "Modern", bg: "#121612", fg: "#eef0ea", card: "#232b24" },
-  { key: "frisch", label: "Frisch", bg: "#ffffff", fg: "#1d221d", card: "#f0f2ea" },
 ];
 
 async function resizeImage(file: File, max = 1200): Promise<string> {
@@ -111,8 +106,13 @@ export default function EditorPage() {
 
   if (!b) return null;
 
-  const plan = PLANS[b.tier];
-  const tpl = getTemplate(b.templateKey);
+  // Demos (not live) show every feature, so visitors see the full result.
+  const demo = !b.isPublished;
+  const plan = PLANS[demo ? "pro" : b.tier];
+  const shown = demo ? { ...b, tier: "pro" as const } : b;
+  const prof = getProfession(b.templateKey);
+  const tplServices = TEMPLATES.find((t) => t.key === (prof?.base ?? b.templateKey))?.services
+    ?? (prof?.services ?? []).map(([title, price_label, duration_min]) => ({ title, price_label, duration_min }));
   const set = <K extends keyof Business>(k: K, v: Business[K]) => setB({ ...b, [k]: v });
   const setSvc = (id: string, patch: Partial<Service>) =>
     set("services", b.services.map((x) => (x.id === id ? { ...x, ...patch } : x)));
@@ -127,19 +127,18 @@ export default function EditorPage() {
   const today = ((new Date().getDay() + 6) % 7) + 1;
   const { pct, steps, next } = profileScore(b);
   const doneIn = (t: EditorTab) => { const own = steps.filter((x) => x.tab === t); return own.length > 0 && own.every((x) => x.done); };
-  const canPublish = !slugErr && !taken && !!b.phone.trim() && !!b.legalName.trim();
   const section = SECTIONS.find((x) => x.key === tab)!;
-  const suggestions = tpl.services.filter((ts) => !b.services.some((x) => x.title.trim().toLowerCase() === ts.title.toLowerCase()));
+  const suggestions = tplServices.filter((ts) => !b.services.some((x) => x.title.trim().toLowerCase() === ts.title.toLowerCase()));
   const live = openState(b.hours);
 
   const preview = device === "phone" ? (
-    <div className={s.device}><div className={s.deviceScreen}><ProfileView b={b} today={today} /></div></div>
+    <div className={s.device}><div className={s.deviceScreen}><ProfileView b={shown} today={today} /></div></div>
   ) : (
     <div ref={deskBox} className={s.desk}>
-      <div className={s.deskBar}><i /><i /><i /><span>{b.slug}.{PROFILE_DOMAIN}</span></div>
+      <div className={s.deskBar}><i /><i /><i /><span>Vorschau · nur bei Veyndo</span></div>
       <div className={s.deskViewport} style={{ height: 720 * deskScale }}>
         <div style={{ width: 1100, zoom: deskScale }}>
-          <ProfileView b={b} today={today} />
+          <ProfileView b={shown} today={today} />
         </div>
       </div>
     </div>
@@ -157,15 +156,7 @@ export default function EditorPage() {
           </span>
         </div>
         <div className={s.topActions}>
-          <Link href={`/p/${b.slug}`} target="_blank" className={s.btnGhost}>Ansehen ↗</Link>
-          {b.isPublished ? (
-            <span className={s.onlinePill}><i />Online</span>
-          ) : (
-            <button className={s.btnPrimary} disabled={!canPublish} onClick={() => set("isPublished", true)}
-              title={canPublish ? "" : "Dafür fehlen noch Telefon und Impressum"}>
-              Veröffentlichen
-            </button>
-          )}
+          <span className={s.onlinePill} style={{ color: "var(--muted)", background: "var(--soft)" }}>Nur Vorschau bei Veyndo</span>
         </div>
       </header>
 
@@ -228,16 +219,16 @@ export default function EditorPage() {
                 <small>{b.tagline.length}/90 · Was Sie machen und wo, z. B. „Schnitt und Farbe in Wien 1070“.</small>
               </div>
               <div className={s.field}>
-                <label htmlFor="f-slug">Adresse Ihrer Seite</label>
+                <label htmlFor="f-slug">Interne Vorschau</label>
                 <div className={s.slug}>
                   <input id="f-slug" value={b.slug} maxLength={40}
                     onChange={(e) => set("slug", e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""))} />
                   <span>.{PROFILE_DOMAIN}</span>
                 </div>
                 {slugErr ? <small className={s.err}>{slugErr}</small> : taken ? (
-                  <small className={s.err}>Diese Adresse ist schon vergeben.</small>
+                  <small className={s.err}>Dieser Name ist schon vergeben.</small>
                 ) : (
-                  <small className={s.ok}>✓ Verfügbar · <button type="button" className={s.linkBtn} onClick={() => set("slug", toSlug(b.name))}>aus dem Namen erzeugen</button></small>
+                  <small>Nur bei Veyndo, nicht für Kundinnen. <button type="button" className={s.linkBtn} onClick={() => set("slug", toSlug(b.name))}>aus dem Namen erzeugen</button></small>
                 )}
               </div>
               <div className={s.field}>
@@ -310,7 +301,7 @@ export default function EditorPage() {
             </div>
             {suggestions.length > 0 && (
               <div className={s.box}>
-                <span className={s.label}>Vorschläge für {tpl.label}</span>
+                <span className={s.label}>Vorschläge für {professionLabel(b.templateKey)}</span>
                 <div className={s.chips}>
                   {suggestions.map((ts) => (
                     <button key={ts.title} type="button" className={s.chip} onClick={() => set("services", [...b.services,

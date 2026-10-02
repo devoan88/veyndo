@@ -15,7 +15,7 @@ create type event_kind as enum ('view', 'call', 'whatsapp', 'route', 'qr');
 -- ---------------------------------------------------------------
 create table owners (
   id            uuid primary key references auth.users(id) on delete cascade,
-  email         text not null,
+  email         text,
   full_name     text,
   is_admin      boolean not null default false,
   stripe_customer_id text unique,
@@ -76,6 +76,17 @@ begin
 end $$;
 create trigger businesses_slug_guard before insert or update on businesses
   for each row execute function check_reserved_slug();
+
+-- owners cannot publish; only Ani (is_admin) or SQL/service_role
+create or replace function protect_published() returns trigger language plpgsql set search_path = public, private as $$
+begin
+  if auth.uid() is not null and not is_admin() then
+    new.is_published := false;
+  end if;
+  return new;
+end $$;
+create trigger businesses_protect_published before insert or update on businesses
+  for each row execute function protect_published();
 
 -- ---------------------------------------------------------------
 -- Services (price list)
@@ -273,8 +284,9 @@ create policy photos_bucket_delete on storage.objects for delete to authenticate
 create or replace function handle_new_user() returns trigger
 language plpgsql security definer set search_path = public as $$
 begin
-  insert into owners(id, email) values (new.id, new.email);
-  insert into subscriptions(owner_id, tier, status) values (new.id, 'basis', 'active');
+  insert into owners(id, email) values (new.id, nullif(new.email, ''));
+  insert into subscriptions(owner_id, tier, status) values (new.id, 'basis', 'active')
+    on conflict (owner_id) do nothing;
   return new;
 end $$;
 create trigger on_auth_user_created after insert on auth.users

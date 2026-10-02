@@ -325,15 +325,17 @@ export async function loadBusiness(): Promise<Business | null> {
 }
 
 export async function saveBusiness(b: Business): Promise<Business> {
+  // Trial: the profile stays on Veyndo. Going live for customers is a later, paid step.
+  const locked: Business = { ...b, isPublished: false };
   if (!supabaseConfigured()) {
-    localSave(b);
-    return b;
+    localSave(locked);
+    return locked;
   }
   try {
-    return await saveRemote(b);
+    return await saveRemote(locked);
   } catch {
-    localSave(b);
-    return b;
+    localSave(locked);
+    return locked;
   }
 }
 

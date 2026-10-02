@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { supabaseConfigured } from "@/lib/env";
 import { TopBar } from "@/components/Chrome";
-import AdminTable from "./AdminTable";
+import AdminTable, { RequestsTable } from "./AdminTable";
 
 export default async function AdminPage() {
   if (!supabaseConfigured()) notFound();
@@ -42,6 +42,20 @@ export default async function AdminPage() {
     status: tierBy.get(r.owner_id)?.status || "",
   }));
 
+  const { data: reqs } = await supabase
+    .from("service_requests")
+    .select("id,owner_id,message,created_at")
+    .order("created_at", { ascending: false });
+
+  const bizByOwner = new Map((rows || []).map((r: { owner_id: string; name: string; slug: string }) => [r.owner_id, r]));
+  const requests = (reqs || []).map((r: { id: string; owner_id: string; message: string | null; created_at: string }) => ({
+    id: r.id,
+    name: bizByOwner.get(r.owner_id)?.name || "—",
+    slug: bizByOwner.get(r.owner_id)?.slug || "",
+    message: r.message || "",
+    created_at: r.created_at,
+  }));
+
   return (
     <>
       <TopBar />
@@ -49,6 +63,10 @@ export default async function AdminPage() {
         <p className="kicker">Admin</p>
         <h1 style={{ fontSize: "2rem" }}>Betriebe</h1>
         <AdminTable rows={list} />
+
+        <h2 style={{ fontSize: "1.5rem", marginTop: 48 }}>Demo-Anfragen</h2>
+        <p className="muted">„Live schalten lassen“ aus dem Demo-Studio, neueste zuerst.</p>
+        <RequestsTable rows={requests} />
       </main>
     </>
   );

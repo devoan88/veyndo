@@ -18,7 +18,7 @@ export function TopBar({ children }: { children?: React.ReactNode }) {
               <Link href="/preise">Preise</Link>
               <Link href="/dashboard">Mein Profil</Link>
               <AuthNav />
-              <a href="https://wa.me/436643568802?text=Hallo%2C%20ich%20interessiere%20mich%20f%C3%BCr%20eine%20Veyndo-Seite." target="_blank" rel="noopener noreferrer" className="btn small">Anfrage senden</a>
+              <Link href="/start" className="btn small">✨ Demo bauen</Link>
             </>
           )}
         </nav>

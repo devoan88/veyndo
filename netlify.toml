@@ -2,8 +2,13 @@
 [build]
   base = "web"
   command = "npm run build"
+  # CLI resolves publish from the repo root (not from base), so this is web/.next.
   publish = "web/.next"
 
 [build.environment]
   NODE_VERSION = "22"
   NEXT_TELEMETRY_DISABLED = "1"
+
+# Lets Netlify serve App Router pages instead of a raw .next folder (which 404s).
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

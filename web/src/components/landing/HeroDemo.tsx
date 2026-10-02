@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { TEMPLATES } from "@/lib/templates";
 import { branchPhoto } from "@/lib/photos";
 import { toSlug, PROFILE_DOMAIN } from "@/lib/slug";
-import { whatsappHref } from "@/lib/contact";
 import s from "@/app/landing.module.css";
 
 const todayIdx = () => ((new Date().getDay() + 6) % 7) + 1;
@@ -14,7 +14,6 @@ export default function HeroDemo() {
   const [name, setName] = useState("");
   const [touched, setTouched] = useState(false);
 
-  // Rotate through the branches until the visitor interacts.
   useEffect(() => {
     if (touched) return;
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -30,28 +29,35 @@ export default function HeroDemo() {
   const slug = toSlug(shownName);
   const day = t.opening_hours.find((h) => h.weekday === todayIdx());
   const status = day && !day.closed ? `Heute geöffnet bis ${day.closes}` : "Heute geschlossen";
-  const startHref = whatsappHref(`Hallo, ich möchte so eine Seite für ${name.trim() || "meinen Betrieb"} (${t.label}).`);
+  const qs = new URLSearchParams({ t: t.key });
+  if (name.trim()) qs.set("n", name.trim());
+  const startHref = `/start?${qs.toString()}`;
 
   return (
     <div className={s.heroGrid}>
       <div className={s.heroCopy}>
-        <p className={s.eyebrow}><span className={s.pulse} aria-hidden /> Für Salons, Praxen und Handwerk in Wien</p>
+        <p className={s.eyebrow}><span className={s.pulse} aria-hidden /> Salons, Praxen und Handwerk in Wien</p>
         <h1 className={s.h1}>
-          Ihre Seite. <em>Persönlich für Sie gebaut.</em>
+          Ihre Seite bauen.<br /><em>Kostenlos ansehen.</em>
         </h1>
         <p className={s.lead}>
-          Tippen Sie den Namen Ihres Betriebs ein und sehen Sie, wie Ihre Seite aussehen kann: mit Preisen,
-          Öffnungszeiten und Anruf-Button. Den Rest machen wir.
+          Preise, Öffnungszeiten, Anrufen und WhatsApp — zuerst nur für Sie.
+          Online für Kundinnen gehen Sie, wenn die Seite sitzt.
         </p>
 
         <form
           className={s.tryBox}
-          onSubmit={(e) => { e.preventDefault(); window.open(startHref, "_blank", "noopener"); }}
+          action="/start"
+          onSubmit={(e) => {
+            e.preventDefault();
+            window.location.href = startHref;
+          }}
         >
           <label htmlFor="hero-name" className={s.tryLabel}>Wie heißt Ihr Betrieb?</label>
           <div className={s.tryRow}>
             <input
               id="hero-name"
+              name="n"
               className={s.tryInput}
               value={name}
               maxLength={60}
@@ -59,7 +65,7 @@ export default function HeroDemo() {
               autoComplete="organization"
               onChange={(e) => { setName(e.target.value); setTouched(true); }}
             />
-            <a href={startHref} target="_blank" rel="noopener noreferrer" className={s.tryBtn}>Diese Seite für mich →</a>
+            <Link href={startHref} className={s.tryBtn}>✨ Demo bauen</Link>
           </div>
           <div className={s.chips} role="radiogroup" aria-label="Branche">
             {TEMPLATES.map((x) => (
@@ -75,15 +81,11 @@ export default function HeroDemo() {
               </button>
             ))}
           </div>
-          <p className={s.fine}>Wir richten alles persönlich für Sie ein · kostenloses Erstgespräch</p>
+          <p className={s.fine}>Kein Abo zum Start. Hosting erst, wenn Kundinnen die Seite öffnen sollen.</p>
         </form>
       </div>
 
-      <div className={s.stage} aria-label="Live-Vorschau Ihrer Seite">
-        <div className={`${s.float} ${s.f1}`}><span className={s.fIcon}>📞</span><div><b>Neuer Anruf</b><small>über Ihre Seite · gerade eben</small></div></div>
-        <div className={`${s.float} ${s.f2}`}><span className={s.fIcon}>📍</span><div><b>Route gestartet</b><small>Kundin ist unterwegs</small></div></div>
-        <div className={`${s.float} ${s.f3}`}><span className={s.fIcon}>▦</span><div><b>QR-Code gescannt</b><small>am Schaufenster</small></div></div>
-
+      <div className={s.stage} aria-label="Vorschau Ihrer Seite">
         <div className={s.phone} style={{ ["--pa" as string]: t.accent_color }}>
           <div className={s.notch} />
           <div className={s.urlbar}><span aria-hidden>🔒</span> {slug}.{PROFILE_DOMAIN}</div>

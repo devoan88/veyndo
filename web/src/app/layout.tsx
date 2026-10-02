@@ -4,11 +4,11 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: { default: "Veyndo – Ihre Seite, persönlich für Sie gebaut", template: "%s · Veyndo" },
   description:
-    "Websites mit Preisen, Öffnungszeiten, Galerie, Anruf- und WhatsApp-Button. Persönlich eingerichtet für Studios, Praxen und Handwerk in Wien. Festpreise ab € 990.",
+    "Websites mit Preisen, Öffnungszeiten, Galerie, Anruf- und WhatsApp-Button. Persönlich eingerichtet für Studios, Praxen und Handwerk in Wien. Festpreise ab € 1.490.",
   icons: { icon: "/favicon.svg" },
 };
 
-export const viewport: Viewport = { themeColor: "#ece8e0" };
+export const viewport: Viewport = { themeColor: "#f2eee4" };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (

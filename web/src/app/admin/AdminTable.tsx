@@ -64,3 +64,40 @@ export default function AdminTable({ rows }: { rows: Row[] }) {
     </div>
   );
 }
+
+export function RequestsTable({
+  rows,
+}: {
+  rows: { id: string; name: string; slug: string; message: string; created_at: string }[];
+}) {
+  return (
+    <div className="card" style={{ overflowX: "auto" }}>
+      <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
+        <thead>
+          <tr style={{ textAlign: "left" }}>
+            <th style={{ padding: 8 }}>Betrieb</th>
+            <th style={{ padding: 8 }}>Nachricht</th>
+            <th style={{ padding: 8 }}>Wann</th>
+            <th style={{ padding: 8 }}></th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((r) => (
+            <tr key={r.id} style={{ borderTop: "1px solid var(--line)" }}>
+              <td style={{ padding: 8 }}>
+                <b>{r.name}</b>
+                <div className="small muted">{r.slug || "kein Slug"}</div>
+              </td>
+              <td style={{ padding: 8, whiteSpace: "pre-wrap", maxWidth: 420 }}>{r.message}</td>
+              <td style={{ padding: 8, whiteSpace: "nowrap" }}>{new Date(r.created_at).toLocaleString("de-AT")}</td>
+              <td style={{ padding: 8 }}>
+                {r.slug ? <a className="btn ghost small" href={`/p/${r.slug}`}>Vorschau ansehen</a> : "—"}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      {!rows.length && <p className="muted">Noch keine Anfragen.</p>}
+    </div>
+  );
+}

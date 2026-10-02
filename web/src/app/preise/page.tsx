@@ -17,9 +17,10 @@ export default function PreisePage() {
         <header className={s.head}>
           <div className="wrap">
             <p className={s.kicker}>Preisliste</p>
-            <h1 className={s.h1}>Klare Festpreise. <em>Persönlich umgesetzt.</em></h1>
+            <h1 className={s.h1}>Was kostenlos ist, <em>und was später.</em></h1>
             <p className={s.lead}>
-              Sie wissen vorher, was es kostet. Nach einem kostenlosen Erstgespräch bekommen Sie ein schriftliches Angebot.
+              Seite bauen und Vorschau: kostenlos. Online für Kundinnen: Hosting € 49 im Monat.
+              Wenn wir die Seite für Sie einrichten, gelten die Festpreise darunter.
             </p>
             <nav className={s.jump} aria-label="Bereiche">
               {PRICE_LIST.map((g) => <a key={g.key} href={`#${g.key}`}>{g.title}</a>)}
@@ -56,8 +57,7 @@ export default function PreisePage() {
 
           <aside className={s.note}>
             <p>
-              Alle Preise in Euro, Festpreise ohne versteckte Kosten. Für Betriebe in Österreich kann eine Förderung wie
-              KMU.DIGITAL einen Teil der Kosten übernehmen.
+              Alle Preise sind Endpreise.
             </p>
           </aside>
         </div>
