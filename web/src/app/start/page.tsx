@@ -13,6 +13,7 @@ import { branchPhoto, DEMO_GALLERY, photo } from "@/lib/photos";
 import { loadBusiness, saveBusiness, slugTaken } from "@/lib/store";
 import { toSlug } from "@/lib/slug";
 import { ensureSession, sendDemoRequest } from "@/lib/session";
+import { notifyByEmail } from "@/lib/notify";
 import { saveWishes, savePhotoPlan, type PhotoPlan } from "@/lib/trial";
 import { resizeImage } from "@/lib/image";
 import { CONTACT } from "@/lib/contact";
@@ -140,7 +141,21 @@ export default function DemoStudio() {
       tags.length ? `Wünsche: ${tags.join(", ")}` : "",
       wishes ? `In eigenen Worten: ${wishes}` : "",
     ].filter(Boolean).join("\n");
-    const ok = await sendDemoRequest(summary);
+    const [saved, mailed] = await Promise.all([
+      sendDemoRequest(summary),
+      notifyByEmail({
+        betrieb: b.name,
+        branche: prof?.label ?? "",
+        name: contact.person,
+        telefon: contact.phone,
+        email: contact.email,
+        erreichbar: contact.when,
+        wuensche: tags.join(", "),
+        eigene_worte: wishes,
+        demo_adresse: b.slug,
+      }),
+    ]);
+    const ok = saved || mailed;
     setSent(ok);
     setBusy(false);
   }
