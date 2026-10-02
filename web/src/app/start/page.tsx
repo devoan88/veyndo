@@ -134,8 +134,8 @@ export default function DemoStudio() {
       tags.length ? `Wünsche: ${tags.join(", ")}` : "",
       wishes ? `In eigenen Worten: ${wishes}` : "",
     ].filter(Boolean).join("\n");
-    await sendDemoRequest(summary);
-    setSent(true);
+    const ok = await sendDemoRequest(summary);
+    setSent(ok);
     setBusy(false);
   }
 

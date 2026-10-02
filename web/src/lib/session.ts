@@ -8,21 +8,26 @@ import { createClient } from "./supabase/client";
  * so the demo is stored in Veyndo's database (never public; see businesses RLS).
  * Returns false if no session could be opened; the demo then stays in this browser.
  */
+let inflight: Promise<boolean> | null = null;
+
 export async function ensureSession(): Promise<boolean> {
   if (!supabaseConfigured()) return false;
-  const supabase = createClient();
-  const { data } = await supabase.auth.getUser();
-  if (data.user) return true;
+  if (inflight) return inflight;
+  inflight = (async () => {
+    const supabase = createClient();
+    const existing = await supabase.auth.getSession();
+    if (existing.data.session?.user) return true;
+    const { data, error } = await supabase.auth.signInAnonymously();
+    if (data.user) return true;
+    // A parallel call may have already created the session (duplicate signup → 422).
+    const again = await supabase.auth.getSession();
+    if (again.data.session?.user) return true;
+    return !error;
+  })();
   try {
-    const result = await Promise.race([
-      supabase.auth.signInAnonymously(),
-      new Promise<{ error: Error }>((resolve) =>
-        setTimeout(() => resolve({ error: new Error("anonymous-timeout") }), 8000),
-      ),
-    ]);
-    return !result.error;
-  } catch {
-    return false;
+    return await inflight;
+  } finally {
+    inflight = null;
   }
 }
 
