@@ -1,46 +1,44 @@
-# Veyndo status — 3 Oct 2026
+# Veyndo status — 3 Oct 2026 (evening)
 
-## Done
+## STEP 0
 
-- Git: `marketing/` committed (`c3149c5`) — flyer PDFs, `flyer-quellen/`, `Besuchsliste-Favoriten.csv`.
-- `.gitignore` already covers `.env*`, `.netlify`, `supabase/.temp/`, `web/.next`.
-- Netlify CLI logged in as `anidevdariani1997@gmail.com`, site `veyndo-app` (`d73d0957-8c4a-4b04-b2ca-bd75b515892b`).
-- `getSite`: `custom_domain=veyndo.at`, alias `www.veyndo.at`. Not changed.
-- Secret scan of `git log -p`: no `sk_live_` / `sk_test_<key>` / `rk_*` / `whsec_` / JWT `eyJhbGci` **values**. Hits are comments (`sk_test_`) and SQL role name `service_role`.
-- `web/src` has no hard-coded `veyndo-app.netlify.app`. `PROFILE_DOMAIN` already `veyndo.at`.
+- `marketing/` in git (`c3149c5`). `.gitignore` covers `.env*`, `.netlify`, `supabase/.temp/`, `web/.next`.
 
-## Blocked
+## STEP 1 — credits
 
-### Netlify credits (STEP 1)
+- API: Free, `usages_exceeded=[]`, `credits used 0/300`, next period **2026-10-29**, `grace_topup` 2026-10-02.
+- **Production deploy still Forbidden** (`JSONHTTPError: Forbidden`). Treat as credit/account block. No second deploy attempted.
 
-- Plan: Free (`credit-free`), `plan_credits=300`.
-- `capabilities.credits.used=0`, `usages_exceeded=[]`, `sites_with_usage_exceeded=[]`.
-- `grace_topup_granted_at=2026-10-02T10:40:22Z`.
-- Next usage/billing period: **2026-10-29**.
-- CLI does **not** currently show “Account credit usage exceeded”.
-- **No production deploy run** this session (STEP 2 DNS not live; STEP 4 skipped).
+## STEP 2 — DNS
 
-### Domain DNS (STEP 2)
+- `whois.nic.at veyndo.at` → **nothing found** (not in the registry yet).
+- `host @8.8.8.8` → **NXDOMAIN**. No A / www CNAME.
+- Gmail: only order `20261003-sbs8z`; **no CloudPit / DNS-ready mail**.
+- Netlify already has `custom_domain=veyndo.at` + alias `www.veyndo.at` (unchanged). `ssl=false`.
+- **Cannot set records until nic.at/easyname finish Prüfung.** After that, easyname DNS:
+  - A `@` → `75.2.60.5`
+  - CNAME `www` → `veyndo-app.netlify.app`
+  - keep MX
 
-- `dig` / `host @8.8.8.8`: **NXDOMAIN** (no A, no www CNAME, no NS).
-- `https://veyndo.at` / `www` did not connect (HTTP 000).
-- `https://veyndo-app.netlify.app` → **200**.
-- SSL on custom domain: `ssl=false`, `ssl_status=null` until DNS exists.
-- **Waiting on Ani** to set easyname DNS (A `@` → `75.2.60.5`, CNAME `www` → `veyndo-app.netlify.app`, keep MX).
+## STEP 3 — URLs (done except Auth UI)
 
-### URLs / Stripe / deploy (STEP 3–4)
+- Netlify `NEXT_PUBLIC_SITE_URL=https://veyndo.at` (production). Needs a successful prod deploy to appear on the live site.
+- Stripe TEST webhook created: `we_1UMaAsDIUjwz68ElsLDeD6s4` → `https://veyndo.at/api/stripe/webhook` (same events as docs). Signing secret stored in Netlify `STRIPE_WEBHOOK_SECRET` (`--secret`). Existing netlify.app webhook left in place.
+- Code: no `veyndo-app.netlify.app` in `web/src`. `PROFILE_DOMAIN` stays `veyndo.at`. Contact form URL → `https://veyndo.at/#kontakt`. Impressum/Datenschutz still on `veyndo-at.netlify.app` (those HTML files are not in this app).
+- **Supabase Auth Site URL** not changed via API (no MCP tool). Ani must set in dashboard (see report).
 
-- Skipped until DNS resolves.
-- Netlify Forms API `listSiteForms` returned `[]` (form not listed). No test submission sent.
-- Stripe MCP not authenticated; webhook for `veyndo.at` not added.
+## STEP 4 — deploy
 
-### GitHub portfolio (STEP 5)
+- `next dev` was off.
+- `netlify deploy --build --prod` → **Forbidden**. Live **veyndo-app.netlify.app**: `/` `/start` `/preise` `/p/beispiel-friseur` all **200** (previous build).
+- `listSiteForms` → `[]`. Form notification not created (no form id). No test submission sent.
 
-- `gh` is **not installed** / not logged in. Public repo **not** created. Do not `gh auth login` for Ani.
+## STEP 5 — GitHub
 
-## Next
+- Secret scan: no live key values in history.
+- `gh` 2.102.0 installed at `~/.local/bin/gh`. **Not logged in.** GitHub.com shows Sign in (no session). Public repo **not** created.
 
-1. Ani: easyname DNS as above; reply **მზადაა**.
-2. Re-check DNS, then HTTPS, then env/Auth/Stripe TEST webhook, then **one** prod deploy if credits still clear.
-3. Ani: install GitHub CLI and `gh auth login`, then push public `veyndo`.
-4. Ani: Form notification email + one demo from her phone (no agent outreach).
+## Commits this session (app)
+
+- `4035383` README EN/DE + contact URL
+- plus STATUS updates
