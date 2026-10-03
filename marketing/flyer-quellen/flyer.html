@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Veyndo Flyer A5</title>
+<style>
+@font-face { font-family: "Figtree"; font-weight: 300 900; src: url(figtree-normal-latin-7073ac.woff2) format("woff2"); }
+@font-face { font-family: "Newsreader"; font-weight: 200 800; src: url(newsreader-normal-latin-f0c28d.woff2) format("woff2"); }
+@font-face { font-family: "Newsreader"; font-style: italic; font-weight: 200 800; src: url(newsreader-italic-latin-7ab0b8.woff2) format("woff2"); }
+
+:root { --paper: #f6f2e8; --ink: #3a4430; --olive: #5c6b43; --sage: #8fa05e; --gold: #f0e2b6; --muted: #5d6550; }
+@page { size: A4 landscape; margin: 0; }
+* { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+html, body { margin: 0; padding: 0; background: #fff; }
+.sheet { width: 297mm; height: 210mm; display: flex; position: relative; }
+.sheet::after { content: ""; position: absolute; left: 148.5mm; top: 0; bottom: 0; border-left: 0.2mm dashed #c9c2b2; }
+
+.flyer {
+  width: 148.5mm; height: 210mm; padding: 9mm 10mm 7mm; display: flex; flex-direction: column;
+  background: var(--paper); color: var(--ink); font-family: "Figtree", sans-serif; position: relative; overflow: hidden;
+}
+.top { display: flex; align-items: center; justify-content: space-between; }
+.brand { display: flex; align-items: center; gap: 2.4mm; font-family: "Newsreader", serif; font-size: 7mm; }
+.brand svg { width: 8mm; height: 8mm; }
+.city { font-size: 2.6mm; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--sage); }
+
+.photos { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 2mm; height: 42mm; margin: 6mm 0 6mm; }
+.photos img { width: 100%; height: 100%; object-fit: cover; border-radius: 3.2mm; display: block; }
+
+.kicker { font-size: 2.7mm; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--sage); margin: 0 0 2mm; }
+h1 { font-family: "Newsreader", serif; font-weight: 400; font-size: 10.6mm; line-height: 1.02; letter-spacing: -.02em; margin: 0 0 3.5mm; }
+h1 em { color: var(--olive); }
+.lead { font-size: 3.6mm; line-height: 1.45; color: var(--muted); margin: 0 0 4mm; }
+
+.checks { list-style: none; padding: 0; margin: 0 0 5mm; display: grid; gap: 1.8mm; }
+.checks li { display: flex; gap: 2.4mm; align-items: center; font-size: 3.4mm; font-weight: 600; }
+.checks i { flex: none; width: 4.6mm; height: 4.6mm; border-radius: 50%; background: var(--sage); color: #fff; font-style: normal; font-size: 2.8mm; font-weight: 900; display: grid; place-items: center; }
+
+.cta { margin-top: auto; display: block; text-align: center; background: var(--olive); color: #fff; border-radius: 5mm; padding: 5mm; }
+.qr { flex: none; width: 33mm; height: 33mm; background: var(--paper); border-radius: 3mm; padding: 2.4mm; }
+.qr svg { width: 100%; height: 100%; display: block; }
+.cta b { display: block; font-family: "Newsreader", serif; font-weight: 400; font-size: 8mm; line-height: 1.05; }
+.cta b em { color: var(--gold); }
+.cta span { display: block; font-size: 3mm; color: #eef1e2; margin-top: 2mm; line-height: 1.4; }
+.cta .url { display: inline-block; margin-top: 3.4mm; font-size: 4.6mm; letter-spacing: .01em; font-weight: 700; background: var(--gold); color: var(--ink); padding: 2.2mm 5mm; border-radius: 99mm; }
+
+.price { display: flex; justify-content: space-between; align-items: baseline; margin: 4mm 0 2.4mm; padding-bottom: 2.4mm; border-bottom: .3mm solid #ddd5c4; font-size: 3.3mm; }
+.price strong { font-family: "Newsreader", serif; font-weight: 500; font-size: 4.8mm; color: var(--olive); }
+.contact { display: flex; justify-content: space-between; font-size: 3.1mm; font-weight: 700; }
+.contact small { display: block; font-weight: 500; color: var(--muted); font-size: 2.5mm; letter-spacing: .06em; text-transform: uppercase; }
+.legal { margin-top: 2.4mm; font-size: 2.1mm; color: #8a8f80; }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <!-- FLYER (repeated twice per A4 sheet) -->
+  
+    <section class="flyer">
+      <div class="top">
+        <div class="brand">
+          <svg viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="12" fill="#3a4430"/><path d="M11 11L24 35l13-24" stroke="#f0e2b6" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 40.5h8" stroke="#8fa05e" stroke-width="3.2" stroke-linecap="round"/></svg>
+          Veyndo
+        </div>
+        <span class="city">Wien</span>
+      </div>
+
+      <div class="photos">
+        <img src="branche-beauty.jpg" alt="">
+        <img src="praxis.jpg" alt="">
+        <img src="branche-handwerk.jpg" alt="">
+      </div>
+
+      <p class="kicker">Für Salons, Praxen &amp; Handwerk</p>
+      <h1>Ihre eigene Website. <em>Gratis ausprobieren.</em></h1>
+      <p class="lead">Beruf wählen, Namen eintippen und in wenigen Minuten sehen, wie Ihre Seite aussieht. Ohne Anmeldung.</p>
+
+      <ul class="checks">
+        <li><i>✓</i> Preise &amp; Öffnungszeiten auf einen Blick</li>
+        <li><i>✓</i> Anrufen, WhatsApp &amp; Route mit einem Tipp</li>
+        <li><i>✓</i> Persönlich für Sie eingerichtet</li>
+      </ul>
+
+      <div class="cta">
+        
+        <div>
+          <b>Jetzt Ihre <em>Demo bauen</em></b>
+          <span>Einfach im Handy-Browser eingeben. Kostenlos, ohne Anmeldung. Ihre Demo sieht nur Veyndo.</span>
+          <span class="url">veyndo.at</span>
+        </div>
+      </div>
+
+      <div class="price">
+        <span>Demo kostenlos · Website ab</span>
+        <strong>€ 1.290</strong>
+      </div>
+      <div class="contact">
+        <div><small>WhatsApp</small>+43 664 3568802</div>
+        <div style="text-align:right"><small>Telefon</small>+43 664 4390540</div>
+      </div>
+      <p class="legal">Medieninhaber und Hersteller: Ani Devdariani, Dieselgasse 10/1/30, 1100 Wien</p>
+    </section>
+  
+    <section class="flyer">
+      <div class="top">
+        <div class="brand">
+          <svg viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="12" fill="#3a4430"/><path d="M11 11L24 35l13-24" stroke="#f0e2b6" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 40.5h8" stroke="#8fa05e" stroke-width="3.2" stroke-linecap="round"/></svg>
+          Veyndo
+        </div>
+        <span class="city">Wien</span>
+      </div>
+
+      <div class="photos">
+        <img src="branche-beauty.jpg" alt="">
+        <img src="praxis.jpg" alt="">
+        <img src="branche-handwerk.jpg" alt="">
+      </div>
+
+      <p class="kicker">Für Salons, Praxen &amp; Handwerk</p>
+      <h1>Ihre eigene Website. <em>Gratis ausprobieren.</em></h1>
+      <p class="lead">Beruf wählen, Namen eintippen und in wenigen Minuten sehen, wie Ihre Seite aussieht. Ohne Anmeldung.</p>
+
+      <ul class="checks">
+        <li><i>✓</i> Preise &amp; Öffnungszeiten auf einen Blick</li>
+        <li><i>✓</i> Anrufen, WhatsApp &amp; Route mit einem Tipp</li>
+        <li><i>✓</i> Persönlich für Sie eingerichtet</li>
+      </ul>
+
+      <div class="cta">
+        
+        <div>
+          <b>Jetzt Ihre <em>Demo bauen</em></b>
+          <span>Einfach im Handy-Browser eingeben. Kostenlos, ohne Anmeldung. Ihre Demo sieht nur Veyndo.</span>
+          <span class="url">veyndo.at</span>
+        </div>
+      </div>
+
+      <div class="price">
+        <span>Demo kostenlos · Website ab</span>
+        <strong>€ 1.290</strong>
+      </div>
+      <div class="contact">
+        <div><small>WhatsApp</small>+43 664 3568802</div>
+        <div style="text-align:right"><small>Telefon</small>+43 664 4390540</div>
+      </div>
+      <p class="legal">Medieninhaber und Hersteller: Ani Devdariani, Dieselgasse 10/1/30, 1100 Wien</p>
+    </section>
+  
+</div>
+</body>
+</html>
