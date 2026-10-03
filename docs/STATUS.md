@@ -11,11 +11,12 @@
 
 ## STEP 2 — DNS
 
-- `whois.nic.at veyndo.at` → **nothing found** (not in the registry yet).
-- `host @8.8.8.8` → **NXDOMAIN**. No A / www CNAME.
-- Gmail: only order `20261003-sbs8z`; **no CloudPit / DNS-ready mail**.
-- Netlify already has `custom_domain=veyndo.at` + alias `www.veyndo.at` (unchanged). `ssl=false`.
-- **Cannot set records until nic.at/easyname finish Prüfung.** After that, easyname DNS:
+- `whois.nic.at veyndo.at` → still **nothing found**. `dig` A empty. nic.at RDAP 500.
+- Gmail: only order `20261003-sbs8z` (Prüfung). No CloudPit login mail.
+- CloudPit “forgot username” for `anidevdariani1997@gmail.com` → generic “if the address exists…”. No new mail. Account not created until Prüfung ends.
+- `createDnsZone veyndo.at` → Netlify **Internal Server Error** (zone cannot be created before the domain exists). `getDnsZones` = `[]`.
+- Netlify still: `custom_domain=veyndo.at`, alias `www.veyndo.at`, `ssl=false`.
+- After nic.at/easyname finish Prüfung, in CloudPit DNS:
   - A `@` → `75.2.60.5`
   - CNAME `www` → `veyndo-app.netlify.app`
   - keep MX
@@ -29,9 +30,11 @@
 
 ## STEP 4 — deploy
 
-- `next dev` was off.
-- `netlify deploy --build --prod` → **Forbidden**. Live **veyndo-app.netlify.app**: `/` `/start` `/preise` `/p/beispiel-friseur` all **200** (previous build).
-- `listSiteForms` → `[]`. Form notification not created (no form id). No test submission sent.
+- `--prod` rebuild still Forbidden (300 prod credits used). Draft was already live: https://step4-draft--veyndo-app.netlify.app
+- **Workaround that worked:** `restoreSiteDeploy` of `6ac17489e4bf169496470b2e` (rollback-style publish, no new build). `published_at` 2026-10-03T21:43:16Z.
+- **Production now that build:** https://veyndo-app.netlify.app — `/` `/start` `/preise` `/p/beispiel-friseur` = **200**. Title “Veyndo – Ihre Seite, persönlich für Sie gebaut”.
+- `veyndo.at` still has no DNS, so the custom hostname is not reachable yet.
+- `listSiteForms` still `[]`.
 
 ## STEP 5 — GitHub
 
