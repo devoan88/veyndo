@@ -4,7 +4,7 @@ export const CONTACT = {
   whatsapp: "436643568802",
   phone: "+43 664 4390540",
   phoneHref: "tel:+436644390540",
-  form: "https://veyndo-at.netlify.app/#kontakt",
+  form: "https://veyndo.at/#kontakt",
 };
 
 export function whatsappHref(text: string) {

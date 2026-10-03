@@ -1,44 +1,21 @@
-# Veyndo App
+# Veyndo
 
-ვებ-აპი, სადაც ავსტრიელი მცირე ბიზნესი 10 წუთში ქმნის ბიზნეს-პროფილს (`slug.veyndo.at`), ყოველთვიური გამოწერით.
+**DE.** Veyndo ist ein Demo-Studio und eine öffentliche Preisliste für kleine Betriebe in Österreich. Besucherinnen bauen ohne Konto eine unveröffentlichte Demo. Veröffentlichen kann nur die Administration.
 
-პროტოტიპი და გეგმა: https://claude.ai/artifact/RoGUW7qAs9X6mLq5VLbtMc
+**EN.** Veyndo is a demo studio and public price list for small businesses in Austria. Visitors build an unpublished demo without an account. Only admin can publish.
 
-## სტრუქტურა
+Live: https://veyndo.at  
+Fallback while DNS is pending: https://veyndo-app.netlify.app
 
-| საქაღალდე | რა არის |
-|---|---|
-| `docs/spec.md` | რას აკეთებს აპი: როლები, ეკრანები, ტარიფები, წესები |
-| `docs/stripe.md` | გამოწერები, ფასები, გადახდის პროცესი, დღგ |
-| `supabase/schema.sql` | მონაცემთა ბაზა, უსაფრთხოების წესები (RLS), ფოტოების საცავი |
-| `web/src/content/templates/de/` | 9 დარგის შაბლონი გერმანულად (სილამაზე, ჯანმრთელობა, ხელობა) |
+## Stack
 
-## ტექნოლოგიები
+Next.js 15 (App Router) · TypeScript · React 19 · Supabase (Auth, Postgres, Storage, RLS) · Stripe **test mode** · Netlify
 
-Next.js (App Router, TypeScript) · Supabase (Postgres, Auth, Storage, EU) · Stripe Billing · Netlify · Resend (ელფოსტა)
-
-## ეტაპები
-
-- [x] **კვირა 1:** სპეციფიკაცია, მონაცემთა ბაზა, შაბლონები, Stripe-ის გეგმა
-- [x] **კვირა 2–3:** onboarding (`/start`), რედაქტორი ცოცხალი გადახედვით (`/editor`), საჯარო გვერდი (`/p/[slug]`), დაფა QR-ით (`/dashboard`). მონაცემები ჯერ ბრაუზერშია (`web/src/lib/store.ts`)
-- [ ] **კვირა 4:** შესვლა + Supabase — პრომპტი Cursor-ისთვის: `docs/cursor-prompt-supabase.md`
-- [ ] **კვირა 4:** SEO, სტატისტიკა
-- [ ] **კვირა 5:** Stripe-ის გამოწერები
-- [ ] **კვირა 6:** დაფა და ადმინ-პანელი
-- [ ] **კვირა 7–8:** ტესტი 5–10 რეალურ ბიზნესთან
-
-## კვირა 2-ისთვის საჭიროა
-
-- **Node.js 22 LTS** ამ კომპიუტერზე (ახლა არ არის დაყენებული).
-- **Supabase-ის პროექტი** (რეგიონი: Frankfurt) — ანგარიშს Ani ქმნის.
-- მოგვიანებით (კვირა 5): **Stripe-ის ანგარიში** და **Gewerbe**.
-
-
-## გაშვება
+## Local
 
 ```bash
-cd web
-npm run dev
+export PATH="$HOME/.local/node/bin:$PATH"
+cd web && npm run dev
 ```
 
-შემდეგ: http://localhost:3000
+Do not commit `.env.local`. Never put `service_role` or live Stripe keys in the client.
