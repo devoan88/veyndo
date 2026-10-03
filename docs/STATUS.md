@@ -1,47 +1,40 @@
-# Veyndo status — 3 Oct 2026 (evening)
+# Veyndo status — 3 Oct 2026 (night)
 
 ## STEP 0
 
 - `marketing/` in git (`c3149c5`). `.gitignore` covers `.env*`, `.netlify`, `supabase/.temp/`, `web/.next`.
 
-## STEP 1 — credits
+## GitHub (this task STEP 1)
 
-- API: Free, `usages_exceeded=[]`, `credits used 0/300`, next period **2026-10-29**, `grace_topup` 2026-10-02.
-- **Production deploy still Forbidden** (`JSONHTTPError: Forbidden`). Treat as credit/account block. No second deploy attempted.
+- `gh auth status` → **not logged in**. Repo **not** created (waiting for Ani: `~/.local/bin/gh auth login --web` + Authorize).
+- Secret scan `git log -p --all` with value pattern (`sk_/rk_/rkcs_/whsec_/eyJhbGciOi` + 16+ chars): **value_hits 0**. Doc/prefix mentions of `sk_test_` / `service_role` remain; no push.
 
-## STEP 2 — DNS
+## Domain (this task STEP 2)
 
-- `whois.nic.at veyndo.at` → still **nothing found**. `dig` A empty. nic.at RDAP 500.
-- Gmail: only order `20261003-sbs8z` (Prüfung). No CloudPit login mail.
-- CloudPit “forgot username” for `anidevdariani1997@gmail.com` → generic “if the address exists…”. No new mail. Account not created until Prüfung ends.
-- `createDnsZone veyndo.at` → Netlify **Internal Server Error** (zone cannot be created before the domain exists). `getDnsZones` = `[]`.
-- Netlify still: `custom_domain=veyndo.at`, alias `www.veyndo.at`, `ssl=false`.
-- After nic.at/easyname finish Prüfung, in CloudPit DNS:
-  - A `@` → `75.2.60.5`
-  - CNAME `www` → `veyndo-app.netlify.app`
-  - keep MX
+- `scripts/check-domain.sh` run once: nic.at **% nothing found**, `registered: no`, A empty, www CNAME empty, `https://veyndo.at` and `https://www.veyndo.at` **000** (Could not resolve host).
+- Runbook: `docs/DOMAIN.md`. No DNS records written by agent. No CloudPit login/password.
 
-## STEP 3 — URLs (done except Auth UI)
+## Supabase (this task STEP 3)
 
-- Netlify `NEXT_PUBLIC_SITE_URL=https://veyndo.at` (production). Needs a successful prod deploy to appear on the live site.
-- Stripe TEST webhook created: `we_1UMaAsDIUjwz68ElsLDeD6s4` → `https://veyndo.at/api/stripe/webhook` (same events as docs). Signing secret stored in Netlify `STRIPE_WEBHOOK_SECRET` (`--secret`). Existing netlify.app webhook left in place.
-- Code: no `veyndo-app.netlify.app` in `web/src`. `PROFILE_DOMAIN` stays `veyndo.at`. Contact form URL → `https://veyndo.at/#kontakt`. Impressum/Datenschutz still on `veyndo-at.netlify.app` (those HTML files are not in this app).
-- **Supabase Auth Site URL** not changed via API (no MCP tool). Ani must set in dashboard (see report).
+- Agent cannot change Auth URL Configuration (no API tool). Ani must add redirects in dashboard (see report). Site URL unchanged until veyndo.at resolves.
 
-## STEP 4 — deploy
+## Deploy (this task STEP 4 — script only, not executed)
 
-- `--prod` rebuild still Forbidden (300 prod credits used). Draft was already live: https://step4-draft--veyndo-app.netlify.app
-- **Workaround that worked:** `restoreSiteDeploy` of `6ac17489e4bf169496470b2e` (rollback-style publish, no new build). `published_at` 2026-10-03T21:43:16Z.
-- **Production now that build:** https://veyndo-app.netlify.app — `/` `/start` `/preise` `/p/beispiel-friseur` = **200**. Title “Veyndo – Ihre Seite, persönlich für Sie gebaut”.
-- `veyndo.at` still has no DNS, so the custom hostname is not reachable yet.
-- `listSiteForms` still `[]`.
+- **No** `netlify deploy`, **no** `restoreSiteDeploy`. Next prod deploy: **2026-10-29** or after Ani upgrades.
+- `scripts/deploy-once.sh` + `docs/DEPLOY.md`. Form `demo-request` in `web/public/__forms.html`. Detection already `ignore_html_forms=false`.
 
-## STEP 5 — GitHub
+## Admin (this task STEP 5)
 
-- Secret scan: no live key values in history.
-- `gh` 2.102.0 installed at `~/.local/bin/gh`. **Not logged in.** GitHub.com shows Sign in (no session). Public repo **not** created.
+- `/admin` already lists `service_requests` newest first (name, slug, message, created_at) + Vorschau `/p/{slug}` (unpublished visible to admin via RLS `is_admin` + `viewerIsAdmin` in `p/[slug]/page.tsx`).
+- `npx tsc --noEmit` OK after deleting Finder dupes in gitignored `web/.next/types/* 2.ts`. `npx next lint` ✔ no warnings. No deploy.
+
+## Older notes
+
+- Production still the restored draft on https://veyndo-app.netlify.app (do not repeat restore). Custom domain ssl=false until DNS.
+- Stripe TEST webhook `we_1UMaAsDIUjwz68ElsLDeD6s4` → `https://veyndo.at/api/stripe/webhook`.
+- `listSiteForms` was `[]`.
 
 ## Commits this session (app)
 
 - `4035383` README EN/DE + contact URL
-- plus STATUS updates
+- STATUS / DOMAIN / DEPLOY / scripts (this task)
