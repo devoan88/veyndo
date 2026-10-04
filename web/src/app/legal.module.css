@@ -1,0 +1,11 @@
+.page { padding-bottom: 64px; }
+.head { padding: clamp(40px, 7vw, 80px) 0 12px; }
+.kicker { text-transform: uppercase; letter-spacing: .16em; font-size: .74rem; font-weight: 700; color: var(--sage); margin: 0 0 12px; }
+.h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(2.1rem, 5vw, 3.4rem); line-height: 1.05; letter-spacing: -.02em; margin: 0 0 12px; }
+.lead { color: var(--muted); font-size: 1.05rem; max-width: 62ch; margin: 0 0 8px; }
+.body { max-width: 68ch; padding-bottom: 24px; }
+.body h2 { font-family: var(--serif); font-weight: 500; font-size: 1.45rem; margin: 1.8em 0 .5em; }
+.body p, .body li { color: var(--ink); }
+.body ul { padding-left: 1.2em; }
+.body a { color: var(--accent); }
+.offen { background: #efe6d2; border: 1px solid #dccca6; border-radius: 10px; padding: 2px 6px; font-size: .92em; }
