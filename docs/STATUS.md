@@ -23,14 +23,15 @@
 - Unsplash: still hotlinked from `images.unsplash.com` (landing, demo, beispiel-*). Documented in Datenschutz.
 - First-party `/api/events` (view/call/whatsapp/route/qr) exists — reported, not removed.
 - Migration **not applied** remotely: `supabase/migrations/20261004_service_requests_handled_at.sql`
+- Retention SQL **not applied**: `supabase/migrations/20261005_retention_cleanup.sql` (Ani: SQL Editor). See `docs/RETENTION.md`.
+- **Reminder:** Netlify Forms `demo-request` are **not** in SQL. After 12 months delete them by hand (Netlify → Forms → demo-request).
 - Smoke (`scripts/smoke.sh` vs http://localhost:3000): all **200**.
 
 ### [OFFEN: …]
 
 - `[OFFEN: Geschäfts-E-Mail, z. B. hallo@veyndo.at]` (Impressum + Datenschutz)
 - `[OFFEN: Gewerbewortlaut + GISA-Zahl nach Anmeldung]`
-- `[OFFEN: Aufbewahrungsfrist in Monaten]` (Anfragen)
-- `[OFFEN: Aufbewahrungsfrist für Aufrufstatistiken]` (events)
+- `[OFFEN: welche Uhr]` for anonymous-demo inactivity (`last_sign_in_at` vs `updated_at`) — see `docs/RETENTION.md`
 
 ## Older notes
 

@@ -1,5 +1,55 @@
 # Datenaufbewahrung (Retention)
 
+Automatisch (nach Apply der Migration): `service_requests` und `events` höchstens 12 Monate.  
+Nicht automatisch: Storage-Dateien, Netlify Forms, anonyme Demos (siehe Vorschlag unten).
+
+## Was die Funktion löscht
+
+Täglich 03:15 UTC, `public.retention_cleanup()`:
+
+- `service_requests` mit `handled_at` älter als 12 Monate
+- `service_requests` ohne `handled_at`, wenn `created_at` älter als 12 Monate
+- `events` mit `created_at` älter als 12 Monate
+
+Nicht angefasst: `businesses` (auch unveröffentlicht), Owner, Admin, Storage.
+
+## Anwenden (du, SQL Editor)
+
+Datei: `supabase/migrations/20261005_retention_cleanup.sql`
+
+1. Zuerst nur die PREVIEW-Abfrage (Datei-Kopf, nur Counts).
+2. Wenn die Zahlen stimmen: ganze Datei in Supabase → SQL Editor einfügen → **Run**.
+3. Remote-Apply macht der Agent in diesem Task **nicht**.
+
+### PREVIEW (nur zählen)
+
+```sql
+select
+  (select count(*) from public.service_requests
+    where handled_at < now() - interval '12 months') as requests_handled_old,
+  (select count(*) from public.service_requests
+    where handled_at is null and created_at < now() - interval '12 months') as requests_unhandled_old,
+  (select count(*) from public.events
+    where created_at < now() - interval '12 months') as events_old;
+```
+
+### Prüfen
+
+```sql
+select * from cron.job;
+select * from cron.job_run_details order by start_time desc limit 5;
+```
+
+### Rückgängig (Job aus, Funktion bleibt)
+
+```sql
+select cron.unschedule('veyndo-retention');
+```
+
+## Netlify Forms
+
+Einträge von `demo-request` liegen **nicht** in Postgres. SQL löscht sie nicht. Nach 12 Monaten: Netlify → Forms → **demo-request** → manuell löschen.
+
 ## Vorschlag — anonyme Demos nach 12 Monaten (noch nicht gebaut)
 
 Ziel: unveröffentlichte Demos anonymer Nutzerinnen nach 12 Monaten Inaktivität löschen. **Kein Delete-Code in diesem Task.**
