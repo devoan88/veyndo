@@ -29,7 +29,7 @@ export default function ImpressumPage() {
           <p>
             Telefon: <a href="tel:+436644390540">+43 664 4390540</a>
             <br />
-            E-Mail: <span className={s.offen}>[OFFEN: Geschäfts-E-Mail, z. B. hallo@veyndo.at]</span>
+            E-Mail: <a href="mailto:anidevdariani1997@gmail.com">anidevdariani1997@gmail.com</a>
           </p>
 
           <h2>Unternehmensgegenstand</h2>

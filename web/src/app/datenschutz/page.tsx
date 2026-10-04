@@ -24,7 +24,7 @@ export default function DatenschutzPage() {
           <p>
             Ani Devdariani, Einzelunternehmerin, Dieselgasse 10/1/30, 1100 Wien, Österreich.
             Telefon +43 664 4390540, E-Mail:{" "}
-            <span className={s.offen}>[OFFEN: Geschäfts-E-Mail, z. B. hallo@veyndo.at]</span>.
+            <a href="mailto:anidevdariani1997@gmail.com">anidevdariani1997@gmail.com</a>.
             Vollständige Angaben: <Link href="/impressum">Impressum</Link>.
           </p>
 
@@ -92,10 +92,8 @@ export default function DatenschutzPage() {
           <h2>10. Speicherdauer</h2>
           <ul>
             <li>Demo-Daten und Fotos: bis zur Löschung auf Anfrage oder bis das anonyme Konto entfällt.</li>
-            <li>Anfragen (<code>service_requests</code> / Netlify Forms): bis zur Bearbeitung, danach{" "}
-              <span className={s.offen}>[OFFEN: Aufbewahrungsfrist in Monaten]</span>.</li>
-            <li>Ereignisse (<code>events</code>):{" "}
-              <span className={s.offen}>[OFFEN: Aufbewahrungsfrist für Aufrufstatistiken]</span>.</li>
+            <li>Anfragen (<code>service_requests</code> / Netlify Forms): bis zur Bearbeitung, danach höchstens 12 Monate.</li>
+            <li>Ereignisse (<code>events</code>): höchstens 12 Monate.</li>
             <li>Netlify-Serverprotokolle: nach Vorgabe des Hosters.</li>
           </ul>
 
