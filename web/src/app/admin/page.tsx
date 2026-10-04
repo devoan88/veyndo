@@ -44,16 +44,17 @@ export default async function AdminPage() {
 
   const { data: reqs } = await supabase
     .from("service_requests")
-    .select("id,owner_id,message,created_at")
+    .select("id,owner_id,message,created_at,handled_at")
     .order("created_at", { ascending: false });
 
   const bizByOwner = new Map((rows || []).map((r: { owner_id: string; name: string; slug: string }) => [r.owner_id, r]));
-  const requests = (reqs || []).map((r: { id: string; owner_id: string; message: string | null; created_at: string }) => ({
+  const requests = (reqs || []).map((r: { id: string; owner_id: string; message: string | null; created_at: string; handled_at: string | null }) => ({
     id: r.id,
     name: bizByOwner.get(r.owner_id)?.name || "—",
     slug: bizByOwner.get(r.owner_id)?.slug || "",
     message: r.message || "",
     created_at: r.created_at,
+    handled_at: r.handled_at,
   }));
 
   return (

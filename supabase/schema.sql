@@ -173,7 +173,8 @@ create table service_requests (
   topic         text not null,       -- 'website', 'google', 'ads', 'other'
   message       text check (char_length(message) <= 1000),
   status        text not null default 'new' check (status in ('new','contacted','won','lost')),
-  created_at    timestamptz not null default now()
+  created_at    timestamptz not null default now(),
+  handled_at    timestamptz
 );
 
 -- ---------------------------------------------------------------

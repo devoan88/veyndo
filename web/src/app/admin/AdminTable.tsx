@@ -68,8 +68,23 @@ export default function AdminTable({ rows }: { rows: Row[] }) {
 export function RequestsTable({
   rows,
 }: {
-  rows: { id: string; name: string; slug: string; message: string; created_at: string }[];
+  rows: { id: string; name: string; slug: string; message: string; created_at: string; handled_at: string | null }[];
 }) {
+  const [list, setList] = useState(rows);
+
+  async function mark(id: string, handled: boolean) {
+    const res = await fetch("/api/admin/request-handled", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, handled }),
+    });
+    if (!res.ok) {
+      alert("Nicht erlaubt oder Spalte handled_at fehlt (Migration anwenden).");
+      return;
+    }
+    const handled_at = handled ? new Date().toISOString() : null;
+    setList((prev) => prev.map((r) => (r.id === id ? { ...r, handled_at } : r)));
+  }
   return (
     <div className="card" style={{ overflowX: "auto" }}>
       <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
@@ -79,10 +94,11 @@ export function RequestsTable({
             <th style={{ padding: 8 }}>Nachricht</th>
             <th style={{ padding: 8 }}>Wann</th>
             <th style={{ padding: 8 }}></th>
+            <th style={{ padding: 8 }}>Erledigt</th>
           </tr>
         </thead>
         <tbody>
-          {rows.map((r) => (
+          {list.map((r) => (
             <tr key={r.id} style={{ borderTop: "1px solid var(--line)" }}>
               <td style={{ padding: 8 }}>
                 <b>{r.name}</b>
@@ -93,11 +109,16 @@ export function RequestsTable({
               <td style={{ padding: 8 }}>
                 {r.slug ? <a className="btn ghost small" href={`/p/${r.slug}`}>Vorschau ansehen</a> : "—"}
               </td>
+              <td style={{ padding: 8 }}>
+                <button className="btn ghost small" type="button" onClick={() => mark(r.id, !r.handled_at)}>
+                  {r.handled_at ? "Offen setzen" : "Erledigt"}
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
-      {!rows.length && <p className="muted">Noch keine Anfragen.</p>}
+      {!list.length && <p className="muted">Noch keine Anfragen.</p>}
     </div>
   );
 }
