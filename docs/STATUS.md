@@ -6,7 +6,7 @@
 
 ## GitHub
 
-- CLI logged in as `devoan88` (keyring). Public repo create was interrupted; push still pending.
+- Public repo: https://github.com/devoan88/veyndo (`master` pushed).
 
 ## Domain
 
@@ -23,7 +23,7 @@
 - Unsplash: still hotlinked from `images.unsplash.com` (landing, demo, beispiel-*). Documented in Datenschutz.
 - First-party `/api/events` (view/call/whatsapp/route/qr) exists — reported, not removed.
 - Migration **not applied** remotely: `supabase/migrations/20261004_service_requests_handled_at.sql`
-- Retention SQL **not applied**: `supabase/migrations/20261005_retention_cleanup.sql` (Ani: SQL Editor). See `docs/RETENTION.md`.
+- Retention **applied** remotely: `retention_cleanup` + cron `veyndo-retention` daily 03:15. Preview counts were 0/0/0. See `docs/RETENTION.md`.
 - **Reminder:** Netlify Forms `demo-request` are **not** in SQL. After 12 months delete them by hand (Netlify → Forms → demo-request).
 - Smoke (`scripts/smoke.sh` vs http://localhost:3000): all **200**.
 
