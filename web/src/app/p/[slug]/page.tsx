@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Footer } from "@/components/Chrome";
 import { createClient } from "@/lib/supabase/server";
 import { demoBusiness } from "@/lib/demo";
 import { localBusinessJsonLd } from "@/lib/jsonld";
@@ -116,6 +117,7 @@ export default async function PublicProfile({
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd(b)) }} />
       )}
       <PublicProfileClient b={b} srcQr={src === "qr"} />
+      <Footer />
     </>
   );
 }

@@ -18,6 +18,7 @@ import { saveWishes, savePhotoPlan, type PhotoPlan } from "@/lib/trial";
 import { resizeImage } from "@/lib/image";
 import { CONTACT } from "@/lib/contact";
 import type { Business } from "@/lib/types";
+import { Footer } from "@/components/Chrome";
 import s from "./start.module.css";
 
 const STEPS = ["Beruf", "Name", "Look", "Fotos", "Wünsche", "Fertig"];
@@ -387,6 +388,10 @@ export default function DemoStudio() {
                       <input id="c-when" value={contact.when} onChange={(e) => setContact({ ...contact, when: e.target.value })} placeholder="z. B. vormittags" />
                     </div>
                   </div>
+                  <p className={s.consent}>
+                    Mit dem Absenden stimmst du zu, dass wir dich zu deiner Anfrage kontaktieren. Details:{" "}
+                    <Link href="/datenschutz">Datenschutz</Link>.
+                  </p>
                   <button type="submit" className={s.go} disabled={busy || !contact.phone.trim()}>{busy ? "Wird gesendet …" : "Anfrage senden 🚀"}</button>
                   <small className={s.fine}>Wir verwenden Ihre Angaben nur, um Sie wegen Ihrer Seite zu kontaktieren.</small>
                 </form>
@@ -428,6 +433,7 @@ export default function DemoStudio() {
       </div>
 
       {preview && step < 5 && <button type="button" className={s.fab} onClick={() => setSheet(true)}>👀 Vorschau</button>}
+      <Footer />
     </div>
   );
 }

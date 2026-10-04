@@ -102,6 +102,8 @@
 .contact { background: var(--white); border: 1px solid var(--line); border-radius: 20px; padding: 20px; margin: 8px 0 18px; animation: stepIn .35s ease both; }
 .contact .go { margin-left: 0; width: 100%; }
 .thanks { display: flex; flex-direction: column; gap: 4px; background: #dff3e3; color: #1f5a2b; border-radius: 16px; padding: 18px; margin: 8px 0 18px; }
+.consent { color: var(--muted); font-size: .88rem; margin: 0 0 12px; }
+.consent a { color: var(--ink); }
 .fine { display: block; color: var(--muted); font-size: .82rem; margin-top: 10px; }
 .fine a { color: var(--ink); }
 

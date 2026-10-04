@@ -33,8 +33,9 @@ export function Footer() {
       <div className="wrap">
         <span>© {new Date().getFullYear()} Veyndo · Wien</span>
         <span>
-          <a href="https://veyndo-at.netlify.app/impressum.html">Impressum</a> ·{" "}
-          <a href="https://veyndo-at.netlify.app/datenschutz.html">Datenschutz</a>
+          <Link href="/impressum">Impressum</Link>
+          {" · "}
+          <Link href="/datenschutz">Datenschutz</Link>
         </span>
       </div>
     </footer>

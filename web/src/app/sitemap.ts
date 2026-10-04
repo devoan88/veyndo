@@ -6,7 +6,7 @@ const DEMOS = ["beispiel-nagelstudio", "beispiel-friseur", "beispiel-massage"];
 
 export default async function sitemap() {
   const origin = siteOrigin();
-  const staticPages = ["", "/start"].map((p) => ({
+  const staticPages = ["", "/start", "/preise", "/impressum", "/datenschutz"].map((p) => ({
     url: `${origin}${p || "/"}`,
     changeFrequency: "weekly" as const,
     priority: p === "" ? 1 : 0.6,
