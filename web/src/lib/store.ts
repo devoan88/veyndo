@@ -180,10 +180,14 @@ async function pathFromPublicUrl(url: string | null | undefined) {
   return url.slice(at + STORAGE_MARKER.length);
 }
 
+const MAX_UPLOAD_BYTES = 1_500_000; // ~1.5 MB JPEG after client resize
+const MAX_GALLERY = 8;
+
 async function uploadCover(businessId: string, dataUrl: string, previousPath: string | null) {
   const supabase = createClient();
   const res = await fetch(dataUrl);
   const blob = await res.blob();
+  if (blob.size > MAX_UPLOAD_BYTES) throw new Error("cover_too_large");
   const path = `${businessId}/cover-${crypto.randomUUID()}.jpg`;
   const { error } = await supabase.storage.from("photos").upload(path, blob, { contentType: "image/jpeg", upsert: false });
   if (error) throw error;
@@ -199,11 +203,12 @@ const STORAGE_MARKER = "/object/public/photos/";
 async function syncPhotos(businessId: string, photos: Photo[]): Promise<Photo[]> {
   const supabase = createClient();
   const rows: { id: string; business_id: string; path: string; position: number }[] = [];
-  for (const [i, p] of photos.entries()) {
+  for (const [i, p] of photos.slice(0, MAX_GALLERY).entries()) {
     let path: string | null = null;
     if (p.url.startsWith("data:")) {
       path = `${businessId}/g-${p.id}.jpg`;
       const blob = await (await fetch(p.url)).blob();
+      if (blob.size > MAX_UPLOAD_BYTES) throw new Error("photo_too_large");
       const { error } = await supabase.storage.from("photos").upload(path, blob, { contentType: "image/jpeg", upsert: false });
       // A parallel autosave may have uploaded the same file already.
       if (error && !/exist|duplicate/i.test(error.message)) throw error;
@@ -236,6 +241,12 @@ async function saveRemote(b: Business, ownerId?: string): Promise<Business> {
   if (!user) {
     localSave(b);
     return b;
+  }
+
+  // One business per owner — never create parallel rows via new UUIDs.
+  const { data: owned } = await supabase.from("businesses").select("id").eq("owner_id", user.id).maybeSingle();
+  if (owned?.id && owned.id !== b.id) {
+    b = { ...b, id: owned.id };
   }
 
   let coverPath: string | null = null;

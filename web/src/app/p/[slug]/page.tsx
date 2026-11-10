@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { Footer } from "@/components/Chrome";
 import { createClient } from "@/lib/supabase/server";
 import { demoBusiness } from "@/lib/demo";
-import { localBusinessJsonLd } from "@/lib/jsonld";
+import { jsonLdScriptHtml, localBusinessJsonLd } from "@/lib/jsonld";
 import { supabaseConfigured } from "@/lib/env";
 import PublicProfileClient from "./PublicProfileClient";
 import type { Business, OpeningDay, PlanTier, ProfileTheme, Service } from "@/lib/types";
@@ -12,7 +12,9 @@ import type { Business, OpeningDay, PlanTier, ProfileTheme, Service } from "@/li
 async function viewerIsAdmin() {
   if (!supabaseConfigured()) return false;
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) return false;
   const { data } = await supabase.from("owners").select("is_admin").eq("id", user.id).maybeSingle();
   return !!data?.is_admin;
@@ -23,9 +25,11 @@ function hm(t: string | null | undefined) {
   return String(t).slice(0, 5);
 }
 
-async function loadPublished(slug: string): Promise<Business | null> {
+type Loaded = { business: Business; blocked: boolean };
+
+async function loadBySlug(slug: string): Promise<Loaded | null> {
   const demo = demoBusiness(slug);
-  if (demo) return demo;
+  if (demo) return { business: demo, blocked: false };
   if (!supabaseConfigured()) return null;
   const supabase = await createClient();
   const { data: row } = await supabase.from("businesses").select("*").eq("slug", slug).maybeSingle();
@@ -38,21 +42,25 @@ async function loadPublished(slug: string): Promise<Business | null> {
   ]);
   let tier: PlanTier = "basis";
   if (planRow && ["active", "trialing", "past_due"].includes(planRow.status)) tier = planRow.tier as PlanTier;
-  const services: Service[] = (svcs || []).map((s: { id: string; title: string; price_label: string | null; duration_min: number | null }) => ({
-    id: s.id,
-    title: s.title,
-    priceLabel: s.price_label || "",
-    durationMin: s.duration_min,
-  }));
-  const hours: OpeningDay[] = (hrs || []).map((h: { weekday: number; closed: boolean; opens: string | null; closes: string | null }) => ({
-    weekday: h.weekday,
-    closed: h.closed,
-    opens: hm(h.opens),
-    closes: hm(h.closes),
-  }));
+  const services: Service[] = (svcs || []).map(
+    (s: { id: string; title: string; price_label: string | null; duration_min: number | null }) => ({
+      id: s.id,
+      title: s.title,
+      priceLabel: s.price_label || "",
+      durationMin: s.duration_min,
+    }),
+  );
+  const hours: OpeningDay[] = (hrs || []).map(
+    (h: { weekday: number; closed: boolean; opens: string | null; closes: string | null }) => ({
+      weekday: h.weekday,
+      closed: h.closed,
+      opens: hm(h.opens),
+      closes: hm(h.closes),
+    }),
+  );
   const base = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const cover = row.cover_path && base ? `${base}/storage/v1/object/public/photos/${row.cover_path}` : null;
-  return {
+  const business: Business = {
     id: row.id,
     slug: row.slug,
     templateKey: row.template_key,
@@ -70,9 +78,16 @@ async function loadPublished(slug: string): Promise<Business | null> {
     accentColor: row.accent_color,
     theme: (row.theme as ProfileTheme) || "klassisch",
     coverDataUrl: cover,
-    photos: base ? (pics || []).map((p: { id: string; path: string }) => ({ id: p.id, url: `${base}/storage/v1/object/public/photos/${p.path}` })) : [],
+    photos: base
+      ? (pics || []).map((p: { id: string; path: string }) => ({
+          id: p.id,
+          url: `${base}/storage/v1/object/public/photos/${p.path}`,
+        }))
+      : [],
     services,
-    hours: hours.length ? hours : Array.from({ length: 7 }, (_, i) => ({ weekday: i + 1, closed: i >= 5, opens: "09:00", closes: "18:00" })),
+    hours: hours.length
+      ? hours
+      : Array.from({ length: 7 }, (_, i) => ({ weekday: i + 1, closed: i >= 5, opens: "09:00", closes: "18:00" })),
     legalName: row.legal_name || "",
     legalForm: row.legal_form || "",
     uidNumber: row.uid_number || "",
@@ -80,12 +95,17 @@ async function loadPublished(slug: string): Promise<Business | null> {
     tier,
     updatedAt: row.updated_at,
   };
+  return { business, blocked: !!row.is_blocked };
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const b = await loadPublished(slug);
-  if (!b) return { title: "Nicht gefunden" };
+  const loaded = await loadBySlug(slug);
+  // Never leak unpublished/blocked draft text into title/description.
+  if (!loaded || loaded.blocked || !loaded.business.isPublished) {
+    return { title: "პროფილი", robots: { index: false, follow: false } };
+  }
+  const b = loaded.business;
   return {
     title: `${b.name} · ${b.tagline}`,
     description: b.about || b.tagline,
@@ -101,8 +121,9 @@ export default async function PublicProfile({
 }) {
   const { slug } = await params;
   const { src } = await searchParams;
-  const b = await loadPublished(slug);
-  if (!b) notFound();
+  const loaded = await loadBySlug(slug);
+  if (!loaded || loaded.blocked) notFound();
+  const b = loaded.business;
   const isDemo = slug.startsWith("beispiel-");
   const adminPreview = !isDemo && !b.isPublished && (await viewerIsAdmin());
   if (!isDemo && !b.isPublished && !adminPreview) notFound();
@@ -110,11 +131,20 @@ export default async function PublicProfile({
     <>
       {(isDemo || adminPreview) && (
         <div className="notice" style={{ borderRadius: 0, margin: 0, textAlign: "center" }}>
-          {adminPreview ? "DEMO · unveröffentlicht · nur für Admin sichtbar." : <>Beispielprofil. <Link href="/start">So eines als Vorschau bauen</Link></>}
+          {adminPreview ? (
+            "DEMO · unveröffentlicht · nur für Admin sichtbar."
+          ) : (
+            <>
+              მაგალითის პროფილი. <Link href="/start">ააშენეთ საკუთარი დემო</Link>
+            </>
+          )}
         </div>
       )}
       {!adminPreview && (
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd(b)) }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: jsonLdScriptHtml(localBusinessJsonLd(b)) }}
+        />
       )}
       <PublicProfileClient b={b} srcQr={src === "qr"} />
       <Footer />
