@@ -1,3 +1,5 @@
+import { getMessages } from "./i18n/messages";
+
 // Catalog for the demo builder. Professions with `base` reuse a full template
 // (services, hours, texts); the others bring a few typical services.
 export type Profession = {
@@ -120,7 +122,7 @@ export const CUSTOM_PREFIX = "eigene:";
 
 export function professionLabel(key: string): string {
   if (key.startsWith(CUSTOM_PREFIX)) return key.slice(CUSTOM_PREFIX.length);
-  return getProfession(key)?.label ?? key;
+  return getMessages("ka").professionLabels[key] ?? getProfession(key)?.label ?? key;
 }
 
 export function customProfession(label: string): Profession {

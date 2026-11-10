@@ -1,7 +1,10 @@
 import type { Business, Template } from "./types";
 import type { Profession } from "./professions";
-import { TEMPLATES } from "./templates";
+import { getTemplates } from "./templates";
 import { toSlug } from "./slug";
+import type { Locale } from "./i18n/config";
+import { DEFAULT_LOCALE, marketCity } from "./i18n/config";
+import { getMessages } from "./i18n/messages";
 
 export const uid = () =>
   typeof crypto !== "undefined" && "randomUUID" in crypto
@@ -10,18 +13,21 @@ export const uid = () =>
 
 export const newServiceId = uid;
 
-export function fromTemplate(t: Template, name?: string): Business {
+export function fromTemplate(t: Template, name?: string, _locale: Locale = DEFAULT_LOCALE): Business {
+  void _locale;
   const businessName = name?.trim() || t.example.name;
+  const city = t.example.city;
+  const districtPhrase = `${city} ${t.example.district}`;
   return {
     id: uid(),
     slug: toSlug(businessName),
     templateKey: t.key,
     name: businessName,
-    tagline: t.tagline.replace("{district}", `Wien ${t.example.district}`),
+    tagline: t.tagline.replace("{district}", districtPhrase),
     about: t.about,
     street: "",
     postalCode: t.example.district,
-    city: t.example.city,
+    city,
     district: t.example.district,
     phone: "",
     whatsapp: "",
@@ -53,22 +59,38 @@ const HOURS: Record<string, [number, string, string][]> = {
 };
 
 /** Demo business for any profession of the catalog (see lib/professions.ts). */
-export function fromProfession(p: Profession, name?: string): Business {
-  const base = p.base ? TEMPLATES.find((t) => t.key === p.base) : undefined;
-  if (base) return { ...fromTemplate(base, name), templateKey: p.key, accentColor: p.accent };
+export function fromProfession(p: Profession, name?: string, locale: Locale = DEFAULT_LOCALE): Business {
+  const templates = getTemplates(locale);
+  const base = p.base ? templates.find((t) => t.key === p.base) : undefined;
+  if (base) return { ...fromTemplate(base, name, locale), templateKey: p.key, accentColor: p.accent };
 
-  const businessName = name?.trim() || `${p.label} Muster`;
+  const m = getMessages(locale);
+  const label = m.professionLabels[p.key] ?? p.label;
+  const city = marketCity(locale);
+  const businessName = name?.trim() || label;
   const preset = p.hours === "termin" ? null : HOURS[p.hours ?? "werktags"];
+  const free = "უფასო";
+  const onRequest = "შეთანხმებით";
+  const byAppt = m.hours.byAppointment;
+  const services = (p.services ?? []).map(([title, priceLabel, durationMin]) => ({
+    id: uid(),
+    title,
+    priceLabel: priceLabel
+      .replace(/kostenlos/gi, free)
+      .replace(/auf Anfrage/gi, onRequest),
+    durationMin,
+  }));
+
   return {
     id: uid(),
     slug: toSlug(businessName),
     templateKey: p.key,
     name: businessName,
-    tagline: p.tagline ?? `${p.label} in Wien`,
-    about: `${p.label} in Wien. Persönlich, verlässlich und mit Zeit für Sie.`,
+    tagline: p.tagline ?? `${label} ${city}-ში`,
+    about: `${label} ${city}-ში. პირადი, საიმედო და დრო თქვენთვის.`,
     street: "",
     postalCode: "",
-    city: "Wien",
+    city,
     district: "",
     phone: "",
     whatsapp: "",
@@ -78,9 +100,9 @@ export function fromProfession(p: Profession, name?: string): Business {
     theme: "klassisch",
     coverDataUrl: null,
     photos: [],
-    services: (p.services ?? []).map(([title, priceLabel, durationMin]) => ({ id: uid(), title, priceLabel, durationMin })),
+    services,
     hours: [1, 2, 3, 4, 5, 6, 7].map((weekday) => {
-      if (!preset) return { weekday, closed: weekday > 5, note: weekday > 5 ? undefined : "nach Vereinbarung" };
+      if (!preset) return { weekday, closed: weekday > 5, note: weekday > 5 ? undefined : byAppt };
       const d = preset.find(([w]) => w === weekday);
       return d ? { weekday, closed: false, opens: d[1], closes: d[2] } : { weekday, closed: true };
     }),

@@ -5,7 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import ProfileView from "@/components/ProfileView";
 import Confetti from "@/components/Confetti";
-import { PROFESSIONS, CATEGORIES, customProfession, getProfession, type Profession } from "@/lib/professions";
+import { customProfession, getProfession, type Profession } from "@/lib/professions";
+import { getCategories, getLocalizedProfessions } from "@/lib/professions-i18n";
 import { PALETTES, THEME_BG } from "@/lib/palettes";
 import { SWATCHES } from "@/lib/look";
 import { fromProfession, uid } from "@/lib/factory";
@@ -19,12 +20,15 @@ import { resizeImage } from "@/lib/image";
 import { CONTACT } from "@/lib/contact";
 import type { Business } from "@/lib/types";
 import { Footer } from "@/components/Chrome";
+import { useI18n } from "@/components/i18n/LocaleProvider";
 import s from "./start.module.css";
 
-const STEPS = ["Beruf", "Name", "Look", "Fotos", "Wünsche", "Fertig"];
-const WISH_TAGS = ["Online-Termine", "Mehrsprachig", "Online-Shop", "Google-Bewertungen", "Gutscheine", "Instagram verbinden", "Logo gesucht", "Texte schreiben lassen"];
-
 export default function DemoStudio() {
+  const { locale, m } = useI18n();
+  const STEPS = m.start.steps;
+  const WISH_TAGS = m.start.wishTags;
+  const CATEGORIES = getCategories(locale);
+  const PROFESSIONS = getLocalizedProfessions(locale);
   const router = useRouter();
   const [step, setStep] = useState(0);
   const [prof, setProf] = useState<Profession | null>(null);
@@ -63,7 +67,7 @@ export default function DemoStudio() {
   }
 
   function pick(p: Profession, name?: string) {
-    const fresh = fromProfession(p, name?.trim() || p.label);
+    const fresh = fromProfession(p, name?.trim() || p.label, locale);
     setProf(p);
     setB((cur) => cur ? {
       ...fresh,
@@ -170,9 +174,9 @@ export default function DemoStudio() {
       <header className={s.bar}>
         <Link href="/" className={s.brand}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/veyndo-sage.svg" alt="" width={24} height={24} /> Veyndo <span>Demo-Studio</span>
+          <img src="/brand/veyndo-sage.svg" alt="" width={24} height={24} /> {m.common.brandMark} <span>{m.chromeDemoStudio}</span>
         </Link>
-        <ol className={s.progress} aria-label="Fortschritt">
+        <ol className={s.progress} aria-label={m.start.progressAria}>
           {STEPS.map((label, i) => (
             <li key={label} className={i === step ? s.now : i < step ? s.done : ""}>
               <button type="button" disabled={i > step || (i > 0 && !b)} onClick={() => setStep(i)}>
@@ -181,23 +185,23 @@ export default function DemoStudio() {
             </li>
           ))}
         </ol>
-        <span className={s.badge}>🔒 Nur bei Veyndo</span>
+        <span className={s.badge}>{m.start.privateBadge}</span>
       </header>
 
       <div className={s.body}>
         <main className={s.panel}>
           {step === 0 && (
             <section className={s.step}>
-              <p className={s.kicker}>Schritt 1 · Beruf</p>
-              <h1>Was machen Sie? <em>Wir bauen mit.</em></h1>
-              <p className={s.sub}>Suchen Sie Ihren Beruf. Ihre Demo bekommt sofort typische Leistungen, Öffnungszeiten und <b>Beispielpreise</b>, also was Ihre Kundinnen bei Ihnen zahlen. Alles änderbar.</p>
-              {hasDemo && <p className={s.resume}>Sie haben schon eine Demo. <Link href="/dashboard">Dort weitermachen →</Link></p>}
+              <p className={s.kicker}>{m.start.step1Kicker}</p>
+              <h1>{m.start.step1Title} <em>{m.start.step1TitleEm}</em></h1>
+              <p className={s.sub}>{m.start.step1Sub}</p>
+              {hasDemo && <p className={s.resume}>{m.start.resume} <Link href="/dashboard">{m.start.resumeLink}</Link></p>}
               <div className={s.search}>
                 <span aria-hidden>⌕</span>
-                <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="z. B. Friseur, Yoga, Elektriker …" aria-label="Beruf suchen" />
+                <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={m.start.searchPlaceholder} aria-label={m.start.searchAria} />
               </div>
-              <div className={s.cats} role="tablist" aria-label="Kategorien">
-                <button type="button" role="tab" aria-selected={!cat} onClick={() => setCat(null)}>Alle</button>
+              <div className={s.cats} role="tablist" aria-label={m.start.catsAria}>
+                <button type="button" role="tab" aria-selected={!cat} onClick={() => setCat(null)}>{m.start.all}</button>
                 {CATEGORIES.map((c) => (
                   <button type="button" role="tab" key={c} aria-selected={cat === c} onClick={() => setCat(c)}>{c}</button>
                 ))}
@@ -209,13 +213,13 @@ export default function DemoStudio() {
                     {p.label}
                   </button>
                 ))}
-                {list.length === 0 && <p className={s.sub}>Nichts gefunden. Tippen Sie Ihren Beruf unten ein.</p>}
+                {list.length === 0 && <p className={s.sub}>{m.start.noneFound}</p>}
               </div>
               <form className={s.custom} onSubmit={(e) => { e.preventDefault(); if (custom.trim().length >= 3) pick(customProfession(custom)); }}>
-                <label htmlFor="custom">Nicht dabei? Tippen Sie Ihren Beruf ein:</label>
+                <label htmlFor="custom">{m.start.customLabel}</label>
                 <div>
-                  <input id="custom" value={custom} onChange={(e) => setCustom(e.target.value)} placeholder="z. B. Goldschmiede" maxLength={40} />
-                  <button type="submit" disabled={custom.trim().length < 3}>Los</button>
+                  <input id="custom" value={custom} onChange={(e) => setCustom(e.target.value)} placeholder={m.start.customPlaceholder} maxLength={40} />
+                  <button type="submit" disabled={custom.trim().length < 3}>{m.start.customGo}</button>
                 </div>
               </form>
             </section>
@@ -223,11 +227,11 @@ export default function DemoStudio() {
 
           {step === 1 && b && (
             <section className={s.step}>
-              <p className={s.kicker}>Schritt 2 · Name</p>
-              <h1>Wie heißt Ihr Betrieb?</h1>
-              <p className={s.sub}>Schauen Sie auf die Vorschau: Ihr Name steht sofort auf Ihrer Seite.</p>
+              <p className={s.kicker}>{m.start.step2Kicker}</p>
+              <h1>{m.start.step2Title}</h1>
+              <p className={s.sub}>{m.start.step2Sub}</p>
               <div className={s.field}>
-                <label htmlFor="name">Name</label>
+                <label htmlFor="name">{m.start.nameLabel}</label>
                 <input id="name" className={s.big} value={b.name} maxLength={80} autoFocus
                   onChange={(e) => {
                     const name = e.target.value;
@@ -235,15 +239,15 @@ export default function DemoStudio() {
                   }} onFocus={(e) => e.target.select()} />
               </div>
               <div className={s.field}>
-                <label htmlFor="plz">Postleitzahl (optional)</label>
+                <label htmlFor="plz">{m.start.plzLabel}</label>
                 <input id="plz" inputMode="numeric" value={b.postalCode} placeholder="1070"
                   onChange={(e) => {
                     const plz = e.target.value.replace(/\D/g, "").slice(0, 4);
-                    update({ postalCode: plz, district: plz, tagline: b.tagline.replace(/ in Wien( \d{4})?$/, plz.length === 4 ? ` in Wien ${plz}` : " in Wien") });
+                    update({ postalCode: plz, district: plz, tagline: b.tagline });
                   }} />
               </div>
               <div className={s.field}>
-                <label htmlFor="tag">Ein Satz unter dem Namen</label>
+                <label htmlFor="tag">{m.start.tagLabel}</label>
                 <input id="tag" value={b.tagline} maxLength={90} onChange={(e) => update({ tagline: e.target.value })} />
               </div>
             </section>
@@ -251,10 +255,10 @@ export default function DemoStudio() {
 
           {step === 2 && b && (
             <section className={s.step}>
-              <p className={s.kicker}>Schritt 3 · Look</p>
-              <h1>Welche Stimmung passt zu Ihnen?</h1>
-              <p className={s.sub}>Tippen Sie eine Palette an. Probieren erlaubt, so oft Sie wollen.</p>
-              <button type="button" className={s.dice} onClick={surprise}>🎲 Überrasch mich</button>
+              <p className={s.kicker}>{m.start.step3Kicker}</p>
+              <h1>{m.start.step3Title}</h1>
+              <p className={s.sub}>{m.start.step3Sub}</p>
+              <button type="button" className={s.dice} onClick={surprise}>{m.start.surprise}</button>
               <div className={s.palettes}>
                 {PALETTES.map((p) => {
                   const t = THEME_BG[p.theme];
@@ -266,20 +270,20 @@ export default function DemoStudio() {
                         <em style={{ background: t.card }} />
                         <u style={{ background: p.accent }} />
                       </span>
-                      <strong>{p.name}</strong>
-                      <small>{p.mood}</small>
+                      <strong>{m.palettes[p.key]?.name ?? p.name}</strong>
+                      <small>{m.palettes[p.key]?.mood ?? p.mood}</small>
                     </button>
                   );
                 })}
               </div>
-              <p className={s.label}>Oder nur die Farbe ändern</p>
+              <p className={s.label}>{m.start.orColor}</p>
               <div className={s.swatches}>
                 {SWATCHES.map((c) => (
                   <button key={c} type="button" aria-label={`Farbe ${c}`} className={s.swatch} style={{ background: c }}
                     aria-pressed={b.accentColor === c} onClick={() => update({ accentColor: c })} />
                 ))}
-                <label className={s.swatchCustom} title="Eigene Farbe">
-                  <input type="color" value={b.accentColor} onChange={(e) => update({ accentColor: e.target.value })} aria-label="Eigene Farbe" />＋
+                <label className={s.swatchCustom} title={m.start.ownColor}>
+                  <input type="color" value={b.accentColor} onChange={(e) => update({ accentColor: e.target.value })} aria-label={m.start.ownColor} />＋
                 </label>
               </div>
             </section>
@@ -287,35 +291,35 @@ export default function DemoStudio() {
 
           {step === 3 && b && (
             <section className={s.step}>
-              <p className={s.kicker}>Schritt 4 · Fotos</p>
-              <h1>Mit Fotos oder ohne?</h1>
-              <p className={s.sub}>Alles geht. Ihre Fotos bleiben bei Veyndo und werden nirgends veröffentlicht.</p>
+              <p className={s.kicker}>{m.start.step4Kicker}</p>
+              <h1>{m.start.step4Title}</h1>
+              <p className={s.sub}>{m.start.step4Sub}</p>
               <div className={s.photoChoices}>
                 <label className={`${s.photoChoice} ${photoPlan === "with" ? s.on : ""}`}>
                   <input type="file" accept="image/*" multiple className="sr-only" onChange={(e) => { upload(e.target.files); e.target.value = ""; }} />
                   <span className={s.emoji}>📸</span>
-                  <strong>Eigene Fotos hochladen</strong>
-                  <small>Bis zu 9 Fotos. Das erste wird das große Titelbild.</small>
+                  <strong>{m.start.uploadTitle}</strong>
+                  <small>{m.start.uploadSub}</small>
                 </label>
                 {branchPhoto(prof?.base ?? prof?.key ?? "") && (
                   <button type="button" className={`${s.photoChoice} ${photoPlan === "later" ? s.on : ""}`} onClick={useSamplePhotos}>
                     <span className={s.emoji}>🖼️</span>
-                    <strong>Beispielfotos zum Probieren</strong>
-                    <small>Nur für die Demo. Eigene Fotos bringen Sie später mit.</small>
+                    <strong>{m.start.sampleTitle}</strong>
+                    <small>{m.start.sampleSub}</small>
                   </button>
                 )}
                 <button type="button" className={`${s.photoChoice} ${photoPlan === "none" ? s.on : ""}`}
                   onClick={() => { update({ coverDataUrl: null, photos: [] }); setPhotoPlan("none"); }}>
                   <span className={s.emoji}>🎨</span>
-                  <strong>Ohne Fotos</strong>
-                  <small>Ihre Farbe und Ihr Anfangsbuchstabe als Titelbild.</small>
+                  <strong>{m.start.noneTitle}</strong>
+                  <small>{m.start.noneSub}</small>
                 </button>
               </div>
               {(b.coverDataUrl || (b.photos?.length ?? 0) > 0) && (
                 <div className={s.thumbs}>
                   {b.coverDataUrl && (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={b.coverDataUrl} alt="Titelbild" className={s.thumbMain} />
+                    <img src={b.coverDataUrl} alt={m.start.coverAlt} className={s.thumbMain} />
                   )}
                   {(b.photos ?? []).map((p) => (
                     // eslint-disable-next-line @next/next/no-img-element
@@ -328,9 +332,9 @@ export default function DemoStudio() {
 
           {step === 4 && b && (
             <section className={s.step}>
-              <p className={s.kicker}>Schritt 5 · In Ihren Worten</p>
-              <h1>Was wünschen Sie sich?</h1>
-              <p className={s.sub}>Schreiben Sie frei, wie Sie reden. Wir lesen alles persönlich.</p>
+              <p className={s.kicker}>{m.start.step5Kicker}</p>
+              <h1>{m.start.step5Title}</h1>
+              <p className={s.sub}>{m.start.step5Sub}</p>
               <div className={s.tags}>
                 {WISH_TAGS.map((t) => (
                   <button type="button" key={t} aria-pressed={tags.includes(t)}
@@ -340,12 +344,12 @@ export default function DemoStudio() {
                 ))}
               </div>
               <div className={s.field}>
-                <label htmlFor="wishes">Ihre Wünsche</label>
+                <label htmlFor="wishes">{m.start.wishesLabel}</label>
                 <textarea id="wishes" rows={5} maxLength={800} value={wishes} onChange={(e) => setWishes(e.target.value)}
-                  placeholder="z. B. Kundinnen sollen sofort sehen, was eine Gelmodellage kostet, und per WhatsApp einen Termin anfragen können." />
+                  placeholder={m.start.wishesPlaceholder} />
               </div>
               <div className={s.field}>
-                <label htmlFor="about">Ein paar Sätze über Sie (stehen auf der Seite)</label>
+                <label htmlFor="about">{m.start.aboutLabel}</label>
                 <textarea id="about" rows={3} maxLength={600} value={b.about} onChange={(e) => update({ about: e.target.value })} />
               </div>
             </section>
@@ -354,85 +358,84 @@ export default function DemoStudio() {
           {step === 5 && b && (
             <section className={`${s.step} ${s.finish}`}>
               {!contactOpen && !sent && <Confetti colors={[b.accentColor, "#b9cf7e", "#f6f2ea", "#2c362b"]} />}
-              <p className={s.kicker}>Fertig</p>
-              <h1>Tada! <em>Das ist Ihre Seite.</em></h1>
+              <p className={s.kicker}>{m.start.finishKicker}</p>
+              <h1>{m.start.finishTitle} <em>{m.start.finishTitleEm}</em></h1>
               <p className={s.sub}>
-                Ihre Demo ist gespeichert, nur bei Veyndo. Sie ist für niemanden sonst sichtbar und kann nicht veröffentlicht werden.
-                Wenn sie echt online gehen soll, machen wir das gemeinsam.
+                {m.start.finishSub}
               </p>
 
               {sent ? (
                 <div className={s.thanks}>
-                  <b>Danke! Ihre Anfrage ist da.</b>
-                  <span>Wir melden uns persönlich bei Ihnen. Falls WhatsApp nicht aufgegangen ist: {CONTACT.phone}</span>
+                  <b>{m.start.thanksTitle}</b>
+                  <span>{m.start.thanksText} {CONTACT.phone}</span>
                 </div>
               ) : contactOpen ? (
                 <form className={s.contact} onSubmit={requestLive}>
                   <div className={s.row2}>
                     <div className={s.field}>
-                      <label htmlFor="c-name">Ihr Name</label>
+                      <label htmlFor="c-name">{m.start.contactName}</label>
                       <input id="c-name" value={contact.person} onChange={(e) => setContact({ ...contact, person: e.target.value })} autoComplete="name" />
                     </div>
                     <div className={s.field}>
-                      <label htmlFor="c-phone">Telefon *</label>
-                      <input id="c-phone" type="tel" required value={contact.phone} onChange={(e) => setContact({ ...contact, phone: e.target.value })} autoComplete="tel" placeholder="+43 …" />
+                      <label htmlFor="c-phone">{m.start.contactPhone}</label>
+                      <input id="c-phone" type="tel" required value={contact.phone} onChange={(e) => setContact({ ...contact, phone: e.target.value })} autoComplete="tel" placeholder={m.start.phonePlaceholder} />
                     </div>
                   </div>
                   <div className={s.row2}>
                     <div className={s.field}>
-                      <label htmlFor="c-mail">E-Mail (optional)</label>
+                      <label htmlFor="c-mail">{m.start.contactEmail}</label>
                       <input id="c-mail" type="email" value={contact.email} onChange={(e) => setContact({ ...contact, email: e.target.value })} autoComplete="email" />
                     </div>
                     <div className={s.field}>
-                      <label htmlFor="c-when">Wann erreichbar?</label>
-                      <input id="c-when" value={contact.when} onChange={(e) => setContact({ ...contact, when: e.target.value })} placeholder="z. B. vormittags" />
+                      <label htmlFor="c-when">{m.start.contactWhen}</label>
+                      <input id="c-when" value={contact.when} onChange={(e) => setContact({ ...contact, when: e.target.value })} placeholder={m.start.contactWhenPh} />
                     </div>
                   </div>
                   <p className={s.consent}>
-                    Mit dem Absenden stimmst du zu, dass wir dich zu deiner Anfrage kontaktieren. Details:{" "}
-                    <Link href="/datenschutz">Datenschutz</Link>.
+                    {m.start.consent}{" "}
+                    <Link href="/datenschutz">{m.start.consentLink}</Link>.
                   </p>
-                  <button type="submit" className={s.go} disabled={busy || !contact.phone.trim()}>{busy ? "Wird gesendet …" : "Anfrage senden 🚀"}</button>
-                  <small className={s.fine}>Wir verwenden Ihre Angaben nur, um Sie wegen Ihrer Seite zu kontaktieren.</small>
+                  <button type="submit" className={s.go} disabled={busy || !contact.phone.trim()}>{busy ? m.start.sending : m.start.sendRequest}</button>
+                  <small className={s.fine}>{m.start.contactFine}</small>
                 </form>
               ) : (
                 <div className={s.finishActions}>
-                  <button type="button" className={s.go} onClick={() => setContactOpen(true)}>🚀 Live schalten lassen</button>
-                  <button type="button" className={s.ghost} onClick={() => router.push("/editor")}>Weiter verfeinern</button>
+                  <button type="button" className={s.go} onClick={() => setContactOpen(true)}>{m.start.goLive}</button>
+                  <button type="button" className={s.ghost} onClick={() => router.push("/editor")}>{m.start.refine}</button>
                 </div>
               )}
-              <p className={s.fine}>Preise für den echten Start finden Sie in der <Link href="/preise">Preisliste</Link>.</p>
+              <p className={s.fine}>{m.start.pricesNote} <Link href="/preise">{m.start.pricesLink}</Link>.</p>
             </section>
           )}
 
           {step < 5 && (
             <div className={s.nav}>
-              {step > 0 && <button type="button" className={s.ghost} onClick={() => setStep(step - 1)}>← Zurück</button>}
-              {step > 0 && step < 4 && <button type="button" className={s.go} disabled={!canNext} onClick={() => setStep(step + 1)}>Weiter →</button>}
-              {step === 4 && <button type="button" className={s.go} disabled={busy} onClick={build}>{busy ? "Wird gebaut …" : "✨ Meine Demo bauen"}</button>}
+              {step > 0 && <button type="button" className={s.ghost} onClick={() => setStep(step - 1)}>{m.start.back}</button>}
+              {step > 0 && step < 4 && <button type="button" className={s.go} disabled={!canNext} onClick={() => setStep(step + 1)}>{m.start.next}</button>}
+              {step === 4 && <button type="button" className={s.go} disabled={busy} onClick={build}>{busy ? m.start.building : m.start.buildDemo}</button>}
             </div>
           )}
         </main>
 
-        <aside className={`${s.stage} ${sheet ? s.sheetOpen : ""}`} aria-label="Live-Vorschau">
-          <button type="button" className={s.sheetClose} onClick={() => setSheet(false)} aria-label="Vorschau schließen">×</button>
+        <aside className={`${s.stage} ${sheet ? s.sheetOpen : ""}`} aria-label={m.start.previewAria}>
+          <button type="button" className={s.sheetClose} onClick={() => setSheet(false)} aria-label={m.start.closePreview}>×</button>
           {preview ? (
             <div className={s.phone}>
               <span className={s.ribbon}>DEMO</span>
-              <span className={s.priceHint}>Preise = Beispiele für Ihre Kundinnen</span>
+              <span className={s.priceHint}>{m.start.priceHint}</span>
               <div className={s.screen}><ProfileView b={preview} today={today} /></div>
             </div>
           ) : (
             <div className={s.ghostPhone}>
               <span>👋</span>
-              <p>Wählen Sie Ihren Beruf.<br />Hier entsteht live Ihre Seite.</p>
+              <p>{m.start.pickProfession.split("\n")[0]}<br />{m.start.pickProfession.split("\n")[1]}</p>
             </div>
           )}
-          {pulse > 0 && <span key={pulse} className={s.spark} aria-hidden>✨ aktualisiert</span>}
+          {pulse > 0 && <span key={pulse} className={s.spark} aria-hidden>{m.start.updated}</span>}
         </aside>
       </div>
 
-      {preview && step < 5 && <button type="button" className={s.fab} onClick={() => setSheet(true)}>👀 Vorschau</button>}
+      {preview && step < 5 && <button type="button" className={s.fab} onClick={() => setSheet(true)}>{m.start.fabPreview}</button>}
       <Footer />
     </div>
   );

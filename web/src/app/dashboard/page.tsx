@@ -9,25 +9,14 @@ import { clearBusiness, loadBusiness, loadStats } from "@/lib/store";
 import { PLANS } from "@/lib/plans";
 import { CONTACT } from "@/lib/contact";
 import { profileScore } from "@/lib/completeness";
-import { openState } from "@/lib/hours";
+import { openState, hoursCopy } from "@/lib/hours";
 import { loadPhotoPlan, visitHref } from "@/lib/trial";
 import type { Business } from "@/lib/types";
+import { useI18n } from "@/components/i18n/LocaleProvider";
 import s from "@/components/studio/studio.module.css";
 
-const KPIS: [string, string, string][] = [
-  ["view", "Aufrufe", "◉"],
-  ["call", "Anrufe", "☏"],
-  ["whatsapp", "WhatsApp", "✆"],
-  ["route", "Routen", "➚"],
-  ["qr", "QR-Scans", "▦"],
-];
-
-function greeting() {
-  const h = new Date().getHours();
-  return h < 11 ? "Guten Morgen" : h < 18 ? "Hallo" : "Guten Abend";
-}
-
 export default function Dashboard() {
+  const { locale, m } = useI18n();
   const router = useRouter();
   const [b, setB] = useState<Business | null>(null);
   const [stats, setStats] = useState<Record<string, number> | null>(null);
@@ -49,8 +38,8 @@ export default function Dashboard() {
   if (!b) return null;
 
   const plan = PLANS[b.tier];
-  const { pct, steps } = profileScore(b);
-  const live = openState(b.hours);
+  const { pct, steps } = profileScore(b, locale);
+  const live = openState(b.hours, new Date(), hoursCopy(locale));
   const visit = visitHref(b, photoPlan);
 
   return (
@@ -58,46 +47,45 @@ export default function Dashboard() {
       <header className={s.dashTop}>
         <Link href="/" className={s.brand}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/veyndo-sage.svg" alt="" width={26} height={26} /> Veyndo
+          <img src="/brand/veyndo-sage.svg" alt="" width={26} height={26} /> {m.common.brandMark}
         </Link>
         <div className={s.topActions}>
           <span className={s.account}><AuthNav /></span>
           <span className={s.planBadge}>{plan.label}</span>
-          <Link href="/editor" className={s.btnPrimary}>Vorschau bearbeiten</Link>
+          <Link href="/editor" className={s.btnPrimary}>{m.dashboard.editPreview}</Link>
         </div>
       </header>
 
       <main className={s.dashMain}>
         <section className={s.hello}>
           <div>
-            <p className={s.helloKicker}>{greeting()} 👋</p>
+            <p className={s.helloKicker}>{( () => { const h = new Date().getHours(); return h < 11 ? m.dashboard.greetingMorning : h < 18 ? m.dashboard.greetingDay : m.dashboard.greetingEvening; })() } 👋</p>
             <h1>{b.name}</h1>
-            <p className={s.helloSub}>Vorschau nur bei Veyndo · {live.label}. Kundinnen sehen diese Seite nicht.</p>
+            <p className={s.helloSub}>{m.dashboard.previewOnly} · {live.label}. {m.dashboard.customersCantSee}</p>
           </div>
           <div className={s.helloActions}>
-            <Link href="/editor" className={s.btnLight}>Vorschau ansehen</Link>
-            <a className={s.btnGhostLight} href={visit} target="_blank" rel="noopener noreferrer">Termin buchen</a>
+            <Link href="/editor" className={s.btnLight}>{m.dashboard.viewPreview}</Link>
+            <a className={s.btnGhostLight} href={visit} target="_blank" rel="noopener noreferrer">{m.dashboard.bookVisit}</a>
           </div>
         </section>
 
         <section id="termin" className={s.planSec}>
-          <div className={s.secHead}><h2>Nächster Schritt</h2></div>
+          <div className={s.secHead}><h2>{m.dashboard.nextStep}</h2></div>
           <div className={s.card}>
             <p style={{ marginTop: 0 }}>
-              Die Vorschau bleibt hier. Kein Link für Google, kein QR fürs Schaufenster, keine Seite für Kundinnen —
-              das richten wir ein, wenn wir uns gesehen haben.
+              {m.dashboard.nextStepText}
             </p>
             <div className={s.posterActions} style={{ justifyContent: "flex-start" }}>
-              <a className={s.btnPrimary} href={visit} target="_blank" rel="noopener noreferrer">Termin per WhatsApp buchen</a>
-              <a className={s.btnGhost} href={CONTACT.phoneHref}>Anrufen: {CONTACT.phone}</a>
+              <a className={s.btnPrimary} href={visit} target="_blank" rel="noopener noreferrer">{m.dashboard.bookWhatsapp}</a>
+              <a className={s.btnGhost} href={CONTACT.phoneHref}>{m.dashboard.call} {CONTACT.phone}</a>
             </div>
           </div>
         </section>
 
         <section>
-          <div className={s.secHead}><h2>Letzte 30 Tage</h2></div>
+          <div className={s.secHead}><h2>{m.dashboard.last30}</h2></div>
           <div className={`${s.kpis} ${s.locked}`}>
-            {KPIS.map(([k, label, icon]) => (
+            {m.dashboard.kpis.map(([k, label, icon]) => (
               <div key={k} className={s.kpi}>
                 <span className={s.kpiIcon} aria-hidden>{icon}</span>
                 <b>{plan.stats ? (stats?.[k] ?? 0) : "–"}</b>
@@ -105,8 +93,8 @@ export default function Dashboard() {
               </div>
             ))}
             <div className={s.lockOver}>
-              <b>Statistik kommt mit der echten Seite</b>
-              <span>Aufrufe und Anrufe sehen Sie, sobald Kundinnen online dürfen.</span>
+              <b>{m.dashboard.statsLockedTitle}</b>
+              <span>{m.dashboard.statsLockedText}</span>
             </div>
           </div>
         </section>
@@ -116,8 +104,8 @@ export default function Dashboard() {
             <div className={s.strength}>
               <Ring pct={pct} size={84} label={`Profil zu ${pct} Prozent fertig`} />
               <div>
-                <h2>Was schon drin ist</h2>
-                <p>Fehlt etwas, ergänzen Sie es in der Vorschau — oder wir machen es beim Termin.</p>
+                <h2>{m.dashboard.whatsIn}</h2>
+                <p>{m.dashboard.whatsInText}</p>
               </div>
             </div>
             <ul className={s.todo}>
@@ -133,11 +121,11 @@ export default function Dashboard() {
 
         <p className={s.danger}>
           <button type="button" className={s.linkBtn} onClick={async () => {
-            if (confirm("Vorschau wirklich löschen und neu beginnen?")) {
+            if (confirm("{m.dashboard.deleteConfirm}")) {
               await clearBusiness();
               router.push("/start");
             }
-          }}>Vorschau löschen und neu beginnen</button>
+          }}>{m.dashboard.delete}</button>
         </p>
       </main>
     </div>

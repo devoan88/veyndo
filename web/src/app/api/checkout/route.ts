@@ -53,7 +53,7 @@ export async function POST(req: Request) {
     success_url: `${siteOrigin()}/dashboard?checkout=ok`,
     cancel_url: `${siteOrigin()}/dashboard?checkout=cancel`,
     client_reference_id: user.id,
-    locale: "de",
+    locale: "ka",
     metadata: { owner_id: user.id },
   });
   return NextResponse.json({ url: session.url });

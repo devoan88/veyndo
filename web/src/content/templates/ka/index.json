@@ -1,0 +1,54 @@
+{
+  "groups": {
+    "schoenheit": "სილამაზე",
+    "gesundheit": "ჯანმრთელობა",
+    "handwerk": "ხელოსნობა"
+  },
+  "templates": [
+    {
+      "key": "friseur",
+      "group": "schoenheit",
+      "label": "ვარცხნილობა"
+    },
+    {
+      "key": "nagelstudio",
+      "group": "schoenheit",
+      "label": "ფრჩხილების სტუდია"
+    },
+    {
+      "key": "kosmetik",
+      "group": "schoenheit",
+      "label": "კოსმეტიკის სტუდია"
+    },
+    {
+      "key": "massage",
+      "group": "gesundheit",
+      "label": "მასაჟი"
+    },
+    {
+      "key": "physiotherapie",
+      "group": "gesundheit",
+      "label": "ფიზიოთერაპია"
+    },
+    {
+      "key": "psychotherapie",
+      "group": "gesundheit",
+      "label": "ფსიქოთერაპია"
+    },
+    {
+      "key": "elektriker",
+      "group": "handwerk",
+      "label": "ელექტრიკოსი"
+    },
+    {
+      "key": "installateur",
+      "group": "handwerk",
+      "label": "სანტექნიკოსი"
+    },
+    {
+      "key": "reinigung",
+      "group": "handwerk",
+      "label": "დალაგება"
+    }
+  ]
+}

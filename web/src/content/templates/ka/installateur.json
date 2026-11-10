@@ -1,0 +1,78 @@
+{
+  "key": "installateur",
+  "group": "handwerk",
+  "label": "სანტექნიკოსი",
+  "google_category": "სანტექნიკოსი",
+  "accent_color": "#5f7a8a",
+  "example": {
+    "name": "სანტექნიკოსი ჰუბერი",
+    "city": "თბილისი",
+    "district": "0112"
+  },
+  "tagline": "სანტექნიკა და გათბობა {district}-ში",
+  "about": "წყალი, გათბობა და სანტექნიკა — სწრაფად და სუფთად. საგანგებო გამოძახებაც.",
+  "services": [
+    {
+      "title": "საგანგებო გამოძახება",
+      "price_label": "€ 89",
+      "duration_min": 60
+    },
+    {
+      "title": "ონკანის შეცვლა",
+      "price_label": "€ 120-დან",
+      "duration_min": 60
+    },
+    {
+      "title": "საათობრივი ტარიფი",
+      "price_label": "€ 70",
+      "duration_min": 60
+    }
+  ],
+  "opening_hours": [
+    {
+      "weekday": 1,
+      "closed": false,
+      "opens": "07:00",
+      "closes": "17:00"
+    },
+    {
+      "weekday": 2,
+      "closed": false,
+      "opens": "07:00",
+      "closes": "17:00"
+    },
+    {
+      "weekday": 3,
+      "closed": false,
+      "opens": "07:00",
+      "closes": "17:00"
+    },
+    {
+      "weekday": 4,
+      "closed": false,
+      "opens": "07:00",
+      "closes": "17:00"
+    },
+    {
+      "weekday": 5,
+      "closed": false,
+      "opens": "07:00",
+      "closes": "14:00"
+    },
+    {
+      "weekday": 6,
+      "closed": true
+    },
+    {
+      "weekday": 7,
+      "closed": true
+    }
+  ],
+  "checklist": [
+    "სათაურის ფოტოს ატვირთვა",
+    "ტელეფონის შემოწმება",
+    "იმპრესუმის შევსება",
+    "ბმულის ჩასმა Google პროფილში",
+    "QR კოდის დადგმა"
+  ]
+}

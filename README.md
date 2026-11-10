@@ -1,11 +1,11 @@
-# Veyndo
+# ვეინდო / Veyndo
 
-**DE.** Veyndo ist ein Demo-Studio und eine öffentliche Preisliste für kleine Betriebe in Österreich. Besucherinnen bauen ohne Konto eine unveröffentlichte Demo. Veröffentlichen kann nur die Administration.
+ქართული პროდუქტი მცირე ბიზნესებისთვის (**veyndo.ge**): დემო-სტუდია და საჯარო ფასების სია. ვიზიტორები ანგარიშის გარეშე აშენებენ გამოუქვეყნებელ დემოს. გამოქვეყნება მხოლოდ ადმინს შეუძლია.
 
-**EN.** Veyndo is a demo studio and public price list for small businesses in Austria. Visitors build an unpublished demo without an account. Only admin can publish.
+**UI ენა:** ქართული (`ka`) — ნაგულისხმევი ყველგან (ლოკალური გადახედვაც). ლოგოში/URL-ში ბრენდი რჩება **Veyndo**; ტექსტში ბუნებრივად **ვეინდო**.
 
-Live: https://veyndo.at  
-Fallback while DNS is pending: https://veyndo-app.netlify.app
+Live (როცა DNS მზად იქნება): https://veyndo.ge  
+Fallback: https://veyndo-app.netlify.app
 
 ## Stack
 
@@ -18,4 +18,11 @@ export PATH="$HOME/.local/node/bin:$PATH"
 cd web && npm run dev
 ```
 
+გახსენით http://localhost:3000 — ინტერფეისი ქართულია (`lang=ka`).
+
 Do not commit `.env.local`. Never put `service_role` or live Stripe keys in the client.
+
+ოფციონალური env:
+
+- `NEXT_PUBLIC_SITE_URL=https://veyndo.ge`
+- `NEXT_PUBLIC_PROFILE_DOMAIN=veyndo.ge`

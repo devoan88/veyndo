@@ -1,0 +1,78 @@
+{
+  "key": "physiotherapie",
+  "group": "gesundheit",
+  "label": "ფიზიოთერაპია",
+  "google_category": "ფიზიოთერაპევტი",
+  "accent_color": "#6f8a8a",
+  "example": {
+    "name": "ფიზიო ვაკეში",
+    "city": "თბილისი",
+    "district": "0160"
+  },
+  "tagline": "ფიზიოთერაპია და რეაბილიტაცია {district}-ში",
+  "about": "ინდივიდუალური თერაპია ტკივილის, მოძრაობისა და ყოველდღიური სიცოცხლისთვის.",
+  "services": [
+    {
+      "title": "პირველი კონსულტაცია",
+      "price_label": "€ 80",
+      "duration_min": 50
+    },
+    {
+      "title": "თერაპიის სეანსი",
+      "price_label": "€ 70",
+      "duration_min": 45
+    },
+    {
+      "title": "სახლში ვიზიტი",
+      "price_label": "€ 100",
+      "duration_min": 60
+    }
+  ],
+  "opening_hours": [
+    {
+      "weekday": 1,
+      "closed": false,
+      "opens": "08:00",
+      "closes": "19:00"
+    },
+    {
+      "weekday": 2,
+      "closed": false,
+      "opens": "08:00",
+      "closes": "19:00"
+    },
+    {
+      "weekday": 3,
+      "closed": false,
+      "opens": "08:00",
+      "closes": "19:00"
+    },
+    {
+      "weekday": 4,
+      "closed": false,
+      "opens": "08:00",
+      "closes": "19:00"
+    },
+    {
+      "weekday": 5,
+      "closed": false,
+      "opens": "08:00",
+      "closes": "15:00"
+    },
+    {
+      "weekday": 6,
+      "closed": true
+    },
+    {
+      "weekday": 7,
+      "closed": true
+    }
+  ],
+  "checklist": [
+    "სათაურის ფოტოს ატვირთვა",
+    "ტელეფონის შემოწმება",
+    "იმპრესუმის შევსება",
+    "ბმულის ჩასმა Google პროფილში",
+    "QR კოდის დადგმა"
+  ]
+}

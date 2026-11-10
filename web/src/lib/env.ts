@@ -13,5 +13,5 @@ export function isStripeTestSecret(secret: string | undefined): secret is string
 }
 
 export function siteOrigin() {
-  return process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  return process.env.NEXT_PUBLIC_SITE_URL || "https://veyndo.ge";
 }

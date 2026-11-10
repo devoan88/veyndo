@@ -1,0 +1,78 @@
+{
+  "key": "reinigung",
+  "group": "handwerk",
+  "label": "დალაგება",
+  "google_category": "დალაგების სერვისი",
+  "accent_color": "#5f7f8f",
+  "example": {
+    "name": "ბრწყინვალე დალაგება",
+    "city": "თბილისი",
+    "district": "0105"
+  },
+  "tagline": "დალაგება და მოვლა {district}-ში",
+  "about": "რეგულარული და ერთჯერადი დალაგება ბინებისა და ოფისებისთვის. სანდო და ფრთხილი.",
+  "services": [
+    {
+      "title": "ბინის დალაგება",
+      "price_label": "€ 25 / საათი",
+      "duration_min": 60
+    },
+    {
+      "title": "ოფისის დალაგება",
+      "price_label": "შეთანხმებით"
+    },
+    {
+      "title": "გენერალური დალაგება",
+      "price_label": "€ 180-დან"
+    }
+  ],
+  "opening_hours": [
+    {
+      "weekday": 1,
+      "closed": false,
+      "opens": "07:00",
+      "closes": "19:00"
+    },
+    {
+      "weekday": 2,
+      "closed": false,
+      "opens": "07:00",
+      "closes": "19:00"
+    },
+    {
+      "weekday": 3,
+      "closed": false,
+      "opens": "07:00",
+      "closes": "19:00"
+    },
+    {
+      "weekday": 4,
+      "closed": false,
+      "opens": "07:00",
+      "closes": "19:00"
+    },
+    {
+      "weekday": 5,
+      "closed": false,
+      "opens": "07:00",
+      "closes": "19:00"
+    },
+    {
+      "weekday": 6,
+      "closed": false,
+      "opens": "08:00",
+      "closes": "14:00"
+    },
+    {
+      "weekday": 7,
+      "closed": true
+    }
+  ],
+  "checklist": [
+    "სათაურის ფოტოს ატვირთვა",
+    "ტელეფონის შემოწმება",
+    "იმპრესუმის შევსება",
+    "ბმულის ჩასმა Google პროფილში",
+    "QR კოდის დადგმა"
+  ]
+}

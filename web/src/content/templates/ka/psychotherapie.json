@@ -1,0 +1,72 @@
+{
+  "key": "psychotherapie",
+  "group": "gesundheit",
+  "label": "ფსიქოთერაპია",
+  "google_category": "ფსიქოთერაპევტი",
+  "accent_color": "#7a7a8b",
+  "example": {
+    "name": "კაბინეტი დოქტორი ბერგერი",
+    "city": "თბილისი",
+    "district": "0108"
+  },
+  "tagline": "ფსიქოთერაპია {district}-ში",
+  "about": "დაცული სივრცე საუბრისა და ცვლილებისთვის. პირადი და წყვილის სეანსები.",
+  "services": [
+    {
+      "title": "ინდივიდუალური სეანსი",
+      "price_label": "€ 100",
+      "duration_min": 50
+    },
+    {
+      "title": "წყვილის თერაპია",
+      "price_label": "€ 130",
+      "duration_min": 75
+    },
+    {
+      "title": "ონლაინ სეანსი",
+      "price_label": "€ 90",
+      "duration_min": 50
+    }
+  ],
+  "opening_hours": [
+    {
+      "weekday": 1,
+      "closed": false,
+      "note": "nach Vereinbarung"
+    },
+    {
+      "weekday": 2,
+      "closed": false,
+      "note": "nach Vereinbarung"
+    },
+    {
+      "weekday": 3,
+      "closed": false,
+      "note": "nach Vereinbarung"
+    },
+    {
+      "weekday": 4,
+      "closed": false,
+      "note": "nach Vereinbarung"
+    },
+    {
+      "weekday": 5,
+      "closed": false,
+      "note": "nach Vereinbarung"
+    },
+    {
+      "weekday": 6,
+      "closed": true
+    },
+    {
+      "weekday": 7,
+      "closed": true
+    }
+  ],
+  "checklist": [
+    "სათაურის ფოტოს ატვირთვა",
+    "ტელეფონის შემოწმება",
+    "იმპრესუმის შევსება",
+    "ბმულის ჩასმა Google პროფილში"
+  ]
+}
