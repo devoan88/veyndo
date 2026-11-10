@@ -355,7 +355,7 @@ export async function clearBusiness(): Promise<void> {
 }
 
 export function newBusiness(templateKey: string, name?: string): Business {
-  return fromTemplate(getTemplate(templateKey), name);
+  return fromTemplate(getTemplate(templateKey, "ka"), name, "ka");
 }
 
 export async function slugTaken(slug: string, exceptId?: string): Promise<boolean> {

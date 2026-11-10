@@ -1,0 +1,88 @@
+{
+  "key": "nagelstudio",
+  "group": "schoenheit",
+  "label": "ფრჩხილების სტუდია",
+  "google_category": "ფრჩხილების სტუდია",
+  "accent_color": "#b98b86",
+  "example": {
+    "name": "ფრჩხილების სტუდია ლენა",
+    "city": "თბილისი",
+    "district": "0179"
+  },
+  "tagline": "მანიკური და პედიკური {district}-ში",
+  "about": "მოვლილი ფრჩხილები მშვიდ გარემოში. გელის მოდელირება, კლასიკური მანიკური და პედიკური.",
+  "services": [
+    {
+      "title": "გელის მოდელირება ახალი",
+      "price_label": "€ 55",
+      "duration_min": 90
+    },
+    {
+      "title": "შევსება",
+      "price_label": "€ 45",
+      "duration_min": 75
+    },
+    {
+      "title": "კლასიკური მანიკური",
+      "price_label": "€ 32",
+      "duration_min": 45
+    },
+    {
+      "title": "პედიკური",
+      "price_label": "€ 49",
+      "duration_min": 60
+    },
+    {
+      "title": "ფრჩხილების მოხსნა",
+      "price_label": "€ 15",
+      "duration_min": 20
+    }
+  ],
+  "opening_hours": [
+    {
+      "weekday": 1,
+      "closed": true
+    },
+    {
+      "weekday": 2,
+      "closed": false,
+      "opens": "10:00",
+      "closes": "19:00"
+    },
+    {
+      "weekday": 3,
+      "closed": false,
+      "opens": "10:00",
+      "closes": "19:00"
+    },
+    {
+      "weekday": 4,
+      "closed": false,
+      "opens": "10:00",
+      "closes": "19:00"
+    },
+    {
+      "weekday": 5,
+      "closed": false,
+      "opens": "10:00",
+      "closes": "19:00"
+    },
+    {
+      "weekday": 6,
+      "closed": false,
+      "opens": "09:00",
+      "closes": "15:00"
+    },
+    {
+      "weekday": 7,
+      "closed": true
+    }
+  ],
+  "checklist": [
+    "სათაურის ფოტოს ატვირთვა",
+    "ტელეფონის შემოწმება",
+    "იმპრესუმის შევსება",
+    "ბმულის ჩასმა Google პროფილში",
+    "QR კოდის დადგმა"
+  ]
+}

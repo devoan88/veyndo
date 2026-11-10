@@ -1,0 +1,83 @@
+{
+  "key": "kosmetik",
+  "group": "schoenheit",
+  "label": "კოსმეტიკის სტუდია",
+  "google_category": "კოსმეტიკის სტუდია",
+  "accent_color": "#a88c9c",
+  "example": {
+    "name": "კოსმეტიკა სოფი",
+    "city": "თბილისი",
+    "district": "0105"
+  },
+  "tagline": "კანის მოვლა და სილამაზე {district}-ში",
+  "about": "პირადი კოსმეტიკური მოვლა: სახის პროცედურები, გაწმენდა და რჩევები ყოველდღიური რუტინისთვის.",
+  "services": [
+    {
+      "title": "სახის გაწმენდა",
+      "price_label": "€ 69",
+      "duration_min": 60
+    },
+    {
+      "title": "ჰიდროფაციალი",
+      "price_label": "€ 89",
+      "duration_min": 75
+    },
+    {
+      "title": "წარბების ფორმირება",
+      "price_label": "€ 18",
+      "duration_min": 20
+    },
+    {
+      "title": "დეპილაცია სახის",
+      "price_label": "€ 25",
+      "duration_min": 30
+    }
+  ],
+  "opening_hours": [
+    {
+      "weekday": 1,
+      "closed": true
+    },
+    {
+      "weekday": 2,
+      "closed": false,
+      "opens": "10:00",
+      "closes": "19:00"
+    },
+    {
+      "weekday": 3,
+      "closed": false,
+      "opens": "10:00",
+      "closes": "19:00"
+    },
+    {
+      "weekday": 4,
+      "closed": false,
+      "opens": "10:00",
+      "closes": "19:00"
+    },
+    {
+      "weekday": 5,
+      "closed": false,
+      "opens": "10:00",
+      "closes": "19:00"
+    },
+    {
+      "weekday": 6,
+      "closed": false,
+      "opens": "09:00",
+      "closes": "14:00"
+    },
+    {
+      "weekday": 7,
+      "closed": true
+    }
+  ],
+  "checklist": [
+    "სათაურის ფოტოს ატვირთვა",
+    "ტელეფონის შემოწმება",
+    "იმპრესუმის შევსება",
+    "ბმულის ჩასმა Google პროფილში",
+    "QR კოდის დადგმა"
+  ]
+}

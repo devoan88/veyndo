@@ -5,8 +5,10 @@ import { useSearchParams } from "next/navigation";
 import { TopBar } from "@/components/Chrome";
 import { createClient } from "@/lib/supabase/client";
 import { supabaseConfigured } from "@/lib/env";
+import { useI18n } from "@/components/i18n/LocaleProvider";
 
 export default function LoginForm() {
+  const { m } = useI18n();
   const params = useSearchParams();
   const next = params.get("next") || "/dashboard";
   const [email, setEmail] = useState("");
@@ -17,7 +19,7 @@ export default function LoginForm() {
     e.preventDefault();
     setError("");
     if (!supabaseConfigured()) {
-      setError("Supabase ist noch nicht eingerichtet.");
+      setError(m.login.noSupabase);
       return;
     }
     const supabase = createClient();
@@ -34,21 +36,30 @@ export default function LoginForm() {
     <>
       <TopBar />
       <main className="wrap" style={{ padding: "48px 0 80px", maxWidth: 480 }}>
-        <p className="kicker">Konto</p>
-        <h1>Anmelden</h1>
-        <p className="muted">Wir schicken Ihnen einen Link per E-Mail. Kein Passwort.</p>
+        <p className="kicker">{m.login.kicker}</p>
+        <h1>{m.login.title}</h1>
+        <p className="muted">{m.login.lead}</p>
         {sent ? (
           <div className="card">
-            <p style={{ margin: 0 }}>Prüfen Sie Ihr Postfach. Der Link gilt ein paar Minuten.</p>
+            <p style={{ margin: 0 }}>{m.login.sent}</p>
           </div>
         ) : (
           <form className="card" onSubmit={onSubmit}>
             <div className="field">
-              <label htmlFor="email">E-Mail</label>
-              <input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} autoFocus />
+              <label htmlFor="email">{m.login.email}</label>
+              <input
+                id="email"
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                autoFocus
+              />
             </div>
             {error && <p className="error">{error}</p>}
-            <button className="btn" type="submit">Link senden</button>
+            <button className="btn" type="submit">
+              {m.login.submit}
+            </button>
           </form>
         )}
       </main>

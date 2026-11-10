@@ -1,0 +1,93 @@
+{
+  "key": "friseur",
+  "group": "schoenheit",
+  "label": "ვარცხნილობა",
+  "google_category": "ვარცხნილობის სალონი",
+  "accent_color": "#8b7a6b",
+  "example": {
+    "name": "სალონი მირა",
+    "city": "თბილისი",
+    "district": "0102"
+  },
+  "tagline": "ვარცხნილობა, ფერი და სტაილინგი {district}-ში",
+  "about": "თქვენი ვარცხნილობა უბანში: გულწრფელი კონსულტაცია, სუფთა ჭრა და ფერები, რომლებიც გეხებათ.",
+  "services": [
+    {
+      "title": "ქალის თმის შეჭრა დაბანით და გაშრობით",
+      "price_label": "€ 49",
+      "duration_min": 60
+    },
+    {
+      "title": "კაცის თმის შეჭრა",
+      "price_label": "€ 28",
+      "duration_min": 30
+    },
+    {
+      "title": "ბავშვის შეჭრა 12 წლამდე",
+      "price_label": "€ 18",
+      "duration_min": 20
+    },
+    {
+      "title": "შეღებვა",
+      "price_label": "€ 60-დან",
+      "duration_min": 90
+    },
+    {
+      "title": "ჰაილაითები",
+      "price_label": "€ 75-დან",
+      "duration_min": 120
+    },
+    {
+      "title": "საღამოს ვარცხნილობა",
+      "price_label": "€ 55-დან",
+      "duration_min": 60
+    }
+  ],
+  "opening_hours": [
+    {
+      "weekday": 1,
+      "closed": true
+    },
+    {
+      "weekday": 2,
+      "closed": false,
+      "opens": "09:00",
+      "closes": "18:00"
+    },
+    {
+      "weekday": 3,
+      "closed": false,
+      "opens": "09:00",
+      "closes": "18:00"
+    },
+    {
+      "weekday": 4,
+      "closed": false,
+      "opens": "09:00",
+      "closes": "20:00"
+    },
+    {
+      "weekday": 5,
+      "closed": false,
+      "opens": "09:00",
+      "closes": "18:00"
+    },
+    {
+      "weekday": 6,
+      "closed": false,
+      "opens": "08:00",
+      "closes": "14:00"
+    },
+    {
+      "weekday": 7,
+      "closed": true
+    }
+  ],
+  "checklist": [
+    "სათაურის ფოტოს ატვირთვა",
+    "ტელეფონის შემოწმება",
+    "იმპრესუმის შევსება",
+    "ბმულის ჩასმა Google პროფილში",
+    "QR კოდის დადგმა"
+  ]
+}

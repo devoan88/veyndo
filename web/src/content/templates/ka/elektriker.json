@@ -1,0 +1,82 @@
+{
+  "key": "elektriker",
+  "group": "handwerk",
+  "label": "ელექტრიკოსი",
+  "google_category": "ელექტრიკოსი",
+  "accent_color": "#6b7a5a",
+  "example": {
+    "name": "ელექტრო ნოვაკი",
+    "city": "თბილისი",
+    "district": "0159"
+  },
+  "tagline": "ელექტრო სამუშაოები {district}-ში",
+  "about": "სანდო ელექტრო სამუშაოები სახლში და ოფისში. სწრაფი დახმარება და სუფთა შესრულება.",
+  "services": [
+    {
+      "title": "გამოძახება / დიაგნოსტიკა",
+      "price_label": "€ 69",
+      "duration_min": 60
+    },
+    {
+      "title": "როზეტების შეცვლა",
+      "price_label": "€ 45-დან",
+      "duration_min": 60
+    },
+    {
+      "title": "განათების მონტაჟი",
+      "price_label": "€ 89-დან"
+    },
+    {
+      "title": "საათობრივი ტარიფი",
+      "price_label": "€ 65",
+      "duration_min": 60
+    }
+  ],
+  "opening_hours": [
+    {
+      "weekday": 1,
+      "closed": false,
+      "opens": "07:00",
+      "closes": "17:00"
+    },
+    {
+      "weekday": 2,
+      "closed": false,
+      "opens": "07:00",
+      "closes": "17:00"
+    },
+    {
+      "weekday": 3,
+      "closed": false,
+      "opens": "07:00",
+      "closes": "17:00"
+    },
+    {
+      "weekday": 4,
+      "closed": false,
+      "opens": "07:00",
+      "closes": "17:00"
+    },
+    {
+      "weekday": 5,
+      "closed": false,
+      "opens": "07:00",
+      "closes": "13:00"
+    },
+    {
+      "weekday": 6,
+      "closed": true
+    },
+    {
+      "weekday": 7,
+      "closed": true
+    }
+  ],
+  "checklist": [
+    "სათაურის ფოტოს ატვირთვა",
+    "ტელეფონის შემოწმება",
+    "იმპრესუმის შევსება",
+    "ბმულის ჩასმა Google პროფილში",
+    "QR კოდის დადგმა"
+  ]
+}
