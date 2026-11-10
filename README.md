@@ -15,7 +15,7 @@ Next.js 15 (App Router) · TypeScript · React 19 · Supabase (Auth, Postgres, S
 
 ```bash
 export PATH="$HOME/.local/node/bin:$PATH"
-cd web && npm run dev
+npm run dev
 ```
 
 გახსენით http://localhost:3000 — ინტერფეისი ქართულია (`lang=ka`).

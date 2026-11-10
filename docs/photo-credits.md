@@ -1,6 +1,6 @@
 # Fotos (Unsplash License, hotlinked)
 
-IDs in `web/src/lib/photos.ts`. Quelle: https://unsplash.com/photos/<id>
+IDs in `src/lib/photos.ts`. Quelle: https://unsplash.com/photos/<id>
 
 | Verwendung | Unsplash-Foto-ID |
 | --- | --- |
