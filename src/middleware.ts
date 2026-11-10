@@ -10,6 +10,9 @@ export async function middleware(request: NextRequest) {
   requestHeaders.set(LOCALE_HEADER, locale);
 
   let response = NextResponse.next({ request: { headers: requestHeaders } });
+  response.headers.set("X-Frame-Options", "DENY");
+  response.headers.set("X-Content-Type-Options", "nosniff");
+  response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
 
   // Always pin Georgian so client trees and SSR stay in sync.
   response.cookies.set(LOCALE_COOKIE, locale, {

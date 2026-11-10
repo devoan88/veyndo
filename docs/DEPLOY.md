@@ -17,7 +17,7 @@ bash scripts/deploy-once.sh
 
 ## ფორმა „demo-request“
 
-დეპლოის შემდეგ Netlify Forms-ში უნდა გამოჩნდეს **demo-request** (`web/public/__forms.html`). Form detection უკვე ჩართულია (`processing_settings.ignore_html_forms=false`).
+დეპლოის შემდეგ Netlify Forms-ში უნდა გამოჩნდეს **demo-request** (`public/__forms.html`). Form detection უკვე ჩართულია (`processing_settings.ignore_html_forms=false`).
 
 შემდეგ **Ani** (არა აგენტი):
 

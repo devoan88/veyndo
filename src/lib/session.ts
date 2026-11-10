@@ -10,6 +10,9 @@ import { createClient } from "./supabase/client";
  */
 let inflight: Promise<boolean> | null = null;
 
+const ANON_FLAG = "veyndo.anon.ok";
+
+/** At most one anonymous sign-in attempt per browser tab session. */
 export async function ensureSession(): Promise<boolean> {
   if (!supabaseConfigured()) return false;
   if (inflight) return inflight;
@@ -17,6 +20,14 @@ export async function ensureSession(): Promise<boolean> {
     const supabase = createClient();
     const existing = await supabase.auth.getSession();
     if (existing.data.session?.user) return true;
+    // Soft client cap: refuse rapid re-anon if a prior attempt already ran this tab.
+    try {
+      if (sessionStorage.getItem(ANON_FLAG) === "1") {
+        const again = await supabase.auth.getSession();
+        return !!again.data.session?.user;
+      }
+      sessionStorage.setItem(ANON_FLAG, "1");
+    } catch {}
     const { data } = await supabase.auth.signInAnonymously();
     if (data.user) return true;
     // A parallel call may have created the session already.

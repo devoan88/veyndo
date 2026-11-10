@@ -1,7 +1,13 @@
 "use client";
 
+const MAX_INPUT_BYTES = 8 * 1024 * 1024; // 8 MB before resize
+const MAX_OUTPUT_DIM = 1400;
+
 /** Downscale a photo in the browser and return a JPEG data URL. */
-export async function resizeImage(file: File, max = 1400): Promise<string> {
+export async function resizeImage(file: File, max = MAX_OUTPUT_DIM): Promise<string> {
+  if (file.size > MAX_INPUT_BYTES) {
+    throw new Error("image_too_large");
+  }
   const url = URL.createObjectURL(file);
   try {
     const img = await new Promise<HTMLImageElement>((res, rej) => {

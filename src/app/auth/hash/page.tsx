@@ -4,14 +4,14 @@ import { Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { supabaseConfigured } from "@/lib/env";
+import { safeNext } from "@/lib/safe-next";
 
 function HashInner() {
   const router = useRouter();
   const params = useSearchParams();
 
   useEffect(() => {
-    const nextRaw = params.get("next") || "/editor";
-    const next = nextRaw.startsWith("/") && !nextRaw.startsWith("//") ? nextRaw : "/editor";
+    const next = safeNext(params.get("next"), "/editor");
     if (!supabaseConfigured()) {
       router.replace("/login");
       return;
@@ -36,7 +36,7 @@ function HashInner() {
 
   return (
     <main className="wrap" style={{ padding: "48px 0" }}>
-      <p className="muted">Anmelden…</p>
+      <p className="muted">შესვლა…</p>
     </main>
   );
 }
