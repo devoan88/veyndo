@@ -35,7 +35,10 @@ rsync -a \
 echo "Copied to $TMP (no .env.local)."
 cd "$TMP"
 
-npx -y netlify-cli@latest deploy --build --prod
+# Temp copy excludes node_modules; Netlify CLI local builds need deps installed.
+npm ci
+
+npx -y netlify-cli@latest deploy --build --prod --site d73d0957-8c4a-4b04-b2ca-bd75b515892b
 
 echo
 echo "==== HTTP ===="
