@@ -2,7 +2,12 @@
 
 პროდუქტი ახლა **ქართულზეა** მიმართული (`lang=ka`, მეტა/OG `ka_GE`, პროფილის დომენი `veyndo.ge`).
 
-## DNS (რეგისტრატორზე — ერთჯერადი)
+## 0) ჯერ დომენი უნდა იყიდო
+
+`veyndo.ge` nic.ge WHOIS-ზე **არ ჩანს** (`No match` / NXDOMAIN) — ანუ რეგისტრირებული არაა.  
+აგენტს რეგისტრატორზე გადახდა/ანგარიში არ აქვს; იყიდე `.ge` აკრედიტებულ რეგისტრატორთან (მაგ. [proservice.ge](https://www.proservice.ge/), ან სხვა nic.ge reseller), შემდეგ:
+
+## DNS (რეგისტრატორზე — ყიდვის შემდეგ)
 
 Netlify-ზე უკვე მიმაგრებულია: `veyndo.ge` (primary) + `www.veyndo.ge` (+ ძველი `veyndo.at` aliases).  
 Netlify DNS zone შექმნილია — **რეგისტრატორზე nameserver-ები შეცვალე** ამაზე:
