@@ -2,14 +2,21 @@
 
 პროდუქტი ახლა **ქართულზეა** მიმართული (`lang=ka`, მეტა/OG `ka_GE`, პროფილის დომენი `veyndo.ge`).
 
-## DNS (როცა დომენი თქვენია)
+## DNS (რეგისტრატორზე — ერთჯერადი)
 
-Netlify საიტზე **veyndo-app** დაამატეთ კასტომ დომენი `veyndo.ge` / `www.veyndo.ge`, შემდეგ DNS-ში:
+Netlify-ზე უკვე მიმაგრებულია: `veyndo.ge` (primary) + `www.veyndo.ge` (+ ძველი `veyndo.at` aliases).  
+Netlify DNS zone შექმნილია — **რეგისტრატორზე nameserver-ები შეცვალე** ამაზე:
 
-- **A** `@` → Netlify load balancer IP (ხშირად `75.2.60.5` — შეამოწმეთ Netlify UI)
-- **CNAME** `www` → `veyndo-app.netlify.app`
+```
+dns1.p06.nsone.net
+dns2.p06.nsone.net
+dns3.p06.nsone.net
+dns4.p06.nsone.net
+```
 
-SSL Netlify-ზე თავისით მოვა DNS გავრცელების შემდეგ.
+ალტერნატივა (NS-ის გარეშე): **A** `@` → `75.2.60.5`, **CNAME** `www` → `veyndo-app.netlify.app`.
+
+SSL Netlify-ზე თავისით მოვა DNS გავრცელების შემდეგ (ხშირად 5–60 წთ).
 
 ## Env
 
