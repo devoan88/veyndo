@@ -27,8 +27,7 @@ rsync -a \
   --exclude '.env.*' \
   --exclude '**/.env' \
   --exclude '**/.env.*' \
-  --exclude 'web/.next' \
-  --exclude 'web/node_modules' \
+  --exclude '.next' \
   --exclude 'node_modules' \
   --exclude '.git' \
   "$ROOT/" "$TMP/"
