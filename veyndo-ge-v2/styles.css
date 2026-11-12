@@ -895,3 +895,33 @@ h3 {
   overflow-wrap: anywhere;
   hyphens: auto;
 }
+
+/* Service chips under the hero status */
+.cy-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.cy-chips a {
+  padding: 0.5rem 0.95rem;
+  border: 1px solid var(--hair);
+  border-radius: 999px;
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 0.9375rem;
+  transition: border-color 0.25s ease, color 0.25s ease;
+}
+
+.cy-chips a:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Visible keyboard focus everywhere */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
