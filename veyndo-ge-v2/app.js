@@ -38,7 +38,7 @@
   } catch (_) {}
   if (themeBtn) {
     themeBtn.addEventListener("click", () => {
-      const next = root.dataset.theme === "dark" ? "light" : "dark";
+      const next = (root.dataset.theme || "dark") === "dark" ? "light" : "dark";
       setTheme(next || (matchMedia("(prefers-color-scheme: dark)").matches ? "light" : "dark"));
     });
   }
