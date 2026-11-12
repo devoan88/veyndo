@@ -1,5 +1,5 @@
 (function () {
-  const STORAGE = "konturi.lang";
+  const STORAGE = "cyra.lang";
 
   function apply(lang) {
     const next = lang === "en" ? "en" : "ka";
@@ -60,5 +60,5 @@
     init();
   }
 
-  window.KonturiI18n = { apply };
+  window.CyraI18n = { apply };
 })();
