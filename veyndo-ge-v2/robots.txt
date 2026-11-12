@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://veyndo.ge/sitemap.xml
+Sitemap: https://cyra.ge/sitemap.xml
