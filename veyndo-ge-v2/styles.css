@@ -789,7 +789,11 @@ h2 {
 }
 
 /* Starting prices on service pages */
-px;
+.cy-price {
+  margin: 0.4rem 0 1.4rem;
+  padding: 0.7rem 1rem;
+  border: 1px solid var(--hair);
+  border-radius: 14px;
   max-width: 100%;
   color: var(--ink);
   font-size: 0.95rem;
