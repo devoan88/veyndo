@@ -1355,3 +1355,102 @@ body::before {
   background: var(--accent);
   color: #070605;
 }
+
+/* ---------- Quiet luxury layer: obsidian, champagne, frosted glass ---------- */
+:root {
+  --paper: #121110;
+  --surface: rgba(255, 255, 255, 0.035);
+  --ink: #f5f5f7;
+  --muted: #a8a29a;
+  --accent: #d4af37;
+  --accent-2: #e8d9a8;
+  --hair: rgba(212, 175, 55, 0.22);
+  --font: "Plus Jakarta Sans", "Noto Sans Georgian", "Noto Sans", system-ui, sans-serif;
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  --paper: #f6f3ee;
+  --surface: rgba(255, 255, 255, 0.7);
+  --ink: #17150f;
+  --muted: #6f675b;
+  --accent: #a8862a;
+  --accent-2: #c9a94f;
+  --hair: rgba(168, 134, 42, 0.3);
+  color-scheme: light;
+}
+
+body {
+  letter-spacing: 0.005em;
+  background: radial-gradient(900px 500px at 50% -15%, rgba(212, 175, 55, 0.08), transparent 60%), var(--paper);
+}
+
+body::before { display: none; }
+
+.cy-hero::before { display: none; }
+
+.cy-title {
+  font-weight: 400;
+  letter-spacing: -0.03em;
+}
+
+.cy-title-muted {
+  font-weight: 300;
+  color: var(--accent-2);
+}
+
+.eyebrow,
+.cy-mono {
+  letter-spacing: 0.18em;
+}
+
+.cy-status {
+  border: 1px solid var(--hair);
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+}
+
+.cy-terminal,
+.card,
+.price-table {
+  border: 1px solid var(--hair);
+  border-radius: 20px;
+  background: var(--surface);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.cy-terminal::before { display: none; }
+
+.card:hover {
+  border-color: rgba(212, 175, 55, 0.45);
+  transform: translateY(-2px);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-2), var(--accent));
+  color: #121110;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #121110;
+}
+
+.btn-ghost {
+  border: 1px solid var(--hair);
+  color: var(--ink);
+}
+
+.site-header {
+  background: rgba(18, 17, 16, 0.6);
+  border-bottom: 1px solid var(--hair);
+}
+
+::selection {
+  background: var(--accent);
+  color: #121110;
+}
