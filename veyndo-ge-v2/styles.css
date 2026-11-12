@@ -505,3 +505,205 @@ h3 {
 .price-table th,
 .price-table td { overflow-wrap: anywhere; padding: 0.7rem 0.6rem; }
 .todo { white-space: normal; }
+
+/* ---------- Cyber layer: grid, glows, brackets, scan lines ---------- */
+body {
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--accent) 6%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--accent) 6%, transparent) 1px, transparent 1px);
+  background-size: 44px 44px;
+  background-attachment: fixed;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg, transparent 0 3px, rgba(255, 255, 255, 0.012) 3px 4px);
+  z-index: 0;
+}
+
+.site-header {
+  background: color-mix(in srgb, var(--paper) 82%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid transparent;
+  border-image: linear-gradient(90deg, transparent, var(--accent), var(--accent-2), transparent) 1;
+}
+
+.site-footer {
+  border-top: 1px solid transparent;
+  border-image: linear-gradient(90deg, transparent, var(--accent-2), transparent) 1;
+}
+
+.hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  width: 620px;
+  height: 620px;
+  right: -180px;
+  top: -200px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 38%, transparent), transparent 62%);
+  filter: blur(18px);
+  pointer-events: none;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  left: -160px;
+  bottom: -220px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent-2) 26%, transparent), transparent 62%);
+  pointer-events: none;
+}
+
+h1 {
+  background: linear-gradient(100deg, var(--ink) 30%, var(--accent-2) 75%, var(--accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.eyebrow {
+  font-family: var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-2);
+}
+
+.eyebrow::before {
+  content: "[ ";
+  color: var(--accent);
+}
+
+.eyebrow::after {
+  content: " ]";
+  color: var(--accent);
+}
+
+.card {
+  position: relative;
+  border: 1px solid var(--line);
+  background:
+    linear-gradient(160deg, color-mix(in srgb, var(--accent) 7%, transparent), transparent 45%),
+    var(--surface);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.card::before,
+.card::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-color: var(--accent);
+  border-style: solid;
+  opacity: 0.6;
+  transition: opacity 0.25s ease;
+}
+
+.card::before {
+  top: -1px;
+  left: -1px;
+  border-width: 2px 0 0 2px;
+  border-radius: 12px 0 0 0;
+}
+
+.card::after {
+  bottom: -1px;
+  right: -1px;
+  border-width: 0 2px 2px 0;
+  border-radius: 0 0 12px 0;
+}
+
+.card:hover {
+  border-color: color-mix(in srgb, var(--accent) 60%, var(--line));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 25%, transparent), 0 12px 40px color-mix(in srgb, var(--accent) 16%, transparent);
+  transform: translateY(-2px);
+}
+
+.card:hover::before,
+.card:hover::after {
+  opacity: 1;
+}
+
+.btn-primary {
+  background: linear-gradient(120deg, var(--accent), var(--accent-2));
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 0%, transparent);
+  transition: box-shadow 0.25s ease, transform 0.2s ease;
+}
+
+.btn-primary:hover {
+  box-shadow: 0 0 24px color-mix(in srgb, var(--accent) 55%, transparent);
+  transform: translateY(-1px);
+}
+
+.btn-ghost {
+  border-color: color-mix(in srgb, var(--accent-2) 45%, var(--line));
+}
+
+.section-head h2,
+.section h2 {
+  position: relative;
+  padding-bottom: 0.4em;
+}
+
+.section-head h2::after,
+.section h2::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 64px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  box-shadow: 0 0 12px var(--accent);
+}
+
+.section + .section {
+  position: relative;
+}
+
+.section + .section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(560px, 80%);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.6;
+}
+
+.price-table th {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  color: var(--accent-2);
+  background: color-mix(in srgb, var(--accent) 8%, var(--surface));
+}
+
+.todo {
+  font-family: var(--mono);
+  border: 1px dashed var(--warn);
+  color: var(--warn);
+  background: color-mix(in srgb, var(--warn) 10%, transparent);
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--paper);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card, .btn-primary { transition: none; }
+}
