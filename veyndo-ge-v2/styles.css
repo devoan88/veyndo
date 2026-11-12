@@ -1,46 +1,36 @@
-/* Konturi / veyndo-ge-v2 — Tbilisi web studio */
-@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400;500;600;700&family=Noto+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap");
+/* Cyra / veyndo-ge-v2 — Tbilisi web studio */
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@300;400;500;600;700&family=Noto+Serif+Georgian:wght@400;500;600;700&family=Noto+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap");
 
 :root {
-  --ink: #14213d;
-  --paper: #faf7f2;
-  --accent: #e07a5f;
-  --accent-2: #3d8b7a;
-  --muted: #6b6f7a;
-  --line: #e6e1d8;
-  --surface: #ffffff;
-  --shadow: 0 18px 50px rgba(20, 33, 61, 0.08);
-  --radius: 18px;
+  --ink: #e2e8f0;
+  --paper: #070b14;
+  --accent: #3b82f6;
+  --accent-2: #7dd3fc;
+  --gold: #e7c873;
+  --warn: #fbbf24;
+  --muted: #94a3b8;
+  --line: #1e293b;
+  --surface: #0e1524;
+  --shadow: 0 18px 50px rgba(59, 130, 246, 0.10);
+  --radius: 12px;
   --font: "Noto Sans Georgian", "Noto Sans", system-ui, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   --space: clamp(1rem, 3vw, 2rem);
   --max: 1120px;
-  color-scheme: light;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --ink: #f3efe6;
-    --paper: #0f1628;
-    --accent: #ef8f74;
-    --accent-2: #5aaf9c;
-    --muted: #a7abb6;
-    --line: #243049;
-    --surface: #162035;
-    --shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
-    color-scheme: dark;
-  }
-}
-
-:root[data-theme="dark"] {
-  --ink: #f3efe6;
-  --paper: #0f1628;
-  --accent: #ef8f74;
-  --accent-2: #5aaf9c;
-  --muted: #a7abb6;
-  --line: #243049;
-  --surface: #162035;
-  --shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
   color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  --ink: #0f172a;
+  --paper: #f1f5f9;
+  --accent: #1d4ed8;
+  --accent-2: #0369a1;
+  --warn: #b45309;
+  --muted: #475569;
+  --line: #cbd5e1;
+  --surface: #ffffff;
+  --shadow: 0 18px 50px rgba(15, 23, 42, 0.08);
+  color-scheme: light;
 }
 
 *,
@@ -285,7 +275,7 @@ h3 {
 
 .btn-primary {
   background: var(--accent);
-  color: #fff;
+  color: #0a1020;
 }
 
 .btn-primary:hover {
@@ -302,9 +292,9 @@ h3 {
   min-height: 280px;
   border-radius: calc(var(--radius) + 8px);
   background:
-    linear-gradient(145deg, rgba(20, 33, 61, 0.88), rgba(61, 139, 122, 0.55)),
+    linear-gradient(145deg, rgba(10, 16, 32, 0.92), rgba(59, 130, 246, 0.35)),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 40 40'%3E%3Cg fill='%23ffffff' fill-opacity='0.06'%3E%3Cpath d='M0 0h20v20H0zm20 20h20v20H20z'/%3E%3C/g%3E%3C/svg%3E");
-  color: #f7f3ec;
+  color: #e2e8f0;
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
@@ -509,4 +499,429 @@ h3 {
   color: var(--muted);
   text-align: center;
   padding: 1rem;
+}
+
+/* mobile: keep the price table inside the screen width */
+.price-table { table-layout: fixed; }
+.price-table th,
+.price-table td { overflow-wrap: anywhere; padding: 0.7rem 0.6rem; }
+.todo { white-space: normal; }
+
+/* ---------- Minimal layer: one accent, large type, air, calm motion ---------- */
+:root {
+  --paper: #0a0a0b;
+  --surface: #121214;
+  --ink: #f4f4f5;
+  --muted: #8e8e93;
+  --accent: #3e6ae1;
+  --accent-2: #8fb3ff;
+  --hair: #26262b;
+  --radius: 18px;
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  --paper: #f5f5f7;
+  --surface: #ffffff;
+  --ink: #111113;
+  --muted: #6e6e73;
+  --accent: #3e6ae1;
+  --accent-2: #2a4fb0;
+  --hair: #d2d2d7;
+  color-scheme: light;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  letter-spacing: 0;
+}
+
+h1, h2, h3 {
+  font-family: var(--font);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+h1 {
+  font-size: clamp(2.8rem, 7.5vw, 6rem);
+  color: var(--ink);
+}
+
+h2 {
+  font-size: clamp(1.9rem, 3.8vw, 3.2rem);
+}
+
+.site-header {
+  background: color-mix(in srgb, var(--paper) 80%, transparent);
+  backdrop-filter: saturate(160%) blur(14px);
+  border-bottom: 1px solid var(--hair);
+  border-image: none;
+}
+
+.site-footer {
+  border-top: 1px solid var(--hair);
+  border-image: none;
+}
+
+/* Hero */
+.cy-hero {
+  min-height: 88vh;
+  display: flex;
+  align-items: center;
+  padding-top: clamp(7rem, 16vh, 10rem);
+}
+
+.cy-hero-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.4rem;
+  max-width: 980px;
+}
+
+.cy-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.45rem 1rem;
+  border: 1px solid var(--hair);
+  border-radius: 999px;
+  background: var(--surface);
+}
+
+.cy-mono {
+  font-family: var(--font);
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+}
+
+.cy-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: cy-pulse 2.4s ease-out infinite;
+}
+
+@keyframes cy-pulse {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 60%, transparent); }
+  70% { box-shadow: 0 0 0 10px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+
+.cy-title {
+  font-size: clamp(2.8rem, 7.2vw, 6rem);
+  font-weight: 600;
+  letter-spacing: -0.045em;
+  line-height: 1.02;
+  margin: 0;
+  color: var(--ink);
+}
+
+.cy-title-muted {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.cy-lede {
+  max-width: 46ch;
+  margin: 0;
+  color: var(--muted);
+  font-size: clamp(1.02rem, 1.5vw, 1.2rem);
+  line-height: 1.6;
+}
+
+.cy-terminal {
+  width: 100%;
+  max-width: 720px;
+  margin-top: 1rem;
+  padding: 1.3rem 1.5rem;
+  border: 1px solid var(--hair);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.cy-terminal-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.9rem;
+  margin-bottom: 0.9rem;
+  border-bottom: 1px solid var(--hair);
+}
+
+.cy-lines p {
+  margin: 0.45rem 0;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.82rem;
+}
+
+.cy-hi {
+  color: var(--ink) !important;
+}
+
+.cy-ok {
+  color: var(--accent);
+}
+
+/* Sections */
+.section {
+  padding-top: clamp(4.5rem, 10vh, 7.5rem);
+  padding-bottom: clamp(4.5rem, 10vh, 7.5rem);
+}
+
+.section + .section::before { display: none; }
+
+.section-head h2::after,
+.section h2::after { display: none; }
+
+.eyebrow {
+  font-family: var(--font);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: var(--muted);
+}
+
+.eyebrow::before,
+.eyebrow::after { content: none; }
+
+.lede,
+.hero p:not(.eyebrow) {
+  color: var(--muted);
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+/* Cards, tables */
+.card {
+  border: 1px solid var(--hair);
+  border-radius: var(--radius);
+  background: var(--surface);
+  padding: clamp(1.4rem, 2.4vw, 2rem);
+  box-shadow: none;
+  transition: border-color 0.3s ease, transform 0.3s ease;
+}
+
+.card::before,
+.card::after { display: none; }
+
+.card:hover {
+  border-color: var(--muted);
+  transform: none;
+  box-shadow: none;
+}
+
+.price-table {
+  border: 1px solid var(--hair);
+  border-radius: var(--radius);
+  background: var(--surface);
+  table-layout: fixed;
+}
+
+.price-table th,
+.price-table td {
+  border-bottom: 1px solid var(--hair);
+}
+
+.price-table th {
+  font-family: var(--font);
+  font-size: 0.85rem;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--muted);
+  background: transparent;
+}
+
+.todo {
+  font-family: var(--font);
+  border: 1px solid var(--hair);
+  border-radius: 999px;
+  color: var(--muted);
+  background: transparent;
+  white-space: normal;
+}
+
+/* Buttons */
+.btn {
+  border-radius: 999px;
+  font-weight: 500;
+  letter-spacing: 0;
+  padding: 0.95rem 1.6rem;
+  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.3s ease;
+}
+
+.btn-primary {
+  background: var(--ink);
+  color: var(--paper);
+  box-shadow: none;
+}
+
+.btn-primary:hover {
+  background: var(--accent);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.btn-ghost {
+  border: 1px solid var(--hair);
+  color: var(--ink);
+  background: transparent;
+}
+
+.btn-ghost:hover {
+  border-color: var(--ink);
+}
+
+::selection {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cy-dot { animation: none; }
+  .card, .btn { transition: none; }
+}
+
+/* Starting prices on service pages */
+.cy-price {
+  margin: 0.4rem 0 1.4rem;
+  padding: 0.7rem 1rem;
+  border: 1px solid var(--hair);
+  border-radius: 14px;
+  max-width: 100%;
+  color: var(--ink);
+  font-size: 0.95rem;
+  display: inline-block;
+}
+
+/* ---------- Typography: Noto Sans Georgian, readable Georgian sizes ---------- */
+body {
+  font-family: var(--font);
+  font-weight: 400;
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  letter-spacing: 0;
+}
+
+h1 {
+  font-family: var(--font);
+  font-size: clamp(2.4rem, 5.5vw, 4.5rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+
+h2 {
+  font-family: var(--font);
+  font-size: clamp(1.7rem, 3vw, 2.6rem);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: 0;
+}
+
+h3 {
+  font-family: var(--font);
+  font-size: 1.35rem;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0;
+}
+
+.cy-title {
+  font-family: var(--font);
+  font-size: clamp(2.4rem, 5.5vw, 4.5rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+
+.lede,
+.cy-lede {
+  font-size: clamp(1.05rem, 1.6vw, 1.2rem);
+  line-height: 1.7;
+  letter-spacing: 0;
+}
+
+.eyebrow,
+.cy-mono,
+.cy-lines p,
+.cy-terminal-head span {
+  font-family: var(--font);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+
+.prose {
+  max-width: 65ch;
+}
+
+/* Logo lockup in the hero, replaces the intro paragraph */
+.cy-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0.4rem 0 0.8rem;
+}
+
+.cy-logo-word {
+  font-family: var(--font);
+  font-size: clamp(2.6rem, 6vw, 4.2rem);
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.cy-logo-dot {
+  width: 10px;
+  height: 10px;
+  margin-top: 0.7rem;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 18%, transparent);
+}
+
+/* Long Georgian words in headings must wrap inside narrow screens */
+h1,
+h2,
+h3 {
+  overflow-wrap: anywhere;
+  hyphens: auto;
+}
+
+/* Service chips under the hero status */
+.cy-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.cy-chips a {
+  padding: 0.5rem 0.95rem;
+  border: 1px solid var(--hair);
+  border-radius: 999px;
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 0.9375rem;
+  transition: border-color 0.25s ease, color 0.25s ease;
+}
+
+.cy-chips a:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Visible keyboard focus everywhere */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 6px;
 }

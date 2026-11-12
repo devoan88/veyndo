@@ -29,16 +29,16 @@
   function setTheme(mode) {
     root.dataset.theme = mode;
     try {
-      localStorage.setItem("konturi.theme", mode);
+      localStorage.setItem("cyra.theme", mode);
     } catch (_) {}
   }
   try {
-    const saved = localStorage.getItem("konturi.theme");
+    const saved = localStorage.getItem("cyra.theme");
     if (saved === "dark" || saved === "light") setTheme(saved);
   } catch (_) {}
   if (themeBtn) {
     themeBtn.addEventListener("click", () => {
-      const next = root.dataset.theme === "dark" ? "light" : "dark";
+      const next = (root.dataset.theme || "dark") === "dark" ? "light" : "dark";
       setTheme(next || (matchMedia("(prefers-color-scheme: dark)").matches ? "light" : "dark"));
     });
   }
