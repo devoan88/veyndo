@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ka" data-lang="ka">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>კონტაქტი — კონტური | თბილისი</title>
+    <meta name="description" content="დაგვიკავშირდით თბილისში: ფორმა, WhatsApp, ტელეფონი და რუკა." />
+    <link rel="canonical" href="https://veyndo.ge/contact.html" />
+    <link rel="alternate" hreflang="ka" href="https://veyndo.ge/contact.html" />
+    <link rel="alternate" hreflang="en" href="https://veyndo.ge/contact.html?lang=en" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap header-inner">
+        <a class="brand" href="./index.html">
+          <span data-brand-ka data-ka></span><span data-brand-en data-en hidden></span>
+          <small data-ka>ვებსტუდია · თბილისი</small><small data-en hidden>Web studio · Tbilisi</small>
+        </a>
+        <nav class="site-nav" data-nav>
+          <a href="./index.html"><span data-ka>მთავარი</span><span data-en hidden>Home</span></a>
+          <a href="./services/index.html"><span data-ka>მომსახურება</span><span data-en hidden>Services</span></a>
+          <a href="./automation.html"><span data-ka>ავტომატიზაცია</span><span data-en hidden>Automation</span></a>
+          <a href="./contact.html" aria-current="page"><span data-ka>კონტაქტი</span><span data-en hidden>Contact</span></a>
+        </nav>
+        <div class="header-actions">
+          <button type="button" class="lang-switch" data-lang-btn="ka" aria-pressed="true">KA</button>
+          <button type="button" class="lang-switch" data-lang-btn="en">EN</button>
+          <button type="button" class="icon-btn" data-theme-toggle>◐</button>
+          <button type="button" class="icon-btn nav-toggle" data-nav-toggle aria-expanded="false">☰</button>
+        </div>
+      </div>
+    </header>
+    <main class="section">
+      <div class="wrap split">
+        <div>
+          <h1 data-ka>კონტაქტი</h1>
+          <h1 data-en hidden>Contact</h1>
+          <p class="lede" data-ka>მოგვწერეთ ქართულად — გიპასუხებთ რაც შეიძლება მალე.</p>
+          <p class="lede" data-en hidden>Write in Georgian or English — we reply as soon as we can.</p>
+          <ul class="list-check">
+            <li><span data-ka>ელფოსტა:</span><span data-en hidden>Email:</span> <span class="todo">[TODO: contact email]</span></li>
+            <li><span data-ka>ტელეფონი:</span><span data-en hidden>Phone:</span> <span class="todo">[TODO: phone]</span></li>
+            <li><span data-ka>WhatsApp:</span><span data-en hidden>WhatsApp:</span> <span class="todo">[TODO: WhatsApp]</span></li>
+            <li><span data-ka>მისამართი:</span><span data-en hidden>Address:</span> <span class="todo">[TODO: თბილისის მისამართი]</span></li>
+          </ul>
+          <div class="map-placeholder" role="img" aria-label="Map placeholder">
+            <span data-ka>რუკის პლაცეჰოლდერი — რეალური მისამართის შემდეგ ჩასმა</span>
+            <span data-en hidden>Map placeholder — embed after real address</span>
+          </div>
+        </div>
+        <form class="card contact-form" data-contact-form method="post" netlify name="contact" netlify-honeypot="company_website">
+          <input type="hidden" name="form-name" value="contact" />
+          <p class="hp"><label>Company website <input name="company_website" tabindex="-1" autocomplete="off" /></label></p>
+          <label
+            ><span data-ka>სახელი</span><span data-en hidden>Name</span>
+            <input name="name" required maxlength="80" />
+          </label>
+          <label
+            ><span data-ka>ელფოსტა ან ტელეფონი</span><span data-en hidden>Email or phone</span>
+            <input name="reply" required maxlength="120" />
+          </label>
+          <label
+            ><span data-ka>რა გჭირდებათ</span><span data-en hidden>What do you need</span>
+            <select name="need">
+              <option value="website" data-ka>ვებსაიტი</option>
+              <option value="shop" data-ka>მაღაზია</option>
+              <option value="seo" data-ka>Google / SEO</option>
+              <option value="social" data-ka>სოციალური</option>
+              <option value="automation" data-ka>ავტომატიზაცია</option>
+              <option value="ai" data-ka>AI</option>
+            </select>
+          </label>
+          <label
+            ><span data-ka>შეტყობინება</span><span data-en hidden>Message</span>
+            <textarea name="message" rows="5" maxlength="2000" required></textarea>
+          </label>
+          <button class="btn btn-primary" type="submit"><span data-ka>გაგზავნა</span><span data-en hidden>Send</span></button>
+          <p class="muted" data-form-status hidden></p>
+        </form>
+      </div>
+    </main>
+    <footer class="site-footer"><div class="wrap muted">© <span data-year></span></div></footer>
+    <script src="./config.js"></script><script src="./i18n.js"></script><script src="./app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,2 @@
+Header/footer are duplicated across HTML files intentionally (static site, no build step).
+Keep brand/nav links in sync when editing.
