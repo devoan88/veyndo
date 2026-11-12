@@ -2,20 +2,34 @@
   const STORAGE = "konturi.lang";
 
   function apply(lang) {
+    const next = lang === "en" ? "en" : "ka";
     const root = document.documentElement;
-    root.lang = lang === "en" ? "en" : "ka";
-    root.dataset.lang = lang;
-    document.querySelectorAll("[data-ka], [data-en]").forEach((el) => {
-      const show =
-        (lang === "ka" && el.hasAttribute("data-ka")) ||
-        (lang === "en" && el.hasAttribute("data-en"));
-      el.hidden = !show;
+    root.lang = next;
+    root.setAttribute("data-lang", next);
+
+    // Prefer CSS data-lang rules; keep hidden in sync for a11y/AT.
+    document.querySelectorAll("[data-ka]").forEach((el) => {
+      el.hidden = next !== "ka";
     });
+    document.querySelectorAll("[data-en]").forEach((el) => {
+      el.hidden = next !== "en";
+    });
+
     document.querySelectorAll("[data-lang-btn]").forEach((btn) => {
-      btn.setAttribute("aria-pressed", btn.getAttribute("data-lang-btn") === lang ? "true" : "false");
+      const on = btn.getAttribute("data-lang-btn") === next;
+      btn.setAttribute("aria-pressed", on ? "true" : "false");
+      btn.classList.toggle("is-active", on);
     });
+
     try {
-      localStorage.setItem(STORAGE, lang);
+      localStorage.setItem(STORAGE, next);
+    } catch (_) {}
+
+    try {
+      const url = new URL(location.href);
+      if (next === "ka") url.searchParams.delete("lang");
+      else url.searchParams.set("lang", "en");
+      history.replaceState(null, "", url);
     } catch (_) {}
   }
 
@@ -30,8 +44,13 @@
       }
     } catch (_) {}
     apply(lang);
-    document.querySelectorAll("[data-lang-btn]").forEach((btn) => {
-      btn.addEventListener("click", () => apply(btn.getAttribute("data-lang-btn")));
+
+    // Delegation so clicks work even if header is re-rendered later.
+    document.addEventListener("click", (ev) => {
+      const btn = ev.target && ev.target.closest && ev.target.closest("[data-lang-btn]");
+      if (!btn) return;
+      ev.preventDefault();
+      apply(btn.getAttribute("data-lang-btn"));
     });
   }
 
@@ -40,4 +59,6 @@
   } else {
     init();
   }
+
+  window.KonturiI18n = { apply };
 })();
