@@ -1,5 +1,5 @@
 (function () {
-  const STORAGE = "konturi.lang";
+  const STORAGE = "cyra.lang";
 
   function apply(lang) {
     const next = lang === "en" ? "en" : "ka";
@@ -7,7 +7,6 @@
     root.lang = next;
     root.setAttribute("data-lang", next);
 
-    // Prefer CSS data-lang rules; keep hidden in sync for a11y/AT.
     document.querySelectorAll("[data-ka]").forEach((el) => {
       el.hidden = next !== "ka";
     });
@@ -45,7 +44,6 @@
     } catch (_) {}
     apply(lang);
 
-    // Delegation so clicks work even if header is re-rendered later.
     document.addEventListener("click", (ev) => {
       const btn = ev.target && ev.target.closest && ev.target.closest("[data-lang-btn]");
       if (!btn) return;
@@ -60,5 +58,5 @@
     init();
   }
 
-  window.KonturiI18n = { apply };
+  window.CyraI18n = { apply, setLang: apply };
 })();
