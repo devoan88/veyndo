@@ -1137,3 +1137,112 @@ h1 {
 @media (prefers-reduced-motion: reduce) {
   .card, .btn-primary { transition: none; }
 }
+
+/* ---------- Cyra hero: status pill, mono telemetry card ---------- */
+.cy-hero {
+  min-height: 88vh;
+  display: flex;
+  align-items: center;
+  padding-top: clamp(7rem, 16vh, 10rem);
+}
+
+.cy-hero-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.4rem;
+  max-width: 980px;
+}
+
+.cy-mono {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+.cy-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.45rem 1rem;
+  border: 1px solid var(--hair);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.cy-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-2);
+  box-shadow: 0 0 0 0 var(--accent-2);
+  animation: cy-pulse 2.4s ease-out infinite;
+}
+
+@keyframes cy-pulse {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent-2) 70%, transparent); }
+  70% { box-shadow: 0 0 0 10px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+
+.cy-title {
+  font-size: clamp(2.6rem, 6.8vw, 5.8rem);
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  line-height: 1.04;
+  margin: 0;
+  background: none;
+  -webkit-text-fill-color: var(--ink);
+  color: var(--ink);
+}
+
+.cy-title-muted {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.cy-lede {
+  max-width: 46ch;
+  margin: 0;
+  color: var(--muted);
+  font-size: clamp(1.02rem, 1.5vw, 1.15rem);
+  line-height: 1.6;
+}
+
+.cy-terminal {
+  width: 100%;
+  max-width: 720px;
+  margin-top: 1.2rem;
+  padding: 1.3rem 1.5rem;
+  border: 1px solid var(--hair);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--surface) 85%, transparent);
+  backdrop-filter: blur(12px);
+}
+
+.cy-terminal-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.9rem;
+  margin-bottom: 0.9rem;
+  border-bottom: 1px solid var(--hair);
+}
+
+.cy-ok {
+  color: var(--accent-2);
+}
+
+.cy-lines p {
+  margin: 0.45rem 0;
+  color: var(--muted);
+}
+
+.cy-hi {
+  color: var(--ink) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cy-dot { animation: none; }
+}
