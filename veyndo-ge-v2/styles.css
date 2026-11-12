@@ -1,15 +1,19 @@
-/* Konturi / veyndo-ge-v2 — Tbilisi web studio */
+/* Cyra / საირა — Tbilisi web studio (veyndo-ge-v2) */
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400;500;600;700&family=Noto+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap");
 
+/* Variant 1 palette — muted #5A554C tuned for WCAG AA on #F7F3EC (~4.6:1) */
 :root {
-  --ink: #14213d;
-  --paper: #faf7f2;
-  --accent: #e07a5f;
-  --accent-2: #3d8b7a;
-  --muted: #6b6f7a;
-  --line: #e6e1d8;
-  --surface: #ffffff;
-  --shadow: 0 18px 50px rgba(20, 33, 61, 0.08);
+  --ink: #2b2a28;
+  --paper: #f7f3ec;
+  /* Variant 1 terracotta; button fill darkened for WCAG AA white text (~5.16:1) */
+  --accent: #c8553d;
+  --accent-btn: #b84a34;
+  --accent-2: #5c6b3a;
+  --muted: #5a554c;
+  --line: #e2dcd2;
+  --surface: #fffdf9;
+  --on-accent: #ffffff;
+  --shadow: 0 18px 50px rgba(43, 42, 40, 0.08);
   --radius: 18px;
   --font: "Noto Sans Georgian", "Noto Sans", system-ui, sans-serif;
   --space: clamp(1rem, 3vw, 2rem);
@@ -17,29 +21,34 @@
   color-scheme: light;
 }
 
+/* Dark = dark brown (not navy) */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --ink: #f3efe6;
-    --paper: #0f1628;
-    --accent: #ef8f74;
-    --accent-2: #5aaf9c;
-    --muted: #a7abb6;
-    --line: #243049;
-    --surface: #162035;
-    --shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+    --ink: #f7f3ec;
+    --paper: #241c18;
+    --accent: #d66a52;
+    --accent-btn: #b84a34;
+    --accent-2: #8a9a5c;
+    --muted: #c9bdb0;
+    --line: #3d322c;
+    --surface: #2f2621;
+    --on-accent: #ffffff;
+    --shadow: 0 18px 50px rgba(0, 0, 0, 0.4);
     color-scheme: dark;
   }
 }
 
 :root[data-theme="dark"] {
-  --ink: #f3efe6;
-  --paper: #0f1628;
-  --accent: #ef8f74;
-  --accent-2: #5aaf9c;
-  --muted: #a7abb6;
-  --line: #243049;
-  --surface: #162035;
-  --shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+  --ink: #f7f3ec;
+  --paper: #241c18;
+  --accent: #d66a52;
+  --accent-btn: #b84a34;
+  --accent-2: #8a9a5c;
+  --muted: #c9bdb0;
+  --line: #3d322c;
+  --surface: #2f2621;
+  --on-accent: #ffffff;
+  --shadow: 0 18px 50px rgba(0, 0, 0, 0.4);
   color-scheme: dark;
 }
 
@@ -60,16 +69,18 @@ html[data-lang="en"] [data-ka] {
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
   margin: 0;
   font-family: var(--font);
   background:
-    radial-gradient(1200px 600px at 10% -10%, rgba(224, 122, 95, 0.16), transparent 55%),
-    radial-gradient(900px 500px at 100% 0%, rgba(61, 139, 122, 0.14), transparent 50%),
-    linear-gradient(180deg, var(--paper), color-mix(in srgb, var(--paper) 86%, var(--accent-2)));
+    radial-gradient(1200px 600px at 10% -10%, rgba(200, 85, 61, 0.14), transparent 55%),
+    radial-gradient(900px 500px at 100% 0%, rgba(92, 107, 58, 0.12), transparent 50%),
+    linear-gradient(180deg, var(--paper), color-mix(in srgb, var(--paper) 88%, var(--accent-2)));
   color: var(--ink);
+  overflow-x: hidden;
   line-height: 1.6;
   min-height: 100vh;
 }
@@ -77,6 +88,13 @@ body {
 img {
   max-width: 100%;
   display: block;
+}
+
+h1,
+h2,
+h3 {
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 a {
@@ -284,8 +302,8 @@ h3 {
 }
 
 .btn-primary {
-  background: var(--accent);
-  color: #fff;
+  background: var(--accent-btn);
+  color: var(--on-accent);
 }
 
 .btn-primary:hover {
@@ -358,8 +376,16 @@ h3 {
   text-decoration: none;
 }
 
+.price-wrap {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 .price-table {
   width: 100%;
+  max-width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
   background: var(--surface);
   border: 1px solid var(--line);
@@ -370,12 +396,36 @@ h3 {
 .price-table th,
 .price-table td {
   text-align: left;
-  padding: 0.9rem 1rem;
+  padding: 0.75rem 0.65rem;
   border-bottom: 1px solid var(--line);
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  vertical-align: top;
+  font-size: 0.92rem;
 }
 
 .price-table th {
   background: color-mix(in srgb, var(--accent-2) 12%, var(--surface));
+}
+
+.say-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0.35rem 0 1rem;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 0.4rem 0.85rem;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.say-name[hidden] {
+  display: none !important;
 }
 
 .muted {
@@ -471,6 +521,15 @@ h3 {
 
 .prose {
   max-width: 42rem;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.prose h1,
+.prose h2,
+.prose h3 {
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .prose p {
