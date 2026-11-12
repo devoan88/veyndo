@@ -49,6 +49,15 @@
   box-sizing: border-box;
 }
 
+/* Language visibility — class/attr driven (more reliable than JS .hidden alone) */
+html[data-lang="ka"] [data-en],
+html:not([data-lang]) [data-en] {
+  display: none !important;
+}
+html[data-lang="en"] [data-ka] {
+  display: none !important;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -138,10 +147,18 @@ a {
   cursor: pointer;
 }
 
-.lang-switch[aria-pressed="true"] {
+.lang-switch[aria-pressed="true"],
+.lang-switch.is-active {
   background: var(--ink);
   color: var(--paper);
   border-color: var(--ink);
+}
+
+.lang-switch {
+  position: relative;
+  z-index: 2;
+  min-width: 2.5rem;
+  min-height: 2.25rem;
 }
 
 .nav-toggle {
