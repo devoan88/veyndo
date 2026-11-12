@@ -787,3 +787,11 @@ h2 {
   .cy-dot { animation: none; }
   .card, .btn { transition: none; }
 }
+
+/* Starting prices on service pages */
+px;
+  max-width: 100%;
+  color: var(--ink);
+  font-size: 0.95rem;
+  display: inline-block;
+}
