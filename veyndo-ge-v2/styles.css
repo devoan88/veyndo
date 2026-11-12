@@ -1246,3 +1246,112 @@ h1 {
 @media (prefers-reduced-motion: reduce) {
   .cy-dot { animation: none; }
 }
+
+/* ---------- Desert layer: warm black, gold accent, grid texture ---------- */
+:root {
+  --paper: #070605;
+  --surface: #12100e;
+  --ink: #e2e8f0;
+  --muted: #a39e93;
+  --accent: #c5a059;
+  --accent-2: #e3c58a;
+  --hair: #2e2822;
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  --paper: #f7f4ee;
+  --surface: #ffffff;
+  --ink: #1a1612;
+  --muted: #6e675c;
+  --accent: #9a7430;
+  --accent-2: #b08a45;
+  --hair: #e0d8ca;
+  color-scheme: light;
+}
+
+body {
+  background:
+    radial-gradient(1000px 600px at 50% -10%, rgba(197, 160, 89, 0.10), transparent 60%),
+    var(--paper);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgba(197, 160, 89, 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(197, 160, 89, 0.07) 1px, transparent 1px);
+  background-size: 64px 64px;
+  -webkit-mask-image: radial-gradient(ellipse 60% 50% at 50% 0%, #000 60%, transparent 100%);
+  mask-image: radial-gradient(ellipse 60% 50% at 50% 0%, #000 60%, transparent 100%);
+}
+
+.cy-hero {
+  position: relative;
+  z-index: 1;
+}
+
+.cy-title-muted {
+  color: var(--accent);
+  font-weight: 300;
+}
+
+.cy-dot {
+  background: var(--accent);
+}
+
+.cy-status {
+  border-color: var(--hair);
+  background: var(--surface);
+}
+
+.cy-status .cy-mono {
+  color: var(--accent);
+}
+
+.cy-terminal {
+  border-color: var(--hair);
+  background: var(--surface);
+}
+
+.cy-terminal::before {
+  content: "";
+  display: block;
+  height: 1px;
+  margin: -1.3rem -1.5rem 1.1rem;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+
+.cy-ok,
+.cy-status .cy-mono {
+  color: var(--accent);
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #070605;
+}
+
+.btn-primary:hover {
+  background: var(--accent-2);
+  color: #070605;
+}
+
+.btn-ghost:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.site-header {
+  background: rgba(7, 6, 5, 0.8);
+  border-bottom: 1px solid var(--hair);
+}
+
+::selection {
+  background: var(--accent);
+  color: #070605;
+}
